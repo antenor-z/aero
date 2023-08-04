@@ -17,12 +17,9 @@ class Ils(BaseModel):
     ident: constr(pattern=r'^[A-Z]{3}$')
     freq: constr(pattern=r'^\d{3}\.\d$')
 
-class Nav(BaseModel):
-    ils: list[Ils] | None = None
-    vor: list[Vor] | None = None
-
 class Airport(BaseModel):
     nome: str
     icao: constr(pattern=r'^[A-Z]{4}$')
     comunication: Comunication | None = None
-    nav: Nav | None = None
+    ils: list[Ils] | None = None
+    vor: list[Vor] | None = None
