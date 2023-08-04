@@ -11,6 +11,7 @@ _airport_data = {
         atis=["127.700"]),
     ils=[Ils(rwy="13", ident="IFO", freq="110.3")],
     vor=[Vor(ident="FLZ", freq="114.1")],
+    rwy=[Rwy(head=("13", "31"), length=2755)]
     ),
 "SBGR": Airport(
     nome="Guarulhos - Governador André Franco Montoro",
@@ -25,6 +26,7 @@ _airport_data = {
         Ils(rwy="10R", ident="IGH", freq="111.7"),
         Ils(rwy="28R", ident="IGS", freq="111.9"),
         Ils(rwy="10L", ident="IUC", freq="110.7")], 
+    rwy=[Rwy(head=("28L", "10R"), length=3000), Rwy(head=("28R", "10L"), length=3700)],
     ),
 "SBRJ": Airport(
     nome="Santos Dumont",
@@ -34,8 +36,9 @@ _airport_data = {
         gnd=["121.700"], 
         traf=["121.050"],
         atis=["132.650"]),
+    rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
     ),
-"SBTE": Airport(
+"SBKP": Airport(
     nome="Viracopos",
     icao="SBKP", 
     comunication=Comunication(
@@ -43,7 +46,8 @@ _airport_data = {
         gnd=["121.900"],
         traf=["121.100"],
         atis=["127.800"]),
-    ils=[Ils(rwy="15", ident="IKP", freq="110.3",)]
+    ils=[Ils(rwy="15", ident="IKP", freq="110.3",)],
+    rwy=[Rwy(head=("15", "33"), length=3240)],
     ),
 "SBTE": Airport(
     nome="Senador Petrônio Portella",
@@ -52,6 +56,7 @@ _airport_data = {
         twr=["118.800"], 
         atis=["127.800"]),
     vor=[Vor(ident="TNA", freq="127.8")],
+    rwy=[Rwy(head=("20", "02"), length=2200)],
     ),
 "SBCT": Airport(
     nome="Afonso Pena",
@@ -64,6 +69,7 @@ _airport_data = {
     ils=[Ils(rwy="33", ident="ITA", freq="110.3"),
          Ils(rwy="15", ident="CTB", freq="109.3"),],
     vor=[Vor(ident="CTB", freq="116.5")],
+    rwy=[Rwy(head=("15", "33"), length=2218), Rwy(head=("11", "29"), length=1798)],
     ),
 }
 
