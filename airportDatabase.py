@@ -38,6 +38,21 @@ _airport_data = {
         atis=["132.650"]),
     rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
     ),
+"SBGL": Airport(
+    nome="Antônio Carlos Jobim",
+    icao="SBGL", 
+    comunication=Comunication(
+        twr=["118.000", "118.200", "121.500", "121.000", "121.650"], 
+        gnd=["121.650", "128.350"], 
+        traf=["121.000", "135.100"],
+        atis=["127.600"],
+        ramp=["121.950", "130.675", "131.050"]),
+    rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
+    ils=[Ils(rwy="15", ident="IJB", freq="110.5"),
+         Ils(rwy="10", ident="ITB", freq="109.3", cat="II"), 
+         Ils(rwy="28", ident="ILM", freq="111.5"), 
+        ],
+    ),
 "SBKP": Airport(
     nome="Viracopos",
     icao="SBKP", 

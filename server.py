@@ -12,7 +12,7 @@ def metar(icao: str):
     
     return decode(icao)
 
-@app.get("/<string:icao>")
+@app.get("/<string:icao>/json")
 def info(icao:str):
     if not is_icao_valid(icao):
         return "fail"

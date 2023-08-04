@@ -8,6 +8,7 @@ class Comunication(BaseModel):
     ops: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
     atis: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
     traf: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
+    ramp: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
 
 class Vor(BaseModel):
     ident: str
@@ -17,6 +18,7 @@ class Ils(BaseModel):
     rwy: constr(pattern=r'^\d{2}[L|C|R]*$')
     ident: constr(pattern=r'^[A-Z]{3}$')
     freq: constr(pattern=r'^\d{3}\.\d$')
+    cat: constr(pattern=r'^[A-Za-z]+$') | None = None
 
 class Rwy(BaseModel):
     head: Tuple[constr(pattern=r'^(\d{2}|\d)(R|L|C)*$'), constr(pattern=r'^(\d{2}|\d)(R|L|C)*$')]
