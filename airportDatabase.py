@@ -41,21 +41,29 @@ _airport_data = {
 #         atis=["132.650"]),
 #     rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
 #     ),
-# "SBGL": Airport(
-#     nome="Antônio Carlos Jobim",
-#     icao="SBGL", 
-#     comunication=Comunication(
-#         twr=["118.000", "118.200", "121.500", "121.000", "121.650"], 
-#         gnd=["121.650", "128.350"], 
-#         traf=["121.000", "135.100"],
-#         atis=["127.600"],
-#         ramp=["121.950", "130.675", "131.050"]),
-#     rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
-#     ils=[Ils(rwy="15", ident="IJB", freq="110.5"),
-#          Ils(rwy="10", ident="ITB", freq="109.3", cat="II"), 
-#          Ils(rwy="28", ident="ILM", freq="111.5"), 
-#         ],
-#     ),
+"SBGL": Airport(
+    nome="Antônio Carlos Jobim",
+    icao="SBGL", 
+    comm=[
+        Comm(freq="118.000", type="torre"),
+        Comm(freq="118.200", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="121.000", type="torre"),
+        Comm(freq="121.650", type="torre"),
+        Comm(freq="121.650", type="solo"),
+        Comm(freq="128.350", type="solo"),
+        Comm(freq="121.000", type="tráfego"),
+        Comm(freq="135.100", type="tráfego"),
+        Comm(freq="127.600", type="atis"),
+        Comm(freq="121.950", type="rampa"),
+        Comm(freq="130.675", type="rampa"),
+        Comm(freq="131.050", type="rampa"),],
+    rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
+    ils=[Ils(rwy="15", ident="IJB", freq="110.5"),
+         Ils(rwy="10", ident="ITB", freq="109.3", cat="II"), 
+         Ils(rwy="28", ident="ILM", freq="111.5"), 
+        ],
+    ),
 "SBKP": Airport(
     nome="Viracopos",
     icao="SBKP", 
@@ -97,6 +105,9 @@ _airport_data = {
 
 def get_info(icao):
     return _airport_data[icao].model_dump()
+
+def get_all_names():
+    return [(a.nome, a.icao) for a in _airport_data.values()]
 
 if __name__ == "__main__":
     print(_airport_data)

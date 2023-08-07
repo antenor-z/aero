@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vertical and Horizontal Centering</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+	<header>
+		Lista Aeroportos
+	</header>
+	<main>
+	<div class="line">
+		{% for a in airports %}
+		<div class="box-rounded box-outlined box-onhover" onclick="location.href='/{{a[1]}}';">
+			<div class="box-value">
+				<span class="no-wrap">{{ a[1] }} {{ a[0] }}</span>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	</main>
+</body>
+</html>
+
