@@ -1,0 +1,61 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+  color: #eee;
+  font-family: sans-serif;
+}
+main {
+  padding: 10px;
+}
+header {
+  font-size: 48px;
+  padding: 20px 0;
+  background-color: rgb(88, 88, 88);
+}
+.metar {
+  font-family: monospace;
+  font-size: 20px;
+}
+.line {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+  gap: 15px;
+  margin: 15px 0;
+}
+.box-rounded {
+  border-radius: 8px;
+  padding: 10px;
+}
+.box {
+  padding: 10px;
+}
+.box-outlined {
+  border: white solid 2px;
+}
+.box-gray {
+  background-color: #4d4d4d;
+}
+.box-blue {
+  border: aqua solid 2px;
+  background-color: rgba(0, 255, 255, 0.139);
+}
+.box-orange {
+  border: rgb(236, 206, 14) solid 2px;
+  background-color: rgba(236, 206, 14, 0.174);
+}
+.box-name {
+  color: #aaa;
+}
+.box-value {
+  font-size: 24px;
+}
+header {
+  text-align: center;
+}
+.runway-number {
+  background-color: rgb(188, 8, 8);
+  font-weight: bold;
+  padding: 4px;
+}

@@ -2,13 +2,9 @@ import re
 from typing import Tuple
 from pydantic import BaseModel, constr
 
-class Comunication(BaseModel):
-    twr: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
-    gnd: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
-    ops: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
-    atis: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
-    traf: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
-    ramp: list[constr(pattern=r'^\d{3}\.\d{3}$')] | None = None
+class Comm(BaseModel):
+    freq: constr(pattern=r'^\d{3}\.\d{3}$') | None = None
+    type: str | None = None
 
 class Vor(BaseModel):
     ident: str
@@ -27,7 +23,7 @@ class Rwy(BaseModel):
 class Airport(BaseModel):
     nome: str
     icao: constr(pattern=r'^[A-Z]{4}$')
-    comunication: Comunication | None = None
+    comm: list[Comm] | None = None
     ils: list[Ils] | None = None
     vor: list[Vor] | None = None
     rwy: list[Rwy]

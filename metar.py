@@ -27,5 +27,9 @@ def get_metar(icao: str) -> str:
     cache[icao] = metar
     return metar, "not cache"
 
+def get_metar_only(icao: str) -> str:
+    metar, _ = get_metar(icao)
+    return re.findall(icao.upper() + "(.*?)=", metar)[0]
+
 if __name__ == "__main__":
     print(get_metar("SBMN"))
