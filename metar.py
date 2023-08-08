@@ -20,6 +20,8 @@ def get_metar(icao: str) -> str:
 
     with open("apikey.txt") as fp:
         key = fp.read()
+
+    key = key.split("\n")[0] # Discard after \n (including newline)
     data_ini = datetime.utcnow().strftime("%Y%m%d%H")
     uma_hora = timedelta(hours=1)
     data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
