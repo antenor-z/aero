@@ -1,3 +1,4 @@
+from ICAONotFound import ICAONotFound
 from airportDataModel import *
 
 _airport_data = {
@@ -16,31 +17,38 @@ _airport_data = {
     vor=[Vor(ident="FLZ", freq="114.1")],
     rwy=[Rwy(head=("13", "31"), length=2755)]
     ),
-# "SBGR": Airport(
-#     nome="Guarulhos - Governador André Franco Montoro",
-#     icao="SBGR", 
-#     comm=Comunication(
-#         twr=["118.400", "121.500", "132.750", "135.200"], 
-#         gnd=["121.700", "126.900"], 
-#         ops=["122.500"],
-#         traf=["121.000"],
-#         atis=["127.750"]),
-#     ils=[Ils(rwy="28L", ident="IBC", freq="111.1"),
-#         Ils(rwy="10R", ident="IGH", freq="111.7"),
-#         Ils(rwy="28R", ident="IGS", freq="111.9"),
-#         Ils(rwy="10L", ident="IUC", freq="110.7")], 
-#     rwy=[Rwy(head=("28L", "10R"), length=3000), Rwy(head=("28R", "10L"), length=3700)],
-#     ),
-# "SBRJ": Airport(
-#     nome="Santos Dumont",
-#     icao="SBRJ", 
-#     comunication=Comunication(
-#         twr=["118.700", "121.500"], 
-#         gnd=["121.700"], 
-#         traf=["121.050"],
-#         atis=["132.650"]),
-#     rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
-#     ),
+"SBGR": Airport(
+    nome="Guarulhos - Governador André Franco Montoro",
+    icao="SBGR", 
+    comm=[
+        Comm(freq="118.400", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="132.750", type="torre"),
+        Comm(freq="135.200", type="torre"),
+        Comm(freq="121.700", type="solo"),
+        Comm(freq="126.900", type="solo"),
+        Comm(freq="122.500", type="operações"),
+        Comm(freq="121.000", type="tráfego"),
+        Comm(freq="127.750", type="atis"),
+    ],
+    ils=[Ils(rwy="28L", ident="IBC", freq="111.1"),
+        Ils(rwy="10R", ident="IGH", freq="111.7"),
+        Ils(rwy="28R", ident="IGS", freq="111.9"),
+        Ils(rwy="10L", ident="IUC", freq="110.7")], 
+    rwy=[Rwy(head=("28L", "10R"), length=3000), Rwy(head=("28R", "10L"), length=3700)],
+    ),
+"SBRJ": Airport(
+    nome="Santos Dumont",
+    icao="SBRJ",
+    comm=[
+        Comm(freq="118.700", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="121.700", type="solo"),
+        Comm(freq="121.050", type="tráfego"),
+        Comm(freq="132.650", type="atis"),
+    ],
+    rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
+    ),
 "SBGL": Airport(
     nome="Antônio Carlos Jobim",
     icao="SBGL", 
@@ -104,6 +112,9 @@ _airport_data = {
 }
 
 def get_info(icao):
+    ret = _airport_data.get(icao)
+    if ret is None:
+        raise ICAONotFound(f"ICAO '{icao}' não encontrado.")
     return _airport_data[icao].model_dump()
 
 def get_all_names():

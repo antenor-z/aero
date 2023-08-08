@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from ICAONotFound import ICAONotFound
 from airportDatabase import get_all_names, get_info
 from metar import get_metar_only
 from metarDecoder import decode
@@ -10,25 +11,18 @@ app = Flask(__name__)
 def list_all():
     return render_template("index.html", airports=get_all_names())
 
-@app.get("/metar/<string:icao>")
-def metar(icao: str):
-    if not is_icao_valid(icao):
-        return "fail"
-    
-    return decode(icao)
-
-@app.get("/<string:icao>/json")
-def info_json(icao:str):
-    if not is_icao_valid(icao):
-        return "fail"
-    
-    return get_info(icao)
 
 @app.get("/<string:icao>")
 def info(icao:str):
-    if not is_icao_valid(icao):
-        return "fail"
+    icao = icao.upper()
     
-    metar = get_metar_only(icao)
-    info = get_info(icao)
+    if not is_icao_valid(icao):
+        return render_template("error.html", error=f"ICAO '{icao}' não encontrado.")
+    
+    try:
+        metar = get_metar_only(icao)
+        info = get_info(icao)
+    except ICAONotFound as e:
+        return render_template("error.html", error=e)
+
     return render_template("airport.html", info=info, metar=metar)
