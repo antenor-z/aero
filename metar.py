@@ -2,10 +2,14 @@ import requests, json
 from datetime import datetime, timedelta
 import re
 
-from ICAONotFound import ICAONotFound
+from IcaoNotFound import IcaoNotFound
+from util import is_icao_valid
 
 cache = {}
 def get_metar(icao: str) -> str:
+    if not is_icao_valid(icao):
+        raise IcaoNotFound(f"ICAO '{icao}' não encontrado.")
+    
     metar = cache.get(icao)
     
     if metar is not None:
@@ -25,7 +29,7 @@ def get_metar(icao: str) -> str:
 
     resp_dict = json.loads(resp.text)
     if resp_dict['data']['total'] == 0:
-        raise ICAONotFound(f"ICAO '{icao}' não encontrado.")
+        raise IcaoNotFound(f"ICAO '{icao}' não encontrado.")
     
     metar = resp_dict["data"]["data"][0]["mens"]
 

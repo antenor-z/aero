@@ -13,8 +13,9 @@
 	<div class="line">
 		{% for a in airports %}
 		<div class="box-rounded box-outlined box-onhover" onclick="location.href='/{{a[1]}}';">
-			<div class="box-value">
-				<span class="no-wrap">{{ a[1] }} {{ a[0] }}</span>
+			<div class="box-value center-text">
+				{{ a[1] }} <br>
+				<span class="no-wrap">{{ a[0] }}</span>
 			</div>
 		</div>
 		{% endfor %}

@@ -25,6 +25,9 @@ header {
   margin: 15px 0;
   grid-auto-rows: 1fr
 }
+.line-margin {
+  margin: 15px 25%;
+}
 .box-rounded {
   border-radius: 8px;
   padding: 10px;
@@ -67,7 +70,12 @@ header {
   white-space: nowrap;
 }
 .runway-length {
-  font-size: 0.8em;
+  font-size: 0.7em;
+  color:rgb(155, 155, 155);
+}
+
+.center-text {
+  text-align: center;
 }
 
 a {

@@ -7,21 +7,23 @@
 </head>
 <body>
 	<header>
-		{{ info.icao }} / {{ info.nome }}
+		{{ info.icao }} // {{ info.nome }}
 		<div class="metar">
 			{{ metar[0] }}
 		</div>
 	</header>
 	<main>
-	<div class="line">
+	<div class="line line-margin">
+		{% for rwy in info.rwy %}
 		<div class="box">
-			<div class="box-value">
-				{% for rwy in info.rwy %}
-				<span class="runway-number">{{ rwy.head[0] }} - {{ rwy.head[1] }}</span>&ensp;
-				<span class="runway-length">{{ rwy.length }}m</span>&ensp;&ensp;&ensp;&ensp;
-				{% endfor %}
+			<div class="box-value" style="display: flex; justify-content: space-around; align-items: center;">
+				<div>
+					<div class="runway-number">{{ rwy.head[0] }} - {{ rwy.head[1] }}</div>
+					<div class="runway-length center-text">({{ rwy.length }}m)</div>
+				</div>
 			</div>
 		</div>
+		{% endfor %}
 	</div>
 	<div class="line">
 		{% for comm in info.comm %}

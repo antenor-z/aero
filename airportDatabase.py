@@ -1,4 +1,4 @@
-from ICAONotFound import ICAONotFound
+from IcaoNotFound import IcaoNotFound
 from airportDataModel import *
 
 _airport_data = {
@@ -114,7 +114,7 @@ _airport_data = {
 def get_info(icao):
     ret = _airport_data.get(icao)
     if ret is None:
-        raise ICAONotFound(f"ICAO '{icao}' não encontrado.")
+        raise IcaoNotFound(f"ICAO '{icao}' não encontrado.")
     return _airport_data[icao].model_dump()
 
 def get_all_names():
