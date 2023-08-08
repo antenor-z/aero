@@ -8,14 +8,39 @@ _airport_data = {
     comm=[
         Comm(freq="121.500", type="torre"),
         Comm(freq="129.000", type="torre"),
+        Comm(freq="129.000", type="torre"),
         Comm(freq="121.950", type="solo"),
         Comm(freq="122.500", type="operações"),
         Comm(freq="127.700", type="atis"),
-        Comm(freq="129.000", type="torre"),
     ],
     ils=[Ils(rwy="13", ident="IFO", freq="110.3")],
     vor=[Vor(ident="FLZ", freq="114.1")],
     rwy=[Rwy(head=("13", "31"), length=2755)]
+    ),
+"SBSP": Airport(
+    nome="Congonhas",
+    icao="SBSP", 
+    comm=[
+        Comm(freq="118.050", type="torre"),
+        Comm(freq="127.150", type="torre"),
+        Comm(freq="121.900", type="solo"),
+        Comm(freq="120.600", type="tráfego"),
+        Comm(freq="127.650", type="atis"),
+    ],
+    ils=[Ils(rwy="13", ident="IFO", freq="110.3")],
+    vor=[Vor(ident="FLZ", freq="114.1")],
+    rwy=[Rwy(head=("17R", "35L"), length=1940), Rwy(head=("17L", "35R"), length=1495)]
+    ),
+"SBMT": Airport(
+    nome="Campo de Marte",
+    icao="SBMT", 
+    comm=[
+        Comm(freq="133.350", type="torre"),
+        Comm(freq="121.600", type="solo"),
+        Comm(freq="118.700", type="tráfego"),
+        Comm(freq="127.725", type="atis"),
+    ],
+    rwy=[Rwy(head=("12", "30"), length=1600)],
     ),
 "SBGR": Airport(
     nome="Guarulhos - Governador André Franco Montoro",
