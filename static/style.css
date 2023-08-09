@@ -6,6 +6,12 @@ html, body {
   color: #eee;
   font-family: sans-serif;
 }
+@media screen and (min-width: 1240px) {
+  main {
+      width: 1200px;
+      margin: 20px auto;
+  }
+}
 main {
   padding: 10px;
 }
