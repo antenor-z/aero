@@ -50,6 +50,15 @@
 		{% endfor %}
 	</div>
 	{% endif %}
+
+	<table class="padded-table">
+		{% for (item, description) in decoded %}
+		<tr>
+			<td style="font-family: monospace">{{ item }}</td>
+			<td>{{ description }}</td>
+		</tr>
+		{% endfor %}
+	</table>
 	{{ metar[1] }}
 	</main>
 </body>

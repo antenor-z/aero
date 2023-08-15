@@ -92,3 +92,15 @@ a:visited {
   text-decoration: none; 
   color: white; 
 }
+
+.padded-table {
+  font-size: 20px;
+  border-collapse: separate;
+  border-spacing: 0 40px;
+}
+
+.padded-table th,
+.padded-table td {
+  padding-right: 40px;
+}
+
