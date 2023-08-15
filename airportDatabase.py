@@ -43,7 +43,7 @@ _airport_data = {
     rwy=[Rwy(head=("12", "30"), length=1600)],
     ),
 "SBGR": Airport(
-    nome="Guarulhos - Governador André Franco Montoro",
+    nome="Guarulhos",
     icao="SBGR", 
     comm=[
         Comm(freq="118.400", type="torre"),
