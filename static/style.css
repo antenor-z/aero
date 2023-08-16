@@ -32,7 +32,7 @@ header {
   grid-auto-rows: 1fr
 }
 .line-margin {
-  margin: 15px 25%;
+  margin: 0 25%;
 }
 .box-rounded {
   border-radius: 8px;
@@ -93,14 +93,21 @@ a:visited {
   color: white; 
 }
 
-.padded-table {
+table {
   font-size: 20px;
-  border-collapse: separate;
-  border-spacing: 0 40px;
+  width: 100%;
+  border: 1px solid white;
+  border-radius: 8px;
 }
 
-.padded-table th,
-.padded-table td {
-  padding-right: 40px;
+td {
+  border: 10px solid #333;
+  padding: 0;
 }
 
+.metarItem {
+  font-family: monospace;
+  color: #333;
+  padding: 5px;
+  background-color: #bbb;
+}
