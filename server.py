@@ -10,7 +10,7 @@ def list_all():
     return render_template("index.html", airports=get_all_names())
 
 
-@app.get("/<string:icao>")
+@app.get("/info/<string:icao>")
 def info(icao:str):
     icao = icao.upper()
     
