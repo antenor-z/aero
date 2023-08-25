@@ -28,4 +28,22 @@ def get_components(runway_head: int, wind_dir:int, wind_speed: int):
             "cross": sign * math.sin(angle_diff) * wind_speed}
 
 def get_runway_in_use(runway_names: list, wind_dir:int, wind_speed:int) -> list:
-    pass
+    runway_group = {}
+    for runway in runway_names:
+        r = int(runway[:-1])
+        if runway_group.get(r) == None:
+            runway_group[r] = [runway]
+        else:
+            runway_group[r].append(runway)
+
+    highest_paral_wind = 0 # The highest head wind yet
+    highest_runway = None # Runway group with the highest head wind
+
+    for runway in runway_group.keys():
+        runway_heading = int(runway) * 10
+        paral_wind = get_components(runway_heading, wind_dir=wind_dir, wind_speed=wind_speed)["paral"]
+        if paral_wind > highest_paral_wind:
+            highest_paral_wind = paral_wind
+            highest_runway = runway
+    
+    return runway_group[highest_runway]

@@ -99,6 +99,13 @@ def decode(metar: str) -> dict:
 
     return ret
 
+def get_wind_info(metar: str) -> dict:
+    if (wind := re.findall("(\d{3})(\d{2})KT", metar)) != []:
+        [(direction, speed)] = wind
+        return {"direction": int(direction), "speed": int(speed)}
+    else:
+        raise Exception("Could not find wind information.")
+
 if __name__ == "__main__":
     metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
     print(decode(metar))

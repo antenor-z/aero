@@ -18,7 +18,19 @@
 		<div class="box">
 			<div class="box-value" style="display: flex; justify-content: space-around; align-items: center;">
 				<div>
-					<div class="runway-number">{{ rwy.head[0] }} - {{ rwy.head[1] }}</div>
+					<div class="runway-number">
+						{% if rwy.head[0] in rwy_in_use %}
+							{{ rwy.head[0] }}* - 
+						{% else %}
+							{{ rwy.head[0] }} - 
+						{% endif %}
+
+						{% if rwy.head[1] in rwy_in_use %}
+							{{ rwy.head[1] }}*
+						{% else %}
+							{{ rwy.head[1] }}
+						{% endif %}
+					</div>
 					<div class="runway-length center-text">({{ rwy.length }}m)</div>
 				</div>
 			</div>
