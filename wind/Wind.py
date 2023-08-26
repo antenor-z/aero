@@ -30,7 +30,10 @@ def get_components(runway_head: int, wind_dir:int, wind_speed: int):
 def get_runway_in_use(runway_names: list, wind_dir:int, wind_speed:int) -> list:
     runway_group = {}
     for runway in runway_names:
-        r = int(runway[:-1])
+        if runway[-1] == "R" or runway[-1] == "L" or runway[-1] == "C":
+            r = int(runway[:-1])
+        else:
+            r = int(runway)
         if runway_group.get(r) == None:
             runway_group[r] = [runway]
         else:

@@ -80,10 +80,14 @@ header {
   margin: 5px;
   color:rgb(155, 155, 155);
 }
+.rwy-in-use {
+  text-decoration: underline white 2px;
+  font-style: italic;
+}
 
 .center-text {
   text-align: center;
-}
+}s
 
 a {
   text-decoration: none; 

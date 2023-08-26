@@ -91,7 +91,7 @@ _airport_data = {
         Comm(freq="121.950", type="rampa"),
         Comm(freq="130.675", type="rampa"),
         Comm(freq="131.050", type="rampa"),],
-    rwy=[Rwy(head=("20L", "02R"), length=1323), Rwy(head=("20R", "02L"), length=1260)],
+    rwy=[Rwy(head=("10", "28"), length=4000), Rwy(head=("15", "33"), length=3180)],
     ils=[Ils(rwy="15", ident="IJB", freq="110.5"),
          Ils(rwy="10", ident="ITB", freq="109.3", cat="II"), 
          Ils(rwy="28", ident="ILM", freq="111.5"), 
