@@ -53,6 +53,28 @@ def decode(metar: str) -> dict:
         
         elif item == "+RA":
             ret.append((item, f"Chuva forte."))
+
+            
+        elif item == "-DZ":
+            ret.append((item, f"Chuvisco leve."))
+        
+        elif item == "DZ":
+            ret.append((item, f"Chuvisco moderado."))
+        
+        elif item == "+DZ":
+            ret.append((item, f"Chuvisco forte."))
+
+
+        elif item == "-GR":
+            ret.append((item, f"Granizo leve."))
+        
+        elif item == "GR":
+            ret.append((item, f"Granizo moderado."))
+        
+        elif item == "+GR":
+            ret.append((item, f"Granizo forte."))
+
+        
         
         elif (wind := re.findall("(\d{3})(\d{2})KT", item)) != []:
             [(direction, speed)] = wind

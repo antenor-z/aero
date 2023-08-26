@@ -2,21 +2,6 @@ from IcaoNotFound import IcaoNotFound
 from airportDataModel import *
 
 _airport_data = {
-"SBFZ": Airport(
-    nome="Pinto Martins",
-    icao="SBFZ", 
-    comm=[
-        Comm(freq="121.500", type="torre"),
-        Comm(freq="129.000", type="torre"),
-        Comm(freq="129.000", type="torre"),
-        Comm(freq="121.950", type="solo"),
-        Comm(freq="122.500", type="operações"),
-        Comm(freq="127.700", type="atis"),
-    ],
-    ils=[Ils(rwy="13", ident="IFO", freq="110.3")],
-    vor=[Vor(ident="FLZ", freq="114.1")],
-    rwy=[Rwy(head=("13", "31"), length=2755)]
-    ),
 "SBSP": Airport(
     nome="Congonhas",
     icao="SBSP", 
@@ -27,8 +12,9 @@ _airport_data = {
         Comm(freq="120.600", type="tráfego"),
         Comm(freq="127.650", type="atis"),
     ],
-    ils=[Ils(rwy="13", ident="IFO", freq="110.3")],
-    vor=[Vor(ident="FLZ", freq="114.1")],
+    ils=[Ils(rwy="17R", ident="ISP", freq="109.3", crs="169", cat="I", minimus="200"),
+         Ils(rwy="35L", ident="ISO", freq="109.7", crs="349", cat="I", minimus="200")],
+    vor=[Vor(ident="CGO", freq="116.9")],
     rwy=[Rwy(head=("17R", "35L"), length=1940), Rwy(head=("17L", "35R"), length=1495)]
     ),
 "SBMT": Airport(
@@ -56,10 +42,10 @@ _airport_data = {
         Comm(freq="121.000", type="tráfego"),
         Comm(freq="127.750", type="atis"),
     ],
-    ils=[Ils(rwy="28L", ident="IBC", freq="111.1"),
-        Ils(rwy="10R", ident="IGH", freq="111.7"),
-        Ils(rwy="28R", ident="IGS", freq="111.9"),
-        Ils(rwy="10L", ident="IUC", freq="110.7")], 
+    ils=[Ils(rwy="28L", ident="IBC", freq="111.1", cat="I", crs="275", minimus="200"),
+        Ils(rwy="10R", ident="IGH", freq="111.7", cat="III", crs="095", minimus="0"),
+        Ils(rwy="28R", ident="IGS", freq="111.9", cat="I", crs="275", minimus="200"),
+        Ils(rwy="10L", ident="IUC", freq="110.7", cat="II", crs="095", minimus="100")], 
     rwy=[Rwy(head=("28L", "10R"), length=3000), Rwy(head=("28R", "10L"), length=3700)],
     ),
 "SBRJ": Airport(
@@ -104,10 +90,24 @@ _airport_data = {
         Comm(freq="118.250", type="torre"),
         Comm(freq="121.900", type="solo"),
         Comm(freq="121.100", type="tráfego"),
-        Comm(freq="127.800", type="atis"),
+        Comm(freq="127.825", type="atis"),
     ],
-    ils=[Ils(rwy="15", ident="IKP", freq="110.3",)],
+    ils=[Ils(rwy="15", ident="IKP", freq="110.3", cat="I", crs="149", minimus="200")],
     rwy=[Rwy(head=("15", "33"), length=3240)],
+    ),
+"SBFZ": Airport(
+    nome="Pinto Martins",
+    icao="SBFZ", 
+    comm=[
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="129.000", type="torre"),
+        Comm(freq="121.950", type="solo"),
+        Comm(freq="122.500", type="operações"),
+        Comm(freq="127.700", type="atis"),
+    ],
+    ils=[Ils(rwy="13", ident="IFO", freq="110.3", crs="126", cat="I", minimus="200")],
+    vor=[Vor(ident="FLZ", freq="114.1")],
+    rwy=[Rwy(head=("13", "31"), length=2755)]
     ),
 "SBTE": Airport(
     nome="Senador Petrônio Portella",
@@ -116,7 +116,7 @@ _airport_data = {
         Comm(freq="118.800", type="torre"),
         Comm(freq="127.800", type="atis"),
     ],
-    vor=[Vor(ident="TNA", freq="127.8")],
+    vor=[Vor(ident="TNA", freq="112.9")],
     rwy=[Rwy(head=("20", "02"), length=2200)],
     ),
 "SBCT": Airport(
@@ -129,8 +129,8 @@ _airport_data = {
         Comm(freq="119.300", type="tráfego"),
         Comm(freq="127.800", type="atis"),
     ],
-    ils=[Ils(rwy="33", ident="ITA", freq="110.3"),
-         Ils(rwy="15", ident="CTB", freq="109.3"),],
+    ils=[Ils(rwy="33", ident="ITA", freq="110.3", cat="I", crs="334", minimus="200"),
+         Ils(rwy="15", ident="ICT", freq="109.3", cat="II", crs="154", minimus="110"),],
     vor=[Vor(ident="CTB", freq="116.5")],
     rwy=[Rwy(head=("15", "33"), length=2218), Rwy(head=("11", "29"), length=1798)],
     ),

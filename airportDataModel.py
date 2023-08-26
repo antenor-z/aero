@@ -14,6 +14,9 @@ class Ils(BaseModel):
     rwy: constr(pattern=r'^\d{2}[L|C|R]*$')
     ident: constr(pattern=r'^[A-Z]{3}$')
     freq: constr(pattern=r'^\d{3}\.\d$')
+    type: constr(pattern=r'^[I]+$') | None = None
+    minimus: constr(pattern=r'^\d+$') | None = None
+    crs: constr(pattern=r'^\d{3}$') | None = None
     cat: constr(pattern=r'^[A-Za-z]+$') | None = None
 
 class Rwy(BaseModel):
