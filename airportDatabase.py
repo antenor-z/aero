@@ -4,6 +4,7 @@ from airportDataModel import *
 _airport_data = {
 "SBSP": Airport(
     nome="Congonhas",
+    cidade="São Paulo",
     icao="SBSP", 
     comm=[
         Comm(freq="118.050", type="torre"),
@@ -19,6 +20,7 @@ _airport_data = {
     ),
 "SBMT": Airport(
     nome="Campo de Marte",
+    cidade="São Paulo",
     icao="SBMT", 
     comm=[
         Comm(freq="133.350", type="torre"),
@@ -30,6 +32,7 @@ _airport_data = {
     ),
 "SBGR": Airport(
     nome="Guarulhos",
+    cidade="São Paulo",
     icao="SBGR", 
     comm=[
         Comm(freq="118.400", type="torre"),
@@ -50,6 +53,7 @@ _airport_data = {
     ),
 "SBRJ": Airport(
     nome="Santos Dumont",
+    cidade="Rio de Janeiro",
     icao="SBRJ",
     comm=[
         Comm(freq="118.700", type="torre"),
@@ -62,6 +66,7 @@ _airport_data = {
     ),
 "SBGL": Airport(
     nome="Antônio Carlos Jobim",
+    cidade="Rio de Janeiro",
     icao="SBGL", 
     comm=[
         Comm(freq="118.000", type="torre"),
@@ -85,6 +90,7 @@ _airport_data = {
     ),
 "SBKP": Airport(
     nome="Viracopos",
+    cidade="Campinas",
     icao="SBKP", 
     comm=[
         Comm(freq="118.250", type="torre"),
@@ -97,6 +103,7 @@ _airport_data = {
     ),
 "SBFZ": Airport(
     nome="Pinto Martins",
+    cidade="Fortaleza",
     icao="SBFZ", 
     comm=[
         Comm(freq="121.500", type="torre"),
@@ -111,6 +118,7 @@ _airport_data = {
     ),
 "SBTE": Airport(
     nome="Senador Petrônio Portella",
+    cidade="Teresina",
     icao="SBTE", 
     comm=[
         Comm(freq="118.800", type="torre"),
@@ -121,6 +129,7 @@ _airport_data = {
     ),
 "SBCT": Airport(
     nome="Afonso Pena",
+    cidade="Curitiba",
     icao="SBCT", 
     comm=[
         Comm(freq="118.150", type="torre"),
@@ -133,6 +142,39 @@ _airport_data = {
          Ils(rwy="15", ident="ICT", freq="109.3", cat="II", crs="154", minimus="110"),],
     vor=[Vor(ident="CTB", freq="116.5")],
     rwy=[Rwy(head=("15", "33"), length=2218), Rwy(head=("11", "29"), length=1798)],
+    ),
+
+    "SBCF": Airport(
+    nome="Tancredo Neves",
+    cidade="Belo Horizonte",
+    icao="SBCF", 
+    comm=[
+        Comm(freq="118.200", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="121.900", type="solo"),
+        Comm(freq="121.000", type="tráfego"),
+        Comm(freq="127.850", type="atis"),
+    ],
+    ils=[Ils(rwy="34", ident="ITN", freq="110.3", cat="I", crs="342", minimus="200"),
+         Ils(rwy="16", ident="ICF", freq="109.7", cat="I", crs="162", minimus="200"),],
+    vor=[Vor(ident="CNF", freq="114.4")],
+    rwy=[Rwy(head=("16", "34"), length=3600)],
+    ),
+
+    "SBSG": Airport(
+    nome="São Gonçalo do Amarante",
+    cidade="Natal",
+    icao="SBSG", 
+    comm=[
+        Comm(freq="118.200", type="torre"),
+        Comm(freq="118.850", type="torre"),
+        Comm(freq="121.700", type="solo"),
+        Comm(freq="121.000", type="tráfego"),
+        Comm(freq="127.600", type="atis"),
+    ],
+    ils=[Ils(rwy="12", ident="ISG", freq="109.7", cat="I", crs="121", minimus="203")],
+    vor=[Vor(ident="SGA", freq="115.9")],
+    rwy=[Rwy(head=("12", "30"), length=3000)],
     ),
 }
 

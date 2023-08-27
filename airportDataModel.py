@@ -25,6 +25,7 @@ class Rwy(BaseModel):
 
 class Airport(BaseModel):
     nome: str
+    cidade: str
     icao: constr(pattern=r'^[A-Z]{4}$')
     comm: list[Comm] | None = None
     ils: list[Ils] | None = None
