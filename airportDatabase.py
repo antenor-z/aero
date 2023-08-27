@@ -185,7 +185,7 @@ def get_info(icao):
     return _airport_data[icao].model_dump()
 
 def get_all_names():
-    return [(a.nome, a.icao) for a in _airport_data.values()]
+    return [(a.nome, a.icao, a.cidade) for a in _airport_data.values()]
 
 if __name__ == "__main__":
     print(_airport_data)

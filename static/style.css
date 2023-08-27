@@ -31,6 +31,13 @@ header {
   margin: 15px 0;
   grid-auto-rows: 1fr
 }
+.line-airports {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  gap: 15px;
+  margin: 15px 0;
+  grid-auto-rows: 1fr
+}
 .line-margin {
   margin: 0 25%;
 }
@@ -61,6 +68,10 @@ header {
 }
 .box-name {
   color: #aaa;
+}
+.box-airport-name {
+  color: #edb90c;
+  text-align: center;
 }
 .box-value {
   font-size: 24px;
