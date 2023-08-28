@@ -21,11 +21,12 @@ def info(icao:str):
     except IcaoNotFound as e:
         return render_template("error.html", error=e)
 
-    try:
-        metar_only = metar[0]
-        decoded = decode(metar_only)
-    except:
-        return render_template("error.html", error="Erro ao decodificar o METAR")
+    #try:
+    print(metar)
+    metar_only = metar[0]
+    decoded = decode(metar_only)
+    #except:
+    #return render_template("error.html", error="Erro ao decodificar o METAR")
     
     runways_list = []
     for rwy in info["rwy"]:
