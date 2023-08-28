@@ -25,15 +25,22 @@ def get_metar(icao: str) -> str:
     data_ini = datetime.utcnow().strftime("%Y%m%d%H")
     uma_hora = timedelta(hours=1)
     data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
-    resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
-                        params={"api_key": key, 
-                                "data_ini": data_ini, "data_fim": data_fim})
+    #resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
+    #                    params={"api_key": key, 
+    #                            "data_ini": data_ini, "data_fim": data_fim})
 
-    resp_dict = json.loads(resp.text)
-    if resp_dict['data']['total'] == 0:
-        raise IcaoNotFound(f"ICAO '{icao}' não encontrado.")
-    
-    metar = resp_dict["data"]["data"][0]["mens"]
+    #resp_dict = json.loads(resp.text)
+    resp_dict = {}
+    resp_data = resp_dict.get("data") 
+    if resp_data is None:
+        # Alternate
+        resp = requests.get(f"https://beta.aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
+        # Still couldn't make it
+        if not resp.startswith(icao):
+            raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
+        metar = "METAR {icao}"
+    else:
+        metar = resp_dict["data"]["data"][0]["mens"]
 
     cache[icao] = metar
     return metar, "not cache"
