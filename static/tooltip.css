@@ -1,6 +1,7 @@
 .tooltip {
     position: relative;
     display: inline-block;
+    cursor: default;
   }
   
   .tooltip .tooltip-text {
@@ -9,6 +10,7 @@
     background-color:rgb(44, 79, 79);
     font-size: 16px;
     font-style: normal;
+    font-weight: normal;
     white-space: normal;
     color: #fff;
     text-align: center;

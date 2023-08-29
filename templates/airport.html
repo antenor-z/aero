@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/tooltip.css">
+  <link rel="stylesheet" href="/static/rwy.css">
 </head>
 <body>
 	<header>
@@ -28,11 +29,16 @@
 										é a mais favorável para pousos e decolagens.
 									</span>
 								{% endif %}
-								{{ head }} {% if not loop.last %} - {% endif %}
+								{{ head }}
 							</span>
+							{% if not loop.last %} - {% endif %}
 						{% endfor %}
 					</div>
-					<div class="runway-length center-text">({{ rwy.length }}m)</div>
+					<span class="runway-length center-text tooltip">({{ rwy.length }}m)
+						<span class="tooltip-text">
+							Comprimento desta pista.
+						</span>
+					</span>
 				</div>
 			</div>
 		</div>
@@ -49,7 +55,7 @@
 	<div class="line">
 		{% for ils in info.ils %}
 		<div class="box-rounded box-blue">
-			<div class="box-name">ILS CAT {{ils.cat}}</div><div class="box-value">{{ ils.freq }} {{ ils.ident }} {{ils.crs}}° (Pista {{ ils.rwy }})</div>
+			<div class="box-name">ILS CAT {{ils.cat}}</div><div class="box-value">{{ ils.freq }} {{ ils.ident }} {{ils.crs}}° <small>(pista {{ ils.rwy }})</small></div>
 		</div>
 		{% endfor %}
 	</div>
@@ -72,7 +78,7 @@
 		</tr>
 		{% endfor %}
 	</table>
-	{{ metar[1] }}
+	<!--{{ metar[1] }}-->
 	</main>
 </body>
 </html>

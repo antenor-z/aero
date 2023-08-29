@@ -80,21 +80,6 @@ header {
   text-align: center;
   border-bottom: #aaa solid 3px;
 }
-.runway-number {
-  background-color: rgb(188, 8, 8);
-  font-weight: bold;
-  padding: 6px;
-  white-space: nowrap;
-}
-.runway-length {
-  font-size: 0.7em;
-  margin: 5px;
-  color:rgb(155, 155, 155);
-}
-.rwy-in-use {
-  text-decoration: underline white 2px;
-  font-style: italic;
-}
 
 .center-text {
   text-align: center;

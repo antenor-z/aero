@@ -25,6 +25,7 @@ def get_metar(icao: str) -> str:
     data_ini = datetime.utcnow().strftime("%Y%m%d%H")
     uma_hora = timedelta(hours=1)
     data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
+    
     resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
                         params={"api_key": key, 
                                 "data_ini": data_ini, "data_fim": data_fim}).json()

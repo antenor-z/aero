@@ -83,9 +83,9 @@ _airport_data = {
         Comm(freq="130.675", type="rampa"),
         Comm(freq="131.050", type="rampa"),],
     rwy=[Rwy(head=("10", "28"), length=4000), Rwy(head=("15", "33"), length=3180)],
-    ils=[Ils(rwy="15", ident="IJB", freq="110.5"),
-         Ils(rwy="10", ident="ITB", freq="109.3", cat="II"), 
-         Ils(rwy="28", ident="ILM", freq="111.5"), 
+    ils=[Ils(rwy="15", ident="IJB", freq="110.5", cat="I", crs="149", minimus="217"),
+         Ils(rwy="10", ident="ITB", freq="109.3", cat="II", crs="097", minimus="100"), 
+         Ils(rwy="28", ident="ILM", freq="111.5", cat="I", crs="278", minimus="500"), 
         ],
     ),
 "SBKP": Airport(
