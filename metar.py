@@ -26,6 +26,7 @@ def get_metar(icao: str) -> str:
     uma_hora = timedelta(hours=1)
     data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
     
+    """
     resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
                         params={"api_key": key, 
                                 "data_ini": data_ini, "data_fim": data_fim}).json()
@@ -40,7 +41,13 @@ def get_metar(icao: str) -> str:
         if not resp.startswith(icao):
             raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
         metar = f"METAR {resp}"
+    """
 
+    resp = requests.get(f"https://beta.aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
+    # NGMI
+    if not resp.startswith(icao):
+        raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
+    metar = f"METAR {resp}"
     cache[icao] = metar
     return metar, "not cache"
 
