@@ -4,6 +4,7 @@
   <title>Aeroporto {{info.icao}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/tooltip.css">
 </head>
 <body>
 	<header>
@@ -18,9 +19,18 @@
 		<div class="box">
 			<div class="box-value" style="display: flex; justify-content: space-around; align-items: center;">
 				<div>
-					<div class="runway-number">
-						<span {% if rwy.head[0] in rwy_in_use %} class="rwy-in-use" {% endif %}>{{ rwy.head[0] }}</span> - 
-						<span {% if rwy.head[1] in rwy_in_use %} class="rwy-in-use" {% endif %}>{{ rwy.head[1] }}</span>
+					<div class="runway-number tooltip">
+						{% for head in rwy.head %}
+							<span {% if head in rwy_in_use %} class="rwy-in-use" {% endif %}>
+								{% if head in rwy_in_use %}
+									<span class="tooltip-text">
+										Pela direção do vento, a cabeceira {{ head }} 
+										é a mais favorável para pousos e decolagens.
+									</span>
+								{% endif %}
+								{{ head }} {% if not loop.last %} - {% endif %}
+							</span>
+						{% endfor %}
 					</div>
 					<div class="runway-length center-text">({{ rwy.length }}m)</div>
 				</div>
