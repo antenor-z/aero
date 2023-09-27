@@ -27,7 +27,10 @@ def get_components(runway_head: int, wind_dir:int, wind_speed: int):
     return {"paral": math.cos(angle_diff) * wind_speed, 
             "cross": sign * math.sin(angle_diff) * wind_speed}
 
-def get_runway_in_use(runway_names: list, wind_dir:int, wind_speed:int) -> list:
+def get_runway_in_use(runway_names: list, wind_dir:int, wind_speed:int) -> list | None:
+    if wind_speed == 0:
+        return None
+
     runway_group = {}
     for runway in runway_names:
         if runway[-1] == "R" or runway[-1] == "L" or runway[-1] == "C":

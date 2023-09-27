@@ -22,7 +22,7 @@
 				<div>
 					<div class="runway-number tooltip">
 						{% for head in rwy.head %}
-							<span {% if head in rwy_in_use %} class="rwy-in-use" {% endif %}>
+							<span {% if rwy_in_use is not none and head in rwy_in_use %} class="rwy-in-use" {% endif %}>
 								{% if head in rwy_in_use %}
 									<span class="tooltip-text">
 										Pela direção do vento, a cabeceira {{ head }} 
