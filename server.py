@@ -35,7 +35,10 @@ def info(icao:str):
 
     #return runways_list
 
-    wind = get_wind_info(metar[0])
-    rwy_in_use = get_runway_in_use(runways_list, wind_dir=wind["direction"], wind_speed=wind["speed"])
+    try:
+        wind = get_wind_info(metar[0])
+        rwy_in_use = get_runway_in_use(runways_list, wind_dir=wind["direction"], wind_speed=wind["speed"])
+    except:
+        rwy_in_use = None
 
     return render_template("airport.html", info=info, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
