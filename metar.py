@@ -43,7 +43,7 @@ def get_metar(icao: str) -> str:
         metar = f"METAR {resp}"
     """
 
-    resp = requests.get(f"https://beta.aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
+    resp = requests.get(f"https://aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
     # NGMI
     if not resp.startswith(icao):
         raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
