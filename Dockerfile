@@ -3,7 +3,6 @@ FROM alpine
 WORKDIR /app/
 
 COPY ./requirements.txt /app/
-RUN apk add curl
 RUN apk add python3
 RUN apk add py3-pip
 RUN python3 -m venv venv
