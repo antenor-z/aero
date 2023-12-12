@@ -17,28 +17,32 @@ def info(icao:str):
     
     try:
         metar = get_metar(icao)
-        info = get_info(icao)
     except IcaoNotFound as e:
         return render_template("error.html", error=e)
+    
+    try:
+        info = get_info(icao)
+    except IcaoNotFound as e:
+        info = None
 
-    #try:
     print(metar)
     metar_only = metar[0]
     decoded = decode(metar_only)
-    #except:
-    #return render_template("error.html", error="Erro ao decodificar o METAR")
     
-    runways_list = []
-    for rwy in info["rwy"]:
-        runways_list.append(rwy["head"][0])
-        runways_list.append(rwy["head"][1])
-
-    #return runways_list
-
-    try:
-        wind = get_wind_info(metar[0])
-        rwy_in_use = get_runway_in_use(runways_list, wind_dir=wind["direction"], wind_speed=wind["speed"])
-    except:
-        rwy_in_use = None
+    rwy_in_use = None
+    if info is not None:
+        runways_list = []
+        for rwy in info["rwy"]:
+            runways_list.append(rwy["head"][0])
+            runways_list.append(rwy["head"][1])
+    
+        try:
+            wind = get_wind_info(metar[0])
+            rwy_in_use = get_runway_in_use(runways_list, wind_dir=wind["direction"], wind_speed=wind["speed"])
+        except:
+            rwy_in_use = None
 
     return render_template("airport.html", info=info, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

@@ -17,7 +17,7 @@ def get_metar(icao: str) -> str:
         now = datetime.utcnow()
         if now.day == int(day) and now.hour == int(hour):
             return metar, "cache"
-
+    """
     with open("apikey.txt") as fp:
         key = fp.read()
 
@@ -26,7 +26,7 @@ def get_metar(icao: str) -> str:
     uma_hora = timedelta(hours=1)
     data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
     
-    """
+    
     resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
                         params={"api_key": key, 
                                 "data_ini": data_ini, "data_fim": data_fim}).json()
