@@ -7,16 +7,16 @@
 </head>
 <body>
 	<header>
-		Lista Aeroportos
+		AERO-INFO
 	</header>
 	<main>
 	<div class="direct-icao">
-		<input type="text" id="ICAO" placeholder="outro ICAO">
-		<button onclick="directToICAO()">Ir</button>
+		<button>Ir</button>
+		<input type="text" id="searchInput" oninput="searchAirports()" placeholder="Pesquisar...">
 	</div>
 	<div class="line-airports">
 		{% for airport in airports %}
-		<div class="box-rounded box-outlined box-onhover" onclick="location.href='/info/{{airport[1]}}';">
+		<div class="airport box-rounded box-outlined box-onhover" onclick="location.href='/info/{{airport[1]}}';">
 			<div class="box-airport-name">
 				{{ airport[2] }}
 			</div>
@@ -26,14 +26,45 @@
 		</div>
 		{% endfor %}
 	</div>
+	<div id="noResultMessage" style="display: none;">Sem resultados.</div>
 	</main>
+	
 	<script>
-		function directToICAO()
-		{
-			const x = document.getElementById('ICAO').value
-			location.href='/info/' + x;
+		window.onload = function() {
+    		document.getElementById('searchInput').focus();
+  		};
+		function searchAirports() {
+		  var query = document.getElementById('searchInput').value.toLowerCase()
+	  
+		  var airports = document.getElementsByClassName('airport')
+	  
+		  let resultFound = false
+
+		  for (var i = 0; i < airports.length; i++) {
+			var airport = airports[i]
+	  
+			var city = airport.querySelector('.box-airport-name').textContent.toLowerCase()
+			var icao = airport.querySelector('.box-value').textContent.split(' ● ')[0].toLowerCase()
+			var airportName = airport.querySelector('.box-value').textContent.split(' ● ')[1].toLowerCase()
+	  
+			if (city.includes(query) || icao.includes(query) || airportName.includes(query)) {
+			  airport.style.display = 'block'
+			  resultFound = true
+			} else {
+			  airport.style.display = 'none'
+			}
+
+			var noResultMessage = document.getElementById('noResultMessage')
+			console.log(resultFound)
+			if (resultFound) {
+			  noResultMessage.style.display = 'none'
+			} else {
+			  noResultMessage.style.display = 'block'
+			}
+		  }
 		}
-	</script>
+	  </script>
+	  
 </body>
 </html>
 

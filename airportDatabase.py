@@ -176,6 +176,74 @@ _airport_data = {
     vor=[Vor(ident="SGA", freq="115.9")],
     rwy=[Rwy(head=("12", "30"), length=3000)],
     ),
+
+    "SBBR": Airport(
+    nome="Presidente Juscelino Kubitschek",
+    cidade="Brasília",
+    icao="SBBR", 
+    comm=[
+        Comm(freq="118.100", type="torre"),
+        Comm(freq="118.450", type="torre"),
+        Comm(freq="118.750", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="121.800", type="solo"),
+        Comm(freq="121.950", type="solo"),
+        Comm(freq="122.500", type="operações"),
+        Comm(freq="135.850", type="operações"),
+        Comm(freq="121.000", type="tráfego"),
+        Comm(freq="127.800", type="atis"),
+    ],
+    ils=[
+        Ils(rwy="11L", ident="IBR", freq="110.3", cat="I", crs="121", minimus="200"),
+        Ils(rwy="29R", ident="IND", freq="109.3", cat="I", crs="121", minimus="203"),
+        Ils(rwy="29L", ident="IJK", freq="112.7", cat="I", crs="121", minimus="203"),
+        Ils(rwy="11R", ident="IDF", freq="109.9", cat="I", crs="121", minimus="203"),],
+    vor=[Vor(ident="SGA", freq="115.9")],
+    rwy=[Rwy(head=("11L", "29R"), length=3200), Rwy(head=("11R", "29L"), length=3300)],
+    ),
+
+    "SBRF": Airport(
+    nome="Guararapes - Gilberto Freyre",
+    cidade="Recife",
+    icao="SBRF", 
+    comm=[
+        Comm(freq="118.350", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="122.800", type="torre"),
+        Comm(freq="125.250", type="torre"),
+        Comm(freq="121.850", type="solo"),
+        Comm(freq="122.500", type="operações"),
+        Comm(freq="118.900", type="tráfego"),
+        Comm(freq="127.650", type="atis"),
+    ],
+    ils=[
+        Ils(rwy="18", ident="IRF", freq="110.3", cat="I", crs="121", minimus="200"),],
+    vor=[Vor(ident="REC", freq="116.9")],
+    rwy=[Rwy(head=("18", "36"), length=2751)],
+    ),
+
+    "SBSV": Airport(
+    nome="Deputado Luís Eduardo Magalhães",
+    cidade="Salvador",
+    icao="SBSV", 
+    comm=[
+        Comm(freq="118.300", type="torre"),
+        Comm(freq="118.600", type="torre"),
+        Comm(freq="118.950", type="torre"),
+        Comm(freq="121.100", type="torre"),
+        Comm(freq="121.500", type="torre"),
+        Comm(freq="121.900", type="solo"),
+        Comm(freq="122.500", type="operações"),
+        Comm(freq="121.100", type="tráfego"),
+        Comm(freq="122.500", type="tráfego"),
+        Comm(freq="127.750", type="atis"),
+    ],
+    ils=[
+        Ils(rwy="28", ident="ILD", freq="110.9", cat="I", crs="121", minimus="200"),
+        Ils(rwy="35", ident="ISA", freq="111.9", cat="I", crs="121", minimus="200"),],
+    vor=[Vor(ident="SVD", freq="116.5")],
+    rwy=[Rwy(head=("17", "35"), length=1518), Rwy(head=("10", "28"), length=3003)],
+    ),
 }
 
 def get_info(icao):

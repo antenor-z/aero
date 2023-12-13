@@ -121,27 +121,28 @@ td {
 .direct-icao > input {
   font-size: 2rem;
   height: 50px;
+  width: 50%;
+  max-width: 400px;
+  min-width: 100px;
   margin: 0;
-  padding: 0;
+  padding: 0 5px;
   outline: none;
-  border: 0;
+  border: solid rgb(255, 255, 255) 3px;
   background-color: white;
-  transition: border-bottom 0.3s ease;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
 .direct-icao > input:focus {
-	border-bottom: white inset 3px;
+  border: solid #edb90c 3px;
 }
 
 .direct-icao > button {
   padding: 20px 20px;
   font-size: 2rem;
-  border-radius: 0;
-  border-style: none;
+  border: 0;
   margin: 0;
   padding: 0 30px;
   height: 50px;
   background-color: #edb90c;
 }
-
-

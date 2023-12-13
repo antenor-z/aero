@@ -111,7 +111,7 @@ def decode(metar: str) -> dict:
         
         elif (qnh := re.findall("Q(\d{4})", item)) != []:
             [qnh] = qnh
-            ret.append((item, f"O altímetro deve ser ajustado para a pressão {qnh} kPa"))
+            ret.append((item, f"O altímetro deve ser ajustado para a pressão {qnh} hPa"))
         
         elif item == "CAVOK":
             ret.append((item, "Ceiling and Visibility OK. Sem nuvens e visibilidade OK."))
