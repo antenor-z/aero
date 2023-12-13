@@ -16,7 +16,7 @@ def get_metar(icao: str) -> str:
         [(day, hour)] = re.findall(r"(\d{2})(\d{2})\d{2}Z", metar)
         now = datetime.utcnow()
         if now.day == int(day) and now.hour == int(hour):
-            return metar, "cache"
+            return "cache", metar
     """
     with open("apikey.txt") as fp:
         key = fp.read()
@@ -49,7 +49,7 @@ def get_metar(icao: str) -> str:
         raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
     metar = f"METAR {resp}"
     cache[icao] = metar
-    return metar, "not cache"
+    return "not cache", metar
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ def info(icao:str):
     icao = icao.upper()
     
     try:
-        metar = get_metar(icao)
+        is_cached, metar = get_metar(icao)
     except IcaoNotFound as e:
         return render_template("error.html", error=e)
     
@@ -25,9 +25,8 @@ def info(icao:str):
     except IcaoNotFound as e:
         info = None
 
-    print(metar)
-    metar_only = metar[0]
-    decoded = decode(metar_only)
+    print(is_cached, metar)
+    decoded = decode(metar)
     
     rwy_in_use = None
     if info is not None:
@@ -42,7 +41,7 @@ def info(icao:str):
         except:
             rwy_in_use = None
 
-    return render_template("airport.html", info=info, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
+    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
