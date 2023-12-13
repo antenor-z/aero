@@ -112,3 +112,36 @@ td {
   padding: 5px;
   background-color: #bbb;
 }
+
+.direct-icao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.direct-icao > input {
+  font-size: 2rem;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  background-color: white;
+  transition: border-bottom 0.3s ease;
+}
+
+.direct-icao > input:focus {
+	border-bottom: white inset 3px;
+}
+
+.direct-icao > button {
+  padding: 20px 20px;
+  font-size: 2rem;
+  border-radius: 0;
+  border-style: none;
+  margin: 0;
+  padding: 0 30px;
+  height: 50px;
+  background-color: #edb90c;
+}
+
+

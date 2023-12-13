@@ -10,19 +10,30 @@
 		Lista Aeroportos
 	</header>
 	<main>
+	<div class="direct-icao">
+		<input type="text" id="ICAO" placeholder="outro ICAO">
+		<button onclick="directToICAO()">Ir</button>
+	</div>
 	<div class="line-airports">
-		{% for a in airports %}
-		<div class="box-rounded box-outlined box-onhover" onclick="location.href='/info/{{a[1]}}';">
+		{% for airport in airports %}
+		<div class="box-rounded box-outlined box-onhover" onclick="location.href='/info/{{airport[1]}}';">
 			<div class="box-airport-name">
-				{{ a[2] }}
+				{{ airport[2] }}
 			</div>
 			<div class="box-value center-text">
-				{{ a[1] }} ● {{ a[0] }}
+				{{ airport[1] }} ● {{ airport[0] }}
 			</div>
 		</div>
 		{% endfor %}
 	</div>
 	</main>
+	<script>
+		function directToICAO()
+		{
+			const x = document.getElementById('ICAO').value
+			location.href='/info/' + x;
+		}
+	</script>
 </body>
 </html>
 
