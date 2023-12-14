@@ -1,3 +1,3 @@
-class IcaoNotFound(Exception):
+class IcaoError(Exception):
     def __init__(self, message):
         super().__init__(message)

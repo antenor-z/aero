@@ -1,4 +1,4 @@
-from IcaoNotFound import IcaoNotFound
+from IcaoError import IcaoError
 from airportDataModel import *
 
 _airport_data = {

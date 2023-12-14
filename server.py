@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from IcaoNotFound import IcaoNotFound
+from IcaoError import IcaoError
 from airportDatabase import get_all_names, get_info
 from metar import get_metar
 from metarDecoder import decode, get_wind_info
@@ -17,12 +17,12 @@ def info(icao:str):
     
     try:
         is_cached, metar = get_metar(icao)
-    except IcaoNotFound as e:
+    except IcaoError as e:
         return render_template("error.html", error=e)
     
     try:
         info = get_info(icao)
-    except IcaoNotFound as e:
+    except IcaoError as e:
         info = None
 
     print(is_cached, metar)

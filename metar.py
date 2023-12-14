@@ -2,13 +2,13 @@ import requests, json
 from datetime import datetime, timedelta
 import re
 
-from IcaoNotFound import IcaoNotFound
+from IcaoError import IcaoError
 from util import is_icao_valid
 
 cache = {}
 def get_metar(icao: str) -> str:
     if not is_icao_valid(icao):
-        raise IcaoNotFound(f"ICAO '{icao}' não encontrado.")
+        raise IcaoError(f"'{icao}' não é ICAO válido ou não é de um aeródromo brasileiro.")
     
     metar = cache.get(icao)
     
@@ -17,36 +17,11 @@ def get_metar(icao: str) -> str:
         now = datetime.utcnow()
         if now.day == int(day) and now.hour == int(hour):
             return "cache", metar
-    """
-    with open("apikey.txt") as fp:
-        key = fp.read()
-
-    key = key.split("\n")[0] # Discard after \n (including newline)
-    data_ini = datetime.utcnow().strftime("%Y%m%d%H")
-    uma_hora = timedelta(hours=1)
-    data_fim = (datetime.utcnow() + uma_hora).strftime("%Y%m%d%H")
-    
-    
-    resp = requests.get(f"https://api-redemet.decea.mil.br/mensagens/metar/{icao}", 
-                        params={"api_key": key, 
-                                "data_ini": data_ini, "data_fim": data_fim}).json()
-
-    resp_data = resp.get("data") 
-    if resp_data is not None:
-        metar = resp["data"]["data"][0]["mens"]
-    else:
-        # Alternate
-        resp = requests.get(f"https://beta.aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
-        # NGMI
-        if not resp.startswith(icao):
-            raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
-        metar = f"METAR {resp}"
-    """
 
     resp = requests.get(f"https://aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
-    # NGMI
+    print(resp)
     if not resp.startswith(icao):
-        raise IcaoNotFound(f"Houve um problema para obter o {icao=}.")
+        raise IcaoError(f"Houve um erro ao obter a informação.")
     metar = f"METAR {resp}"
     cache[icao] = metar
     return "not cache", metar
