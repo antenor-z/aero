@@ -41,7 +41,7 @@ def info(icao:str):
         except:
             rwy_in_use = None
 
-    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use), 400
+    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
 
 @app.errorhandler(404)
 def not_found(e):
