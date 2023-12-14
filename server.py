@@ -43,5 +43,9 @@ def info(icao:str):
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use), 400
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("error.html", error="404 | Página não encontrada."), 404
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
