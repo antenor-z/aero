@@ -8,7 +8,7 @@ from util import is_icao_valid
 cache = {}
 def get_metar(icao: str) -> str:
     if not is_icao_valid(icao):
-        raise IcaoError(f"'{icao}' não é ICAO válido ou não é de um aeródromo brasileiro.")
+        raise IcaoError(f"O ICAO informado não é válido ou não é de um aeródromo brasileiro.")
     
     metar = cache.get(icao)
     
@@ -21,7 +21,7 @@ def get_metar(icao: str) -> str:
     resp = requests.get(f"https://aviationweather.gov/cgi-bin/data/metar.php?ids={icao}").text
     print(resp)
     if not resp.startswith(icao):
-        raise IcaoError(f"Houve um erro ao obter a informação.")
+        raise IcaoError("Houve um erro ao obter a informação.")
     metar = f"METAR {resp}"
     cache[icao] = metar
     return "not cache", metar

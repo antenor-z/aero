@@ -18,7 +18,7 @@ def info(icao:str):
     try:
         is_cached, metar = get_metar(icao)
     except IcaoError as e:
-        return render_template("error.html", error=e)
+        return render_template("error.html", error=e), 400
     
     try:
         info = get_info(icao)
@@ -41,7 +41,7 @@ def info(icao:str):
         except:
             rwy_in_use = None
 
-    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use)
+    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, rwy_in_use=rwy_in_use), 400
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
