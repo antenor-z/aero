@@ -11,7 +11,7 @@
 	</header>
 	<main>
 	<div class="direct-icao">
-		<button>Ir</button>
+		<button><img src="static/search.svg"></button>
 		<input type="text" id="searchInput" oninput="searchAirports()" placeholder="Pesquisar...">
 	</div>
 	<div class="line-airports">
@@ -26,45 +26,15 @@
 		</div>
 		{% endfor %}
 	</div>
-	<div id="noResultMessage" style="display: none;">Sem resultados.</div>
+	<div id="noResultMessage" style="display: none; text-align:center">Sem resultados.</div>
 	</main>
 	
 	<script>
 		window.onload = function() {
     		document.getElementById('searchInput').focus();
   		};
-		function searchAirports() {
-		  var query = document.getElementById('searchInput').value.toLowerCase()
-	  
-		  var airports = document.getElementsByClassName('airport')
-	  
-		  let resultFound = false
-
-		  for (var i = 0; i < airports.length; i++) {
-			var airport = airports[i]
-	  
-			var city = airport.querySelector('.box-airport-name').textContent.toLowerCase()
-			var icao = airport.querySelector('.box-value').textContent.split(' ● ')[0].toLowerCase()
-			var airportName = airport.querySelector('.box-value').textContent.split(' ● ')[1].toLowerCase()
-	  
-			if (city.includes(query) || icao.includes(query) || airportName.includes(query)) {
-			  airport.style.display = 'block'
-			  resultFound = true
-			} else {
-			  airport.style.display = 'none'
-			}
-
-			var noResultMessage = document.getElementById('noResultMessage')
-			console.log(resultFound)
-			if (resultFound) {
-			  noResultMessage.style.display = 'none'
-			} else {
-			  noResultMessage.style.display = 'block'
-			}
-		  }
-		}
-	  </script>
-	  
+	</script>
+	<script src="static/search.js"></script>
 </body>
 </html>
 

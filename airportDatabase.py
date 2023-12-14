@@ -194,11 +194,11 @@ _airport_data = {
         Comm(freq="127.800", type="atis"),
     ],
     ils=[
-        Ils(rwy="11L", ident="IBR", freq="110.3", cat="I", crs="121", minimus="200"),
-        Ils(rwy="29R", ident="IND", freq="109.3", cat="I", crs="121", minimus="203"),
-        Ils(rwy="29L", ident="IJK", freq="112.7", cat="I", crs="121", minimus="203"),
-        Ils(rwy="11R", ident="IDF", freq="109.9", cat="I", crs="121", minimus="203"),],
-    vor=[Vor(ident="SGA", freq="115.9")],
+        Ils(rwy="11L", ident="IBR", freq="110.3", cat="I", crs="108", minimus="264"),
+        Ils(rwy="29L", ident="IJK", freq="110.9", cat="I", crs="288", minimus="498"),
+        Ils(rwy="11R", ident="IDF", freq="109.9", cat="I", crs="108", minimus="250"),],
+    vor=[Vor(ident="FSA", freq="112.7"),
+         Vor(ident="VJK", freq="117.5")],
     rwy=[Rwy(head=("11L", "29R"), length=3200), Rwy(head=("11R", "29L"), length=3300)],
     ),
 
@@ -217,7 +217,7 @@ _airport_data = {
         Comm(freq="127.650", type="atis"),
     ],
     ils=[
-        Ils(rwy="18", ident="IRF", freq="110.3", cat="I", crs="121", minimus="200"),],
+        Ils(rwy="18", ident="IRF", freq="110.3", cat="I", crs="183", minimus="200"),],
     vor=[Vor(ident="REC", freq="116.9")],
     rwy=[Rwy(head=("18", "36"), length=2751)],
     ),
@@ -239,8 +239,8 @@ _airport_data = {
         Comm(freq="127.750", type="atis"),
     ],
     ils=[
-        Ils(rwy="28", ident="ILD", freq="110.9", cat="I", crs="121", minimus="200"),
-        Ils(rwy="35", ident="ISA", freq="111.9", cat="I", crs="121", minimus="200"),],
+        Ils(rwy="28", ident="ILD", freq="110.9", cat="I", crs="282", minimus="200"),
+        Ils(rwy="10", ident="ISA", freq="111.9", cat="I", crs="102", minimus="200"),],
     vor=[Vor(ident="SVD", freq="116.5")],
     rwy=[Rwy(head=("17", "35"), length=1518), Rwy(head=("10", "28"), length=3003)],
     ),

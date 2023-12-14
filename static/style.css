@@ -142,7 +142,11 @@ td {
   font-size: 2rem;
   border: 0;
   margin: 0;
-  padding: 0 30px;
+  padding: 5px 20px;
   height: 50px;
   background-color: #edb90c;
+}
+
+.direct-icao > button>img {
+  width: 40px;
 }
