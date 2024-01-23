@@ -2,15 +2,16 @@ FROM alpine
 
 WORKDIR /app/
 
-COPY ./requirements.txt /app/
+COPY . /app/
 RUN apk add python3
 RUN apk add py3-pip
-RUN python3 -m venv venv
-RUN source venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["venv/bin/gunicorn", "-c", "gunicorn_config.py", "server:app"]
-
+CMD ["gunicorn", "-c", "gunicorn_config.py", "app:app"]
