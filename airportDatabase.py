@@ -244,6 +244,23 @@ _airport_data = {
     vor=[Vor(ident="SVD", freq="116.5")],
     rwy=[Rwy(head=("17", "35"), length=1518), Rwy(head=("10", "28"), length=3003)],
     ),
+
+    "SBPA": Airport(
+    nome="Salgado Filho",
+    cidade="Porto Alegre",
+    icao="SBSV", 
+    comm=[
+        Comm(freq="118.100", type="torre"),
+        Comm(freq="121.100", type="torre"),
+        Comm(freq="121.900", type="solo"),
+        Comm(freq="122.150", type="trafego")
+        Comm(freq="132.350", type="atis"),
+    ],
+    ils=[
+        Ils(rwy="11", ident="IPA", freq="110.3", cat="I", crs="110", minimus="200"),
+    vor=[Vor(ident="FIG", freq="114.7")],
+    rwy=[Rwy(head=("11", "29"), length=3200)],
+    ),
 }
 
 def get_info(icao):
