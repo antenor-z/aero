@@ -253,7 +253,7 @@ _airport_data = {
         Comm(freq="118.100", type="torre"),
         Comm(freq="121.100", type="torre"),
         Comm(freq="121.900", type="solo"),
-        Comm(freq="122.150", type="trafego")
+        Comm(freq="122.150", type="trafego"),
         Comm(freq="132.350", type="atis"),
     ],
     ils=[
