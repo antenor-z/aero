@@ -257,7 +257,7 @@ _airport_data = {
         Comm(freq="132.350", type="atis"),
     ],
     ils=[
-        Ils(rwy="11", ident="IPA", freq="110.3", cat="I", crs="110", minimus="200"),
+        Ils(rwy="11", ident="IPA", freq="110.3", cat="I", crs="110", minimus="200")],
     vor=[Vor(ident="FIG", freq="114.7")],
     rwy=[Rwy(head=("11", "29"), length=3200)],
     ),
