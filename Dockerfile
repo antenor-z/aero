@@ -10,8 +10,8 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-c", "gunicorn_config.py", "server:app"]
+CMD ["python3", "-u", "-m", "gunicorn", "-c", "gunicorn_config.py", "server:app"]

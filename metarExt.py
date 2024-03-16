@@ -4,6 +4,7 @@ import redis
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 def load_now():
+    print("Downloading METARs")
     df = pandas.read_csv("https://aviationweather.gov/data/cache/metars.cache.csv.gz", 
                      compression='infer',
                      header=5)
@@ -13,7 +14,8 @@ def load_now():
         BRAZIL_PREFIX = "SB"
         if airport['station_id'].startswith(BRAZIL_PREFIX):
             metar = airport["raw_text"].replace(airport['station_id'] + " ", "")
-            r.set(f"metar:{airport['station_id']}", metar, ex=1800)
+            r.set(f"metar:{airport['station_id']}", metar, ex=3600)
+    print("Done")
 
 def get_metar(icao: str) -> str | None:
     metar = r.get(f"metar:{icao.upper()}")
