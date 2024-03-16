@@ -5,3 +5,4 @@ gunicorn
 pytest
 pandas
 redis
+apscheduler

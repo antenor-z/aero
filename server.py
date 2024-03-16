@@ -1,9 +1,14 @@
 from flask import Flask, render_template
 from airportDatabase import InfoError, get_all_names, get_info
-from metarExt import IcaoError, get_metar
+from metarExt import IcaoError, get_metar, load_now
 from metarDecoder import DecodeError, decode, get_wind_info
 from wind.Wind import get_runway_in_use
+from apscheduler.schedulers.background import BackgroundScheduler
 app = Flask(__name__)
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=load_now, trigger='cron', minute="*/30")
+scheduler.start()
 
 @app.get("/")
 def list_all():
