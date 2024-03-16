@@ -1,7 +1,7 @@
 import pandas
 import redis
 
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 def load_now():
     df = pandas.read_csv("https://aviationweather.gov/data/cache/metars.cache.csv.gz", 
