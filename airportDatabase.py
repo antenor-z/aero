@@ -1,4 +1,3 @@
-from IcaoError import IcaoError
 from airportDataModel import *
 
 _airport_data = {
@@ -266,11 +265,15 @@ _airport_data = {
 def get_info(icao):
     ret = _airport_data.get(icao)
     if ret is None:
-        raise IcaoError(f"ICAO '{icao}' não encontrado.")
+        raise InfoError(f"Informações do ICAO '{icao}' não encontradas.")
     return _airport_data[icao].model_dump()
 
 def get_all_names():
     return [(a.nome, a.icao, a.cidade) for a in _airport_data.values()]
+
+class InfoError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 if __name__ == "__main__":
     print(_airport_data)

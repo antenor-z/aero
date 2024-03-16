@@ -1,5 +1,4 @@
 import re
-from metar import get_metar
 
 # Fonte: https://ajuda.decea.mil.br/base-de-conhecimento/como-decodificar-o-metar-e-o-speci/
 
@@ -10,10 +9,6 @@ def decode(metar: str) -> dict:
     #metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
 
     metar = metar.split(" ")
-    assert(metar[0] == "METAR")
-
-    metar = metar[2:]
-
     day = metar[0][0:2]
     timeZ = metar[0][2:6]
     ret = []
@@ -126,7 +121,11 @@ def get_wind_info(metar: str) -> dict:
         [(direction, speed)] = wind
         return {"direction": int(direction), "speed": int(speed)}
     else:
-        raise Exception("Could not find wind information.")
+        raise DecodeError("Could not find wind information.")
+
+class DecodeError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 if __name__ == "__main__":
     metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="

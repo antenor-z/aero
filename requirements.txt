@@ -3,4 +3,5 @@ pydantic
 flask
 gunicorn
 pytest
+pandas
 redis

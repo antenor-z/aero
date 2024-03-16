@@ -12,6 +12,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY cron_get_metars /etc/crontabs/root
+
 EXPOSE 5000
 
 CMD ["gunicorn", "-c", "gunicorn_config.py", "server:app"]

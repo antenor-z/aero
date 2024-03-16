@@ -1,8 +1,7 @@
 from flask import Flask, render_template
-from IcaoError import IcaoError
-from airportDatabase import get_all_names, get_info
-from metar import get_metar
-from metarDecoder import decode, get_wind_info
+from airportDatabase import InfoError, get_all_names, get_info
+from metarExt import IcaoError, get_metar
+from metarDecoder import DecodeError, decode, get_wind_info
 from wind.Wind import get_runway_in_use
 app = Flask(__name__)
 
@@ -10,22 +9,20 @@ app = Flask(__name__)
 def list_all():
     return render_template("index.html", airports=get_all_names())
 
-
 @app.get("/info/<string:icao>")
 def info(icao:str):
     icao = icao.upper()
     
     try:
-        is_cached, metar = get_metar(icao)
+        metar = get_metar(icao)
     except IcaoError as e:
         return render_template("error.html", error=e), 400
     
     try:
         info = get_info(icao)
-    except IcaoError as e:
+    except InfoError as e:
         info = None
 
-    print(is_cached, metar)
     decoded = decode(metar)
     
     rwy_in_use = None
