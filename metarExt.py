@@ -10,7 +10,7 @@ def load_every_30_minutes():
         minute = datetime.now().minute
         if minute == 0 or minute == 30:
             load_now()
-        time.sleep(30)
+        time.sleep(5)
         
 def load_now():
     print("Downloading METARs")
