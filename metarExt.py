@@ -9,7 +9,9 @@ def load_every_30_minutes():
     while True:
         minute = datetime.now().minute
         second = datetime.now().second
-        if (minute == 0 or minute == 30) and second == 0:
+        # We are using second 10 to compensate against time diff
+        # between this machine and aviationweather's machine
+        if (minute == 0 or minute == 30) and second == 10:
             try:
                 load_now()
             except:
