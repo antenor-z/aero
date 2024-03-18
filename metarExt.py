@@ -9,7 +9,11 @@ def load_every_30_minutes():
     while True:
         minute = datetime.now().minute
         if minute == 0 or minute == 30:
-            load_now()
+            try:
+                load_now()
+            except:
+                # If any problem occours, ignore and download nothing
+                pass
         time.sleep(5)
         
 def load_now():
@@ -23,7 +27,7 @@ def load_now():
         BRAZIL_PREFIX = "SB"
         if airport['station_id'].startswith(BRAZIL_PREFIX):
             metar = airport["raw_text"].replace(airport['station_id'] + " ", "")
-            r.set(f"metar:{airport['station_id']}", metar, ex=3600)
+            r.set(f"metar:{airport['station_id']}", metar)
     print("Done")
 
 def get_metar(icao: str) -> str | None:
