@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aeroporto {{info.icao}}</title>
+  <title>Aeroporto {{info.nome}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/tooltip.css">
@@ -24,17 +24,7 @@
 				<div>
 					<div class="runway-number tooltip">
 						{% for head in rwy.head %}
-							<span {% if rwy_in_use is not none and head in rwy_in_use %} class="rwy-in-use" {% endif %}>
-								{% if rwy_in_use is not none %}
-								{% if head in rwy_in_use %}
-									<span class="tooltip-text">
-										Pela direção do vento, a cabeceira {{ head }} 
-										é a mais favorável para pousos e decolagens.
-									</span>
-								{% endif %}
-								{% endif %}
-								{{ head }}
-							</span>
+							{{ head }}
 							{% if not loop.last %} - {% endif %}
 						{% endfor %}
 					</div>

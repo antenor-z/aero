@@ -1,0 +1,13 @@
+input, select, textarea {
+    font-size: 20px;
+    outline: none;
+    color-scheme: dark;
+    background-color: #202020;
+    border-radius: 8px;
+    border: solid rgba(255, 255, 255, 0.75) 3px;
+    color: white;
+    padding: 8px;
+}
+option {
+    background-color: #333;
+}

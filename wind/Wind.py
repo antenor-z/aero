@@ -1,55 +1,59 @@
 import math
+import re
 
-def sanity_check(heading):
-    if heading < 0 or heading >= 360:
-        raise Exception(f"Heading {heading} outside range.")
+from airportDatabase import get_info
 
-def get_components(runway_head: int, wind_dir:int, wind_speed: int):
-    sanity_check(runway_head)
-    sanity_check(wind_dir)
-    # Dot product:
-    # A.B = (Ax*Bx) + (Ay*By) = |A|*|B|*cos(x)
 
-    alpha = math.radians(runway_head)
-    (ax, ay) = (math.cos(alpha), math.sin(alpha))
+def get_components(icao: str, metar: str):
+    #metar = "171800Z 28010KT 260V320 9999 SCT035 FEW040TCU 33/19 Q1012"
+    [(wind_dir, wind_speed)] = re.findall("(\d{3})(\d{2})KT", metar)
+    r = {}
+    for (rwy_name, rwy_direction) in get_runways(icao):
+        print(rwy_direction)
+        r[rwy_name] = get_components_one_runway(rwy_direction, int(wind_dir), int(wind_speed))
+    print(r)
+    return r
 
-    beta = math.radians(wind_dir)
-    (bx, by) = (math.cos(beta), math.sin(beta))
+def get_components_one_runway(runway_head: int, wind_dir:int, wind_speed: int):
+    """
+    For a runway heading (0 to 360 degrees) and the direction where the
+    wind is comming from, compute the component paralel to the direction
+    of the runway (head wind or tail wind) and the perpendicular component.
 
-    AB = (ax * bx) + (ay * by)
+    For the paralel component:
+        if > 0: Head wind, the wind is comming towards the plane
+        if < 0: Tail wind, the wind is comming from behind the plane.
+    For the perpendicular component (cross wind):
+        if > 0: Cross wind comming from the right
+        if < 0: Cross wind comming from the left
+    """
+    assert 0 <= runway_head < 360
+    assert 0 <= wind_dir < 360
+    assert 0 <= wind_speed
 
-    angle_diff = math.acos(AB)
+    angle = math.radians((wind_dir - runway_head) % 360)
+    angle_deg = abs(math.degrees(angle))
 
-    sign = -1 
-    if 0 <= (wind_dir - runway_head) % 360 <= 180:
-        sign = 1
+    head = wind_speed * math.cos(angle)
+    cross = wind_speed * math.sin(angle)
 
-    return {"paral": math.cos(angle_diff) * wind_speed, 
-            "cross": sign * math.sin(angle_diff) * wind_speed}
+    return {
+        "cross": round(cross, 2),
+        "head": round(head, 2),
+        "angle": round(angle_deg, 2),
+    }
 
-def get_runway_in_use(runway_names: list, wind_dir:int, wind_speed:int) -> list | None:
-    if wind_speed == 0:
-        return None
-
-    runway_group = {}
-    for runway in runway_names:
-        if runway[-1] == "R" or runway[-1] == "L" or runway[-1] == "C":
-            r = int(runway[:-1])
-        else:
-            r = int(runway)
-        if runway_group.get(r) == None:
-            runway_group[r] = [runway]
-        else:
-            runway_group[r].append(runway)
-
-    highest_paral_wind = 0 # The highest head wind yet
-    highest_runway = None # Runway group with the highest head wind
-
-    for runway in runway_group.keys():
-        runway_heading = int(runway) * 10
-        paral_wind = get_components(runway_heading, wind_dir=wind_dir, wind_speed=wind_speed)["paral"]
-        if paral_wind > highest_paral_wind:
-            highest_paral_wind = paral_wind
-            highest_runway = runway
-    
-    return runway_group[highest_runway]
+def get_runways(icao: str):
+    """
+    Returns the runway 'name' (including R, L or C) and the runway heading in degrees.
+    For example if the airport has runways 17L, 17R, 35L and 35R, the following will
+    be returned:
+    [('17R', 170), ('35L', 350), ('17L', 170), ('35R', 350)]
+    """
+    r = []
+    for runway in get_info(icao)["rwy"]:
+        rwy_without_letter = runway["head"][0].replace("L", "").replace("C", "").replace("R", "")
+        r.append((runway["head"][0], int(rwy_without_letter) * 10))
+        rwy_without_letter = runway["head"][1].replace("L", "").replace("C", "").replace("R", "")
+        r.append((runway["head"][1], int(rwy_without_letter) * 10))
+    return r
