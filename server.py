@@ -1,7 +1,7 @@
 import threading
 from flask import Flask, render_template
 from airportDatabase import InfoError, get_all_names, get_info
-from metarExt import IcaoError, get_metar, load_every_30_minutes, load_now()
+from metarExt import IcaoError, get_metar, load_every_30_minutes, load_now
 from metarDecoder import DecodeError, decode, get_wind_info
 from wind.Wind import get_runway_in_use
 app = Flask(__name__)

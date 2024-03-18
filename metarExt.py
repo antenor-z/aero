@@ -8,16 +8,17 @@ r = redis.Redis(host='redis', port=6379, decode_responses=True)
 def load_every_30_minutes():
     while True:
         minute = datetime.now().minute
-        if minute == 0 or minute == 30:
+        second = datetime.now().second
+        if (minute == 0 or minute == 30) and second == 0:
             try:
                 load_now()
             except:
                 # If any problem occours, ignore and download nothing
                 pass
-        time.sleep(5)
+        time.sleep(1)
         
 def load_now():
-    print("Downloading METARs")
+    print("Downloading METARs", datetime.now())
     df = pandas.read_csv("https://aviationweather.gov/data/cache/metars.cache.csv.gz", 
                      compression='infer',
                      header=5)
