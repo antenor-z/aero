@@ -3,7 +3,11 @@ import pandas
 import redis
 from datetime import datetime
 
-r = redis.Redis(host='redis', port=6379, decode_responses=True)
+try:
+    r = redis.Redis(host='redis', port=6379, decode_responses=True)
+    r.keys("a")
+except redis.exceptions.ConnectionError:
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 def load_every_30_minutes():
     while True:
