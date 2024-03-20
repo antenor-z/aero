@@ -31,6 +31,13 @@ header {
   margin: 15px 0;
   grid-auto-rows: 1fr
 }
+.line-big {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
+  gap: 15px;
+  margin: 15px 0;
+  grid-auto-rows: 1fr
+}
 .line-airports {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 

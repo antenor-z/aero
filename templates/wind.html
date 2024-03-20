@@ -17,64 +17,27 @@
 	</header>
 	<main>
     <div style="text-align: right;">APENAS PARA USO EM SIMULADOR</div>
-    <div style="display: flex;">
-        <div style="width: 330;" id="map">
-            <select id="runway-selector" onchange="f(event)">
-                {% for runway in runways %}
-                <option value="{{ runway }}" {% if loop.first %}selected{% endif %}>{{ runway }}</option>
-                {% endfor %}
-            </select>
-            <svg width="300" height="450" xmlns="http://www.w3.org/2000/svg">
-                <rect width="210" height="430" x="0" y="0" fill="#222" />
-                
-                <text x="60" y="400" fill="#ddd" font-size="80" font-family="monospace">28</text>
-    
-                <rect width="10" height="70" x="100" y="250" style="fill:rgba(255, 255, 255, 0.25);" />
-                <rect width="10" height="70" x="100" y="150" style="fill:rgba(255, 255, 255, 0.25);" />
-                <rect width="10" height="70" x="100" y="50" style="fill:rgba(255, 255, 255, 0.25);" />
-    
-                <g style="fill:rgb(0, 255, 0);" transform="rotate(60, 105, 300) translate(105, 300)">
-                    <rect width="8" height="50" x="-4" y="20" />
-                    <polygon points="-15,30 0,0 15,30" />
-                </g>
-            </svg>
+    <div class="line-big" id="runways">
+        {% for runway in runways %}
+        <div id="{{runway}}" class="box-rounded box-outlined">
+            <div class="box-name" style="margin-bottom: 10px;">Cabeçeira {{runway}}</div>
+            <div class="box-value">
+                {% if runways[runway].head >= 0 %}
+                    <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].head }}</span> kt de proa
+                {% else %}
+                    <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].head }}</span> kt de cauda
+                {% endif %}
+                <br />
+                {% if runways[runway].cross >= 0 %}
+                    <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].cross}}</span> kt vindo da direita
+                {% else %}
+                    <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].cross}}</span> kt vindo da esquerda
+                {% endif %}
+            </div>
         </div>
-        <div style="width: 100%;" id="wind">
-                {% for runway in runways %}
-                <div id="runways" class="line">
-                <div id="{{runway}}" class="box-rounded box-outlined">
-                    <div class="box-name">Cabeçeira {{runway}}</div>
-                    <div class="box-value">
-                        {% if runways[runway].head >= 0 %}
-                            <b>{{ runways[runway].head }}</b> kt de proa
-                        {% else %}
-                            <b>{{ -runways[runway].head }}</b> kt de cauda
-                        {% endif %}
-                        <br />
-                        {% if runways[runway].cross >= 0 %}
-                            <b>{{ runways[runway].cross}}</b> kt vindo da direita
-                        {% else %}
-                            <b>{{ -runways[runway].cross}}</b> kt vindo da esquerda
-                        {% endif %}
-                    </div>
-                </div>
-                </div>
-                {% endfor %}
-        </div>
+        {% endfor %}
     </div>
 	</main>
-    <script>
-        function f(event) {
-            // const runways = document.getElementById("runways").children
-            // for (const runway in runways) {
-            //     if (runways[runway].id == event.target.value) {
-            //         runways[runway].style.display = "block"
-            //     } else {
-            //         runways[runway].style.display = "none"
-            //     }
-            // }
-        }
-    </script>
 </body>
 </html>
 
