@@ -1,5 +1,5 @@
 import threading
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from airportDatabase import InfoError, get_all_names, get_info
 from metarExt import IcaoError, get_metar, load_every_30_minutes, load_now
 from metarDecoder import DecodeError, decode, get_wind_info
@@ -17,7 +17,9 @@ def list_all():
 
 @app.get("/info/<string:icao>")
 def info(icao:str):
-    icao = icao.upper()
+    icao_upper = icao.upper()
+    if icao != icao_upper:
+        return redirect(f"/info/{icao_upper}")
     
     try:
         metar = get_metar(icao)
@@ -35,7 +37,9 @@ def info(icao:str):
 
 @app.get("/wind/<string:icao>")
 def wind(icao:str):
-    icao = icao.upper()
+    icao_upper = icao.upper()
+    if icao != icao_upper:
+        return redirect(f"/wind/{icao_upper}")
     
     try:
         metar = get_metar(icao)
