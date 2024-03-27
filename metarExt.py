@@ -13,9 +13,9 @@ def load_every_30_minutes():
     while True:
         minute = datetime.now().minute
         second = datetime.now().second
-        # We are using second 10 to compensate against time diff
+        # We are delaying 1 minute to compensate against time diff
         # between this machine and aviationweather's machine
-        if (minute == 0 or minute == 30) and second == 10:
+        if (minute == 1 or minute == 21 or minute == 41) and second == 0:
             try:
                 load_now()
             except:
