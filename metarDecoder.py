@@ -69,7 +69,8 @@ other_items = {
     "TS": "Trovoada, Raios e Relâmpagos moderada.",
     "+TS": "Trovoada, Raios e Relâmpagos densa.",
     "RERA": "Fenômenos meteorológicos recentes.",
-    "WS": "Tesoura de vento (windshear)"
+    "WS": "Tesoura de vento (windshear)",
+    "NSC": "No Significant Cloud, podem haver algumas nuvens, mas nenhuma está abaixo de 5000 pés ou dentro de 10 quilômetros.",
 }
 
 def decode(metar: str) -> dict:
