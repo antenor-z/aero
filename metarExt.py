@@ -9,13 +9,11 @@ try:
 except redis.exceptions.ConnectionError:
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-def load_every_30_minutes():
+def load_every_10_minutes():
     while True:
         minute = datetime.now().minute
         second = datetime.now().second
-        # We are delaying 1 minute to compensate against time diff
-        # between this machine and aviationweather's machine
-        if (minute == 1 or minute == 21 or minute == 41) and second == 0:
+        if (minute % 10 == 0) and second == 0:
             try:
                 load_now()
             except:
