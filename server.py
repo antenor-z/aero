@@ -47,7 +47,9 @@ def wind(icao:str):
     except InfoError as e:
         info = None
     get_components(icao, metar)
-    return render_template("wind.html", runways=get_components(icao, metar), nome_aeroporto=info["nome"], icao=icao)
+    
+    airport_page = f"/info/{icao}"
+    return render_template("wind.html", runways=get_components(icao, metar), nome_aeroporto=info["nome"], icao=icao, airport_page=airport_page)
 
 @app.errorhandler(404)
 def not_found(e):

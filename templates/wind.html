@@ -16,7 +16,10 @@
 		</div>
 	</header>
 	<main>
-    <div style="text-align: right;">APENAS PARA USO EM SIMULADOR</div>
+    <div class="first-line">
+        <a href="{{ airport_page }}">&lt Voltar</a>
+    	<span>APENAS PARA USO EM SIMULADOR</span>
+    </div>
     <div class="line-big" id="runways">
         {% for runway in runways %}
         <div id="{{runway}}" class="box-rounded box-outlined">
