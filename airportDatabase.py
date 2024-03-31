@@ -5,6 +5,8 @@ _airport_data = {
     nome="Congonhas",
     cidade="São Paulo",
     icao="SBSP", 
+    lat=-23.626243,
+    lon=-46.655417,
     comm=[
         Comm(freq="118.050", type="torre"),
         Comm(freq="127.150", type="torre"),
@@ -21,6 +23,8 @@ _airport_data = {
     nome="Campo de Marte",
     cidade="São Paulo",
     icao="SBMT", 
+    lat=-23.508810,
+    lon=-46.637816,
     comm=[
         Comm(freq="133.350", type="torre"),
         Comm(freq="121.600", type="solo"),
@@ -33,6 +37,8 @@ _airport_data = {
     nome="Guarulhos",
     cidade="São Paulo",
     icao="SBGR", 
+    lat=-23.430181,
+    lon=-46.466770,
     comm=[
         Comm(freq="118.400", type="torre"),
         Comm(freq="121.500", type="torre"),
@@ -54,6 +60,8 @@ _airport_data = {
     nome="Santos Dumont",
     cidade="Rio de Janeiro",
     icao="SBRJ",
+    lat=-22.910500, 
+    lon=-43.163236,
     comm=[
         Comm(freq="118.700", type="torre"),
         Comm(freq="121.500", type="torre"),
@@ -67,6 +75,8 @@ _airport_data = {
     nome="Antônio Carlos Jobim",
     cidade="Rio de Janeiro",
     icao="SBGL", 
+    lat=-22.806812, 
+    lon=-43.236409,
     comm=[
         Comm(freq="118.000", type="torre"),
         Comm(freq="118.200", type="torre"),
@@ -91,6 +101,8 @@ _airport_data = {
     nome="Viracopos",
     cidade="Campinas",
     icao="SBKP", 
+    lat=-23.006848, 
+    lon=-47.136147,
     comm=[
         Comm(freq="118.250", type="torre"),
         Comm(freq="121.900", type="solo"),
@@ -104,6 +116,8 @@ _airport_data = {
     nome="Pinto Martins",
     cidade="Fortaleza",
     icao="SBFZ", 
+    lat=-3.776400, 
+    lon=-38.532041,
     comm=[
         Comm(freq="121.500", type="torre"),
         Comm(freq="129.000", type="torre"),
@@ -119,6 +133,8 @@ _airport_data = {
     nome="Senador Petrônio Portella",
     cidade="Teresina",
     icao="SBTE", 
+    lat=-5.059275, 
+    lon=-42.823784,
     comm=[
         Comm(freq="118.800", type="torre"),
         Comm(freq="127.800", type="atis"),
@@ -130,6 +146,8 @@ _airport_data = {
     nome="Afonso Pena",
     cidade="Curitiba",
     icao="SBCT", 
+    lat=-25.527896, 
+    lon=-49.175797,
     comm=[
         Comm(freq="118.150", type="torre"),
         Comm(freq="121.500", type="torre"),
@@ -147,6 +165,8 @@ _airport_data = {
     nome="Tancredo Neves",
     cidade="Belo Horizonte",
     icao="SBCF", 
+    lat=-19.633220, 
+    lon=-43.969015,
     comm=[
         Comm(freq="118.200", type="torre"),
         Comm(freq="121.500", type="torre"),
@@ -164,6 +184,8 @@ _airport_data = {
     nome="São Gonçalo do Amarante",
     cidade="Natal",
     icao="SBSG", 
+    lat=-5.768855, 
+    lon=-35.366448,
     comm=[
         Comm(freq="118.200", type="torre"),
         Comm(freq="118.850", type="torre"),
@@ -180,6 +202,8 @@ _airport_data = {
     nome="Presidente Juscelino Kubitschek",
     cidade="Brasília",
     icao="SBBR", 
+    lat=-15.870264, 
+    lon=-47.918460,
     comm=[
         Comm(freq="118.100", type="torre"),
         Comm(freq="118.450", type="torre"),
@@ -205,6 +229,8 @@ _airport_data = {
     nome="Guararapes - Gilberto Freyre",
     cidade="Recife",
     icao="SBRF", 
+    lat=-8.123593, 
+    lon=-34.924340,
     comm=[
         Comm(freq="118.350", type="torre"),
         Comm(freq="121.500", type="torre"),
@@ -225,6 +251,8 @@ _airport_data = {
     nome="Deputado Luís Eduardo Magalhães",
     cidade="Salvador",
     icao="SBSV", 
+    lat=-12.910444, 
+    lon=-38.332605,
     comm=[
         Comm(freq="118.300", type="torre"),
         Comm(freq="118.600", type="torre"),
@@ -247,7 +275,9 @@ _airport_data = {
     "SBPA": Airport(
     nome="Salgado Filho",
     cidade="Porto Alegre",
-    icao="SBSV", 
+    icao="SBPA", 
+    lat=29.993515, 
+    lon=-51.172375,
     comm=[
         Comm(freq="118.100", type="torre"),
         Comm(freq="121.100", type="torre"),

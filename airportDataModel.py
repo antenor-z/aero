@@ -31,3 +31,5 @@ class Airport(BaseModel):
     ils: list[Ils] | None = None
     vor: list[Vor] | None = None
     rwy: list[Rwy]
+    lat: float
+    lon: float

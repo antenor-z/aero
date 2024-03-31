@@ -48,7 +48,7 @@
 
     <script src="/static/3p/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([-22.909521, -43.165208], 15);
+        var map = L.map('map');
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -61,14 +61,14 @@
         var arrowPoints = "100,150 120,120 110,120 110,50 90,50 90,120 80,120";
         svgElement.innerHTML = '<polygon points="' + arrowPoints + '" style="fill:green; \
         stroke:white; stroke-width:3px; transform-origin: 100px 100px; transform:rotate({{wind_direction}}deg)"/>/>';
-        var latLngBounds = L.latLngBounds([[-22.909521 - 0.007, -43.165208 - 0.007], [-22.909521 + 0.007, -43.165208 + 0.007]]);
+        var latLngBounds = L.latLngBounds([[{{lat}} - 0.01, {{lon}} - 0.01], [{{lat}} + 0.01, {{lon}} + 0.01]]);
         map.fitBounds(latLngBounds);
         var svgOverlay = L.svgOverlay(svgElement, latLngBounds, {
             opacity: 0.7,
             interactive: true
         }).addTo(map);
 
-        var tooltip = L.tooltip([-22.909521 + 0.007, -43.165208], {
+        var tooltip = L.tooltip([{{lat}} + 0.007, {{lon}}], {
             content: 'Vento {{wind_direction}}° {{wind_speed}}kt',
             permanent: true,
             direction: "top"})

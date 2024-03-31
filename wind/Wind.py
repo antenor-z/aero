@@ -34,7 +34,7 @@ def get_components_one_runway(runway_head: int, wind_dir:int, wind_speed: int):
         if > 0: Cross wind comming from the right
         if < 0: Cross wind comming from the left
     """
-    assert 0 <= runway_head < 360
+    assert 0 < runway_head <= 360
     assert 0 <= wind_dir < 360
     assert 0 <= wind_speed
 
