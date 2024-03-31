@@ -3,10 +3,17 @@ import re
 
 from airportDatabase import get_info
 
+def get_wind(metar):
+    try:
+        [(wind_dir, wind_speed)] = re.findall("(\d{3})(\d{2})KT", metar)
+    except ValueError:
+        wind_dir, wind_speed = 0, 0
+
+    return wind_dir, wind_speed
 
 def get_components(icao: str, metar: str):
     #metar = "171800Z 28010KT 260V320 9999 SCT035 FEW040TCU 33/19 Q1012"
-    [(wind_dir, wind_speed)] = re.findall("(\d{3})(\d{2})KT", metar)
+    wind_dir, wind_speed = get_wind(metar)
     r = {}
     for (rwy_name, rwy_direction) in get_runways(icao):
         print(rwy_direction)

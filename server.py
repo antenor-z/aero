@@ -3,7 +3,7 @@ from flask import Flask, render_template
 from airportDatabase import InfoError, get_all_names, get_info
 from metarExt import IcaoError, get_metar, load_every_30_minutes, load_now
 from metarDecoder import DecodeError, decode, get_wind_info
-from wind.Wind import get_components
+from wind.Wind import get_components, get_wind
 app = Flask(__name__)
 
 thread = threading.Thread(target=load_every_30_minutes, daemon=True)
@@ -42,12 +42,18 @@ def wind(icao:str):
     except IcaoError as e:
         return render_template("error.html", error=e), 400
     
+    wind_direction, wind_speed = get_wind(metar)
+    
     try:
         info = get_info(icao)
     except InfoError as e:
         info = None
     get_components(icao, metar)
-    return render_template("wind.html", runways=get_components(icao, metar), nome_aeroporto=info["nome"], icao=icao)
+    return render_template("wind.html", runways=get_components(icao, metar), 
+                           nome_aeroporto=info["nome"], 
+                           icao=icao,
+                           wind_direction=wind_direction,
+                           wind_speed=wind_speed)
 
 @app.errorhandler(404)
 def not_found(e):

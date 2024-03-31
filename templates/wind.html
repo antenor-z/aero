@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Vento - {{nome_aeroporto}}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/static/style.css">
-  <link rel="stylesheet" href="/static/tooltip.css">
-  <link rel="stylesheet" href="/static/rwy.css">
-  <link rel="stylesheet" href="/static/wind.css">
+    <title>Vento - {{nome_aeroporto}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/tooltip.css">
+    <link rel="stylesheet" href="/static/rwy.css">
+    <link rel="stylesheet" href="/static/wind.css">
+    <link rel="stylesheet" href="/static/3p/leaflet.css" />
+    <style>
+        #map { height: 335px; width: 30%; margin-right: 10px; margin-top: 15px; border-radius: 5px};
+    </style>
 </head>
 <body>
 	<header>
@@ -17,27 +21,59 @@
 	</header>
 	<main>
     <div style="text-align: right;">APENAS PARA USO EM SIMULADOR</div>
-    <div class="line-big" id="runways">
-        {% for runway in runways %}
-        <div id="{{runway}}" class="box-rounded box-outlined">
-            <div class="box-name" style="margin-bottom: 10px;">Cabeçeira {{runway}}</div>
-            <div class="box-value">
-                {% if runways[runway].head >= 0 %}
-                    <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].head }}</span> kt de proa
-                {% else %}
-                    <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].head }}</span> kt de cauda
-                {% endif %}
-                <br />
-                {% if runways[runway].cross >= 0 %}
-                    <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].cross}}</span> kt vindo da direita
-                {% else %}
-                    <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].cross}}</span> kt vindo da esquerda
-                {% endif %}
+    <div style="display: flex;">
+        <div id="map"></div>
+        <div class="line-big" id="runways" style="width: 70%;">
+            {% for runway in runways %}
+            <div id="{{runway}}" class="box-rounded box-outlined">
+                <div class="box-name" style="margin-bottom: 10px;">Cabeçeira {{runway}}</div>
+                <div class="box-value">
+                    {% if runways[runway].head >= 0 %}
+                        <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].head }}</span> kt de proa
+                    {% else %}
+                        <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].head }}</span> kt de cauda
+                    {% endif %}
+                    <br />
+                    {% if runways[runway].cross >= 0 %}
+                        <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].cross}}</span> kt vindo da direita
+                    {% else %}
+                        <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].cross}}</span> kt vindo da esquerda
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 	</main>
+
+    <script src="/static/3p/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-22.909521, -43.165208], 15);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svgElement.setAttribute('viewBox', '0 0 200 200');
+        
+        var arrowPoints = "100,150 120,120 110,120 110,50 90,50 90,120 80,120";
+        svgElement.innerHTML = '<polygon points="' + arrowPoints + '" style="fill:green; \
+        stroke:white; stroke-width:3px; transform-origin: 100px 100px; transform:rotate({{wind_direction}}deg)"/>/>';
+        var latLngBounds = L.latLngBounds([[-22.909521 - 0.007, -43.165208 - 0.007], [-22.909521 + 0.007, -43.165208 + 0.007]]);
+        map.fitBounds(latLngBounds);
+        var svgOverlay = L.svgOverlay(svgElement, latLngBounds, {
+            opacity: 0.7,
+            interactive: true
+        }).addTo(map);
+
+        var tooltip = L.tooltip([-22.909521 + 0.007, -43.165208], {
+            content: 'Vento {{wind_direction}}° {{wind_speed}}kt',
+            permanent: true,
+            direction: "top"})
+        .addTo(map);
+    </script>
 </body>
 </html>
 
