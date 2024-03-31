@@ -20,6 +20,11 @@ header {
   padding: 20px 0;
   background-color: rgb(88, 88, 88);
 }
+.first-line {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+}
 .metar {
   font-family: monospace;
   font-size: 20px;

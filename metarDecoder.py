@@ -2,6 +2,76 @@ import re
 
 # Fonte: https://ajuda.decea.mil.br/base-de-conhecimento/como-decodificar-o-metar-e-o-speci/
 
+other_items = {
+    "SH": "Pancada(s) moderada.",
+    "+SH": "Pancada(s) forte.",
+    "-FZ": "Congelante leve.",
+    "FZ": "Congelante moderado.",
+    "+FZ": "Congelante forte.",
+    "-DZ": "Chuvisco leve.",
+    "DZ": "Chuvisco moderado.",
+    "+DZ": "Chuvisco forte.",
+    "-RA": "Chuva leve.",
+    "RA": "Chuva moderada.",
+    "+RA": "Chuva forte.",
+    "-SN": "Neve leve.",
+    "SN": "Neve moderada.",
+    "+SN": "Neve forte.",
+    "-SG": "Grãos de neve leve.",
+    "SG": "Grãos de neve moderado.",
+    "+SG": "Grãos de neve forte.",
+    "-PL": "Pelotas de gelo leve.",
+    "PL": "Pelotas de gelo moderado.",
+    "+PL": "Pelotas de gelo forte.",
+    "-GR": "Granizo leve.",
+    "GR": "Granizo moderado.",
+    "+GR": "Granizo forte.",
+    "-GS": "Granizo pequeno e/ou grãos de neve leve.",
+    "GS": "Granizo pequeno e/ou grãos de neve moderado.",
+    "+GS": "Granizo pequeno e/ou grãos de neve forte.",
+    "-BR": "Névoa úmida leve.",
+    "BR": "Névoa úmida moderada.",
+    "+BR": "Névoa úmida densa.",
+    "-FG": "Nevoeiro leve.",
+    "FG": "Nevoeiro moderado.",
+    "+FG": "Nevoeiro denso.",
+    "-FU": "Fumaça leve.",
+    "FU": "Fumaça moderada.",
+    "+FU": "Fumaça densa.",
+    "-VA": "Cinzas vulcânicas leve.",
+    "VA": "Cinzas vulcânicas moderada.",
+    "+VA": "Cinzas vulcânicas densa.",
+    "-DU": "Poeira extensa leve.",
+    "DU": "Poeira extensa moderada.",
+    "+DU": "Poeira extensa densa.",
+    "-SA": "Areia leve.",
+    "SA": "Areia moderada.",
+    "+SA": "Areia densa.",
+    "-HZ": "Névoa seca leve.",
+    "HZ": "Névoa seca moderada.",
+    "+HZ": "Névoa seca densa.",
+    "-PO": "Poeira/areia em redemoinhos leve.",
+    "PO": "Poeira/areia em redemoinhos moderada.",
+    "+PO": "Poeira/areia em redemoinhos densa.",
+    "-SQ": "Tempestade leve.",
+    "SQ": "Tempestade moderada.",
+    "+SQ": "Tempestade forte.",
+    "-FC": "Nuvem(ns) funil (tornado ou tromba d’água) leve.",
+    "FC": "Nuvem(ns) funil (tornado ou tromba d’água) moderada.",
+    "+FC": "Nuvem(ns) funil (tornado ou tromba d’água) densa.",
+    "-SS": "Tempestade de areia leve.",
+    "SS": "Tempestade de areia moderada.",
+    "+SS": "Tempestade de areia densa.",
+    "-DS": "Tempestade de poeira leve.",
+    "DS": "Tempestade de poeira moderada.",
+    "+DS": "Tempestade de poeira densa.",
+    "-TS": "Trovoada, Raios e Relâmpagos leve.",
+    "TS": "Trovoada, Raios e Relâmpagos moderada.",
+    "+TS": "Trovoada, Raios e Relâmpagos densa.",
+    "RERA": "Fenômenos meteorológicos recentes.",
+    "WS": "Tesoura de vento (windshear)",
+    "NSC": "No Significant Cloud, podem haver algumas nuvens, mas nenhuma está abaixo de 5000 pés ou dentro de 10 quilômetros.",
+}
 
 def decode(metar: str) -> dict:
     #metar = "METAR SBSP 290400Z AUTO 19008KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
@@ -39,37 +109,6 @@ def decode(metar: str) -> dict:
             elif sector == "SW": sector = "sudoeste"
         
             ret.append((item, f"No setor {sector} do aerodromo, visibilidade {vis}m."))
-        
-        elif item == "-RA":
-            ret.append((item, f"Chuva leve."))
-        
-        elif item == "RA":
-            ret.append((item, f"Chuva moderada."))
-        
-        elif item == "+RA":
-            ret.append((item, f"Chuva forte."))
-
-            
-        elif item == "-DZ":
-            ret.append((item, f"Chuvisco leve."))
-        
-        elif item == "DZ":
-            ret.append((item, f"Chuvisco moderado."))
-        
-        elif item == "+DZ":
-            ret.append((item, f"Chuvisco forte."))
-
-
-        elif item == "-GR":
-            ret.append((item, f"Granizo leve."))
-        
-        elif item == "GR":
-            ret.append((item, f"Granizo moderado."))
-        
-        elif item == "+GR":
-            ret.append((item, f"Granizo forte."))
-
-        
         
         elif (wind := re.findall("(\d{3})(\d{2})KT", item)) != []:
             [(direction, speed)] = wind
@@ -111,6 +150,13 @@ def decode(metar: str) -> dict:
         elif item == "CAVOK":
             ret.append((item, "Ceiling and Visibility OK. Sem nuvens e visibilidade OK."))
         
+        elif (runway := re.findall("RWY(\d{2}[RLC]*)", item)) != []:
+            [runway] = runway
+            ret.append((item, f"Informação anterior se refere a pista {runway}"))
+        
+        elif item in other_items:
+            ret.append((item, other_items[item]))
+        
         else:
             ret.append((item, ""))
 
@@ -128,5 +174,5 @@ class DecodeError(Exception):
         super().__init__(message)
 
 if __name__ == "__main__":
-    metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
+    metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA -DU BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
     print(decode(metar))
