@@ -4,21 +4,54 @@ import re
 from airportDatabase import get_info
 
 def get_wind(metar):
+    ret = None
     try:
-        [(wind_dir, wind_speed)] = re.findall("(\d{3})(\d{2})KT", metar)
-    except ValueError:
-        wind_dir, wind_speed = 0, 0
+        wind_m = re.search(r"(\d{3}|VRB)(\d{2})(G\d{2,3})?KT", metar)
+        variable_direction_m = re.search(r"(\d{3})V(\d{3})", metar)
+        if wind_m:
+            wind_dir = wind_m.group(1)
+            wind_speed = wind_m.group(2)
+            gust_match = wind_m.group(3)
 
-    return wind_dir, wind_speed
+            ret = [wind_dir, wind_speed, None, None, None]
+            if gust_match:
+                ret[2] = gust_match.replace("G", "")
+
+            if variable_direction_m:
+                ret[3] = variable_direction_m[1]
+                ret[4] = variable_direction_m[2]
+    except ValueError:
+        pass
+
+    return ret
 
 def get_components(icao: str, metar: str):
-    #metar = "171800Z 28010KT 260V320 9999 SCT035 FEW040TCU 33/19 Q1012"
-    wind_dir, wind_speed = get_wind(metar)
+    metar = "171800Z 28010KT 9999 SCT035 FEW040TCU 33/19 Q1012"
+    wind_dir, wind_speed, gust_speed, wind_dir_min, wind_dir_max = get_wind(metar)
     r = {}
     for (rwy_name, rwy_direction) in get_runways(icao):
-        print(rwy_direction)
         r[rwy_name] = get_components_one_runway(rwy_direction, int(wind_dir), int(wind_speed))
-    print(r)
+        
+        if gust_speed is not None:
+            r[rwy_name]["gust"] = get_components_one_runway(rwy_direction, int(wind_dir), int(gust_speed))
+        else:
+            r[rwy_name]["gust"] = None
+
+        if wind_dir_min is not None and wind_dir_max is not None :
+            r[rwy_name]["wind_var_min"] = get_components_one_runway(rwy_direction, int(wind_dir_min), int(wind_speed))
+            r[rwy_name]["wind_var_max"] = get_components_one_runway(rwy_direction, int(wind_dir_max), int(wind_speed))
+
+            if gust_speed is not None:
+                r[rwy_name]["wind_var_min"]["gust"] = get_components_one_runway(rwy_direction, int(wind_dir_min), int(gust_speed))
+                r[rwy_name]["wind_var_max"]["gust"] = get_components_one_runway(rwy_direction, int(wind_dir_max), int(gust_speed))
+            else:
+                r[rwy_name]["wind_var_min"]["gust"] = None
+                r[rwy_name]["wind_var_max"]["gust"] = None
+        else:
+            r[rwy_name]["wind_var_min"] = None
+            r[rwy_name]["wind_var_max"] = None
+
+
     return r
 
 def get_components_one_runway(runway_head: int, wind_dir:int, wind_speed: int):
