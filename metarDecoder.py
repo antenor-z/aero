@@ -112,40 +112,40 @@ def decode(metar: str) -> dict:
         
         elif (wind := re.findall("(\d{3})(\d{2})KT", item)) != []:
             [(direction, speed)] = wind
-            ret.append((item, f"Vento proa {direction}° com velocidade {speed} nós (kt)."))
+            ret.append((item, f"Vento proa <b>{direction}</b>° com velocidade <b>{speed}</b> nós (kt)."))
         
         elif (wind := re.findall("VRB(\d{2})KT", item)) != []:
             [speed] = wind
-            ret.append((item, f"Vento com direção variável e velocidade {speed} nós (kt)."))
+            ret.append((item, f"Vento com direção <b>variável</b> e velocidade {speed} nós (kt)."))
         
         elif (wind := re.findall("(\d{3})(\d+)G(\d+)KT", item)) != []:
             [(direction, speed, gust)] = wind
-            ret.append((item, f"Vento proa {direction}° com velocidade {speed} nós (kt) e rajadas de {gust} nós."))
+            ret.append((item, f"Vento proa {direction}° com velocidade {speed} nós (kt) e <b>rajadas</b> de {gust} nós."))
         
         elif (wind := re.findall("(\d{3})V(\d{3})", item)) != []:
             [(wind1, wind2)] = wind
-            ret.append((item, f"Vento variável de proa {wind1}° até {wind2}°."))
+            ret.append((item, f"Vento <b>variável</b> de proa {wind1}° até {wind2}°."))
         
         elif (cloud := re.findall("([A-Z]{3})(\d{3})", item)) != []:
             [(cloud_type, cloud_altitude)] = cloud
             cloud_altitude = int(cloud_altitude) * 100
 
             if cloud_type == "OVC": cloud_type = "Totalmente encoberto"
-            elif cloud_type == "BKN": cloud_type = "Nuvens quebradas (5/8 a 7/8 do céu com nuvens)"
+            elif cloud_type == "BKN": cloud_type = "Nuvens broken (5/8 a 7/8 do céu com nuvens)"
             elif cloud_type == "SCT": cloud_type = "Nuvens espalhadas (3/8 a 4/8 do céu com nuvens)"
             elif cloud_type == "FEW": cloud_type = "Poucas nuvens (1/8 a 2/8 do céu com nuvens)"
-            ret.append((item, f"{cloud_type} em {cloud_altitude} pés de altitude."))
+            ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude."))
 
         elif (temp := re.findall("(\d+)/(\d+)", item)) != []:
             [(temperature, dew_point)] = temp
             if (int(temperature) - int(dew_point) < 4):
-                ret.append((item, f"Temperatura {temperature}°C e ponto de orvalho {dew_point}°C. Existe chance de chuva, pois as duas temperaturas estão próximas."))
+                ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C. Existe chance de chuva, pois as duas temperaturas estão próximas."))
             else:
-                ret.append((item, f"Temperatura {temperature}°C e ponto de orvalho {dew_point}°C. Provavelmente não choverá, pois as duas temperaturas estão distantes."))
+                ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C. Provavelmente não choverá, pois as duas temperaturas estão distantes."))
         
         elif (qnh := re.findall("Q(\d{4})", item)) != []:
             [qnh] = qnh
-            ret.append((item, f"O altímetro deve ser ajustado para a pressão {qnh} hPa"))
+            ret.append((item, f"O altímetro deve ser ajustado para <b>{qnh}</b> hPa ({convert_to_inhg(qnh)} inHg)"))
         
         elif item == "CAVOK":
             ret.append((item, "Ceiling and Visibility OK. Sem nuvens e visibilidade OK."))
@@ -161,6 +161,10 @@ def decode(metar: str) -> dict:
             ret.append((item, ""))
 
     return ret
+
+def convert_to_inhg(hpa):
+    return round(float(hpa) / 33.8639, 2)
+
 
 def get_wind_info(metar: str) -> dict:
     if (wind := re.findall("(\d{3})(\d{2})KT", metar)) != []:
