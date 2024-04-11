@@ -4,12 +4,17 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 Base = declarative_base()
 
+class City(Base):
+    __tablename__ = 'City'
+
+    CityName = Column(String(50), primary_key=True)
+
 class Aerodrome(Base):
     __tablename__ = 'Aerodrome'
 
     ICAO = Column(String(4), primary_key=True)
     AerodromeName = Column(String(100), nullable=False)
-    City = Column(String(100), nullable=False)
+    City = Column(String(100), ForeignKey('City.CityName'), nullable=False)
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
     __table_args__ = (
@@ -33,7 +38,7 @@ class Runway(Base):
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
     Head1 = Column(String(3), nullable=False)
     Head2 = Column(String(3), nullable=False)
-    RunwayLength = Column(Integer)
+    RunwayLength = Column(Integer, nullable=False)
     RunwayWidth = Column(Integer)
     PavementCode = Column(String(3), ForeignKey('PavementType.Code'))
 
