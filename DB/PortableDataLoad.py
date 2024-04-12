@@ -28,6 +28,16 @@ session.add_all([
 session.add_all([
     City(CityName="São Paulo"),
     City(CityName="Rio de Janeiro"),
+    City(CityName="Campinas"),
+    City(CityName="Fortaleza"),
+    City(CityName="Teresina"),
+    City(CityName="Curitiba"),
+    City(CityName="Belo Horizonte"),
+    City(CityName="Natal"),
+    City(CityName="Brasília"),
+    City(CityName="Recife"),
+    City(CityName="Salvador"),
+    City(CityName="Porto Alegre"),
 ])
 
 session.commit()
@@ -101,7 +111,6 @@ session.add_all([
     Communication(ICAO="SBGL", Frequency=118.000, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=118.200, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=121.500, CommType="Torre"),
-    Communication(ICAO="SBGL", Frequency=121.000, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=121.650, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=121.000, CommType="Tráfego"),
     Communication(ICAO="SBGL", Frequency=135.100, CommType="Tráfego"),
@@ -234,10 +243,8 @@ session.add_all([
     Communication(ICAO='SBSV', Frequency=118.300, CommType='Torre'),
     Communication(ICAO='SBSV', Frequency=118.600, CommType='Torre'),
     Communication(ICAO='SBSV', Frequency=118.950, CommType='Torre'),
-    Communication(ICAO='SBSV', Frequency=121.100, CommType='Torre'),
     Communication(ICAO='SBSV', Frequency=121.500, CommType='Torre'),
     Communication(ICAO='SBSV', Frequency=121.900, CommType='Solo'),
-    Communication(ICAO='SBSV', Frequency=122.500, CommType='Operações'),
     Communication(ICAO='SBSV', Frequency=121.100, CommType='Tráfego'),
     Communication(ICAO='SBSV', Frequency=122.500, CommType='Tráfego'),
     Communication(ICAO='SBSV', Frequency=127.750, CommType='ATIS'),
