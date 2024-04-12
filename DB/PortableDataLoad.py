@@ -50,8 +50,8 @@ session.add_all([
     Communication(ICAO="SBSP", Frequency=120.600, CommType="Tráfego"),
     Communication(ICAO="SBSP", Frequency=127.650, CommType="ATIS")])
 session.add_all([
-    Runway(ICAO="SBSP", Head1="17R", Head2="35L", RunwayLength=1940, RunwayWidth=45, PavementCode="ASP"),
-    Runway(ICAO="SBSP", Head1="17L", Head2="35R", RunwayLength=1495, RunwayWidth=30, PavementCode="ASP"),
+    Runway(ICAO="SBSP", Head1="17L", Head2="35R", RunwayLength=1495, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO="SBSP", Head1="17R", Head2="35L", RunwayLength=1883, RunwayWidth=45, PavementCode="ASP"),
 ])
 session.add_all([
     ILS(ICAO="SBSP", Ident="ISP", RunwayHead="17R", Frequency=109.3, Category="I", CRS="169", Minimum=200),
@@ -80,11 +80,12 @@ session.add_all([
     Communication(ICAO="SBGR", Frequency=135.200, CommType="Torre"),
     Communication(ICAO="SBGR", Frequency=121.700, CommType="Solo"),
     Communication(ICAO="SBGR", Frequency=126.900, CommType="Solo"),
+    Communication(ICAO="SBGR", Frequency=122.500, CommType="Operações"),
     Communication(ICAO="SBGR", Frequency=121.000, CommType="Tráfego"),
     Communication(ICAO="SBGR", Frequency=127.750, CommType="ATIS")])
 session.add_all([
-    Runway(ICAO="SBGR", Head1="28L", Head2="10R", RunwayLength=3000, RunwayWidth=45, PavementCode="ASP"),
-    Runway(ICAO="SBGR", Head1="28R", Head2="10L", RunwayLength=3700, RunwayWidth=30, PavementCode="ASP"),
+    Runway(ICAO="SBGR", Head1="10R", Head2="28L", RunwayLength=3000, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO="SBGR", Head1="10L", Head2="28R", RunwayLength=3700, RunwayWidth=30, PavementCode="ASP"),
 ])
 session.add_all([
     ILS(ICAO="SBGR", Ident="IBC", RunwayHead="28L", Frequency=111.1, Category="I", CRS="275", Minimum=200),
@@ -102,8 +103,8 @@ session.add_all([
     Communication(ICAO="SBRJ", Frequency=121.050, CommType="Tráfego"),
     Communication(ICAO="SBRJ", Frequency=132.650, CommType="ATIS")])
 session.add_all([
-    Runway(ICAO="SBRJ", Head1="20L", Head2="02R", RunwayLength=1323, RunwayWidth=45, PavementCode="ASP"),
-    Runway(ICAO="SBRJ", Head1="20R", Head2="02L", RunwayLength=1260, RunwayWidth=30, PavementCode="ASP"),
+    Runway(ICAO="SBRJ", Head1="02L", Head2="20R", RunwayLength=1260, RunwayWidth=30, PavementCode="ASP"),
+    Runway(ICAO="SBRJ", Head1="02R", Head2="20L", RunwayLength=1323, RunwayWidth=42, PavementCode="ASP"),
 ])
 
 session.add(Aerodrome(ICAO='SBGL', AerodromeName='Antônio Carlos Jobim', City='Rio de Janeiro', Latitude=-22.806812, Longitude=-43.236409))
@@ -111,7 +112,8 @@ session.add_all([
     Communication(ICAO="SBGL", Frequency=118.000, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=118.200, CommType="Torre"),
     Communication(ICAO="SBGL", Frequency=121.500, CommType="Torre"),
-    Communication(ICAO="SBGL", Frequency=121.650, CommType="Torre"),
+    Communication(ICAO="SBGL", Frequency=121.650, CommType="Solo"),
+    Communication(ICAO="SBGL", Frequency=128.350, CommType="Solo"),
     Communication(ICAO="SBGL", Frequency=121.000, CommType="Tráfego"),
     Communication(ICAO="SBGL", Frequency=135.100, CommType="Tráfego"),
     Communication(ICAO="SBGL", Frequency=127.600, CommType="ATIS"),
@@ -120,12 +122,16 @@ session.add_all([
     Communication(ICAO="SBGL", Frequency=131.050, CommType="Rampa"),
     ])
 session.add_all([
-    Runway(ICAO="SBGL", Head1="10", Head2="28", RunwayLength=4000, RunwayWidth=60, PavementCode="ASP"),
-    Runway(ICAO="SBGL", Head1="15", Head2="33", RunwayLength=3180, RunwayWidth=60, PavementCode="ASP"),
+    Runway(ICAO="SBGL", Head1="10", Head2="28", RunwayLength=4000, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO="SBGL", Head1="15", Head2="33", RunwayLength=3180, RunwayWidth=47, PavementCode="ASP"),
+])
+session.add_all([
+    VOR(ICAO='SBGL', Ident='PCX', Frequency=114.6),
+    VOR(ICAO='SBGL', Ident='CXI', Frequency=112.3),
 ])
 session.add_all([
     ILS(ICAO="SBGL", Ident="IJB", RunwayHead="15", Frequency=110.5, Category="I", CRS="149", Minimum=217),
-    ILS(ICAO="SBGL", Ident="ITB", RunwayHead="10", Frequency=109.7, Category="II", CRS="097", Minimum=100),
+    ILS(ICAO="SBGL", Ident="ITB", RunwayHead="10", Frequency=109.3, Category="II", CRS="097", Minimum=100),
     ILS(ICAO="SBGL", Ident="ILM", RunwayHead="28", Frequency=111.5, Category="I", CRS="278", Minimum=500),
 ])
 
@@ -137,7 +143,7 @@ session.add_all([
     Communication(ICAO="SBKP", Frequency=127.825, CommType="Atis"),
     ])
 session.add_all([
-    Runway(ICAO="SBKP", Head1="15", Head2="33", RunwayLength=3240, RunwayWidth=60, PavementCode="ASP"),
+    Runway(ICAO="SBKP", Head1="15", Head2="33", RunwayLength=3240, RunwayWidth=45, PavementCode="ASP"),
 ])
 session.add_all([
     ILS(ICAO="SBKP", Ident="IKP", RunwayHead="15", Frequency=110.3, Category="I", CRS="149", Minimum=200),
