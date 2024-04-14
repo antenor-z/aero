@@ -17,6 +17,7 @@ class Aerodrome(Base):
     City = Column(String(100), ForeignKey('City.CityName'), nullable=False)
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
+    METAR = Column(String(100), nullable=True)
     __table_args__ = (
         UniqueConstraint('AerodromeName'),
     )

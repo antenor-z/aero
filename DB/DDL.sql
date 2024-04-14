@@ -9,6 +9,7 @@ CREATE TABLE `Aerodrome` (
   `City` varchar(100) NOT NULL,
   `Latitude` decimal(9,6) NOT NULL,
   `Longitude` decimal(9,6) NOT NULL,
+  `METAR` varchar(100),
   PRIMARY KEY (`ICAO`),
   UNIQUE KEY `AerodromeName` (`AerodromeName`),
   KEY `City` (`City`),
