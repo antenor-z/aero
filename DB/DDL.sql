@@ -1,68 +1,81 @@
-CREATE TABLE Aerodrome (
-    ICAO VARCHAR(4) PRIMARY KEY,
-    AerodromeName VARCHAR(100) NOT NULL,
-    City VARCHAR(100) NOT NULL,
-    Latitude DECIMAL(9, 6) NOT NULL,
-    Longitude DECIMAL(9, 6) NOT NULL,
-    UNIQUE (AerodromeName)
+CREATE TABLE `City` (
+  `CityName` varchar(50) NOT NULL,
+  PRIMARY KEY (`CityName`)
 );
 
-CREATE TABLE PavementType (
-    Code VARCHAR(3) PRIMARY KEY,
-    Material VARCHAR(50) NOT NULL
+CREATE TABLE `Aerodrome` (
+  `ICAO` varchar(4) NOT NULL,
+  `AerodromeName` varchar(100) NOT NULL,
+  `City` varchar(100) NOT NULL,
+  `Latitude` decimal(9,6) NOT NULL,
+  `Longitude` decimal(9,6) NOT NULL,
+  PRIMARY KEY (`ICAO`),
+  UNIQUE KEY `AerodromeName` (`AerodromeName`),
+  KEY `City` (`City`),
+  FOREIGN KEY (`City`) REFERENCES `City` (`CityName`)
 );
 
-CREATE TABLE Runway (
-    ICAO VARCHAR(4) NOT NULL,
-    Head1 VARCHAR(3) NOT NULL,
-    Head2 VARCHAR(3) NOT NULL,
-    RunwayLength INT(4),
-    RunwayWidth INT(2),
-    PavementCode VARCHAR(3),
-    PRIMARY KEY (ICAO, Head1),
-    FOREIGN KEY (ICAO) REFERENCES Aerodrome (ICAO),
-    FOREIGN KEY (PavementCode) REFERENCES PavementType (Code),
-    UNIQUE (ICAO, Head1, Head2)
+CREATE TABLE `CommunicationType` (
+  `CommType` varchar(20) NOT NULL,
+  PRIMARY KEY (`CommType`)
 );
 
-CREATE TABLE CommunicationType (
-    CommType VARCHAR(20) PRIMARY KEY
+CREATE TABLE `Communication` (
+  `ICAO` varchar(4) NOT NULL,
+  `Frequency` decimal(6,3) NOT NULL,
+  `CommType` varchar(20) NOT NULL,
+  PRIMARY KEY (`ICAO`,`Frequency`),
+  UNIQUE KEY `ICAO` (`ICAO`,`Frequency`),
+  KEY `CommType` (`CommType`),
+  FOREIGN KEY (`ICAO`) REFERENCES `Aerodrome` (`ICAO`),
+  FOREIGN KEY (`CommType`) REFERENCES `CommunicationType` (`CommType`)
 );
 
-CREATE TABLE Communication (
-    Id INT AUTO_INCREMENT,
-    ICAO VARCHAR(4),
-    Frequency DECIMAL(6, 3) NOT NULL,
-    CommType VARCHAR(20),
-    PRIMARY KEY (ICAO, Id),
-    FOREIGN KEY (ICAO) REFERENCES Aerodrome (ICAO),
-    FOREIGN KEY (CommType) REFERENCES CommunicationType (CommType),
-    UNIQUE (ICAO, Frequency)
+CREATE TABLE `PavementType` (
+  `Code` varchar(3) NOT NULL,
+  `Material` varchar(50) NOT NULL,
+  PRIMARY KEY (`Code`)
 );
 
-CREATE TABLE ILSCategory (
-    Category VARCHAR(10) PRIMARY KEY
+CREATE TABLE `Runway` (
+  `ICAO` varchar(4) NOT NULL,
+  `Head1` varchar(3) NOT NULL,
+  `Head2` varchar(3) NOT NULL,
+  `RunwayLength` int(11) NOT NULL,
+  `RunwayWidth` int(11) DEFAULT NULL,
+  `PavementCode` varchar(3) DEFAULT NULL,
+  PRIMARY KEY (`ICAO`,`Head1`),
+  UNIQUE KEY `ICAO` (`ICAO`,`Head1`,`Head2`),
+  KEY `PavementCode` (`PavementCode`),
+  FOREIGN KEY (`ICAO`) REFERENCES `Aerodrome` (`ICAO`),
+  FOREIGN KEY (`PavementCode`) REFERENCES `PavementType` (`Code`)
 );
 
-CREATE TABLE ILS (
-    ICAO VARCHAR(4),
-    Ident VARCHAR(20) NOT NULL,
-    Frequency DECIMAL(6, 3) NOT NULL,
-    Category VARCHAR(10) NOT NULL,
-    CRS VARCHAR(10) NOT NULL,
-    Minimum INT,
-    PRIMARY KEY (ICAO, Ident),
-    FOREIGN KEY (ICAO) REFERENCES Aerodrome (ICAO),
-    FOREIGN KEY (Category) REFERENCES ILSCategory (Category),
-    UNIQUE (ICAO, Frequency),
-    UNIQUE (ICAO, Ident)
+CREATE TABLE `ILSCategory` (
+  `Category` varchar(10) NOT NULL,
+  PRIMARY KEY (`Category`)
 );
 
-CREATE TABLE VORNDB (
-    ICAO VARCHAR(4),
-    Ident VARCHAR(20) NOT NULL,
-    Frequency DECIMAL(6, 3) NOT NULL,
-    PRIMARY KEY (ICAO, Ident),
-    FOREIGN KEY (ICAO) REFERENCES Aerodrome (ICAO),
-    UNIQUE (ICAO, Frequency)
+CREATE TABLE `ILS` (
+  `ICAO` varchar(4) NOT NULL,
+  `Ident` varchar(20) NOT NULL,
+  `RunwayHead` varchar(3) NOT NULL,
+  `Frequency` decimal(6,3) NOT NULL,
+  `Category` varchar(10) NOT NULL,
+  `CRS` varchar(10) NOT NULL,
+  `Minimum` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ICAO`,`Ident`),
+  UNIQUE KEY `ICAO` (`ICAO`,`Frequency`),
+  KEY `Category` (`Category`),
+  FOREIGN KEY (`ICAO`) REFERENCES `Aerodrome` (`ICAO`),
+  FOREIGN KEY (`Category`) REFERENCES `ILSCategory` (`Category`)
+);
+
+CREATE TABLE `VOR` (
+  `ICAO` varchar(4) NOT NULL,
+  `Ident` varchar(20) NOT NULL,
+  `Frequency` decimal(6,3) NOT NULL,
+  PRIMARY KEY (`ICAO`,`Ident`),
+  UNIQUE KEY `ICAO` (`ICAO`,`Frequency`),
+  FOREIGN KEY (`ICAO`) REFERENCES `Aerodrome` (`ICAO`)
 );
