@@ -60,7 +60,7 @@ class Communication(Base):
 
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
     Frequency = Column(DECIMAL(6, 3), nullable=False)
-    CommType = Column(String(20), ForeignKey('CommunicationType.CommType'))
+    CommType = Column(String(20), ForeignKey('CommunicationType.CommType'), nullable=False)
 
     __table_args__ = (
         PrimaryKeyConstraint('ICAO', 'Frequency'),
