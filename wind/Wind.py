@@ -1,7 +1,7 @@
 import math
 import re
 
-from airportDatabase import get_info
+from DB.Getter import get_info
 
 def get_wind(metar):
     ret = None
@@ -91,9 +91,9 @@ def get_runways(icao: str):
     [('17R', 170), ('35L', 350), ('17L', 170), ('35R', 350)]
     """
     r = []
-    for runway in get_info(icao)["rwy"]:
-        rwy_without_letter = runway["head"][0].replace("L", "").replace("C", "").replace("R", "")
-        r.append((runway["head"][0], int(rwy_without_letter) * 10))
-        rwy_without_letter = runway["head"][1].replace("L", "").replace("C", "").replace("R", "")
-        r.append((runway["head"][1], int(rwy_without_letter) * 10))
+    for runway in get_info(icao)["runways"]:
+        rwy_without_letter = runway["Head1"].replace("L", "").replace("C", "").replace("R", "")
+        r.append((runway["Head1"], int(rwy_without_letter) * 10))
+        rwy_without_letter = runway["Head2"].replace("L", "").replace("C", "").replace("R", "")
+        r.append((runway["Head2"], int(rwy_without_letter) * 10))
     return r
