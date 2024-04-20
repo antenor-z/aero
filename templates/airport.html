@@ -28,9 +28,10 @@
 					<div class="runway-number tooltip">
 						{{ runway.Head1 }} - {{ runway.Head2 }}
 					</div>
-					<span class="runway-length center-text tooltip">({{ runway.RunwayLength }}m)
+					<span class="runway-length center-text tooltip">ⓘ
 						<span class="tooltip tooltip-text">
-							Comprimento desta pista.
+							Comprimento: {{ runway.RunwayLength }} m<br />
+							Largura: {{ runway.RunwayWidth }} m
 						</span>
 					</span>
 				</div>
@@ -56,8 +57,8 @@
 				</span>
 
 				<span class="tooltip">ⓘ
-					<span class="tooltip tooltip-text" style="text-align: right;">
-						ILS CAT {{ils.Category}}<br />
+					<span class="tooltip tooltip-text tooltip-left" style="text-align: right;">
+						<div style="font-size: 1.1em;">ILS CAT {{ils.Category}}</div>
 						Altitude de decisão: {{ ils.Minimum }}<br />
 						Curso final: {{ils.CRS}}° 
 					</span>
