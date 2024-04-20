@@ -2,6 +2,10 @@ from sqlalchemy import PrimaryKeyConstraint, create_engine,\
     Column, Integer, String, DECIMAL, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
+from dotenv import dotenv_values
+
+CONFIG: dict = dotenv_values()
+
 Base = declarative_base()
 
 class City(Base):
@@ -13,8 +17,8 @@ class Aerodrome(Base):
     __tablename__ = 'Aerodrome'
 
     ICAO = Column(String(4), primary_key=True)
-    AerodromeName = Column(String(100), nullable=False)
-    City = Column(String(100), ForeignKey('City.CityName'), nullable=False)
+    AerodromeName = Column(String(50), nullable=False)
+    City = Column(String(30), ForeignKey('City.CityName'), nullable=False)
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
     METAR = Column(String(100), nullable=True)
@@ -31,7 +35,7 @@ class PavementType(Base):
     __tablename__ = 'PavementType'
 
     Code = Column(String(3), primary_key=True)
-    Material = Column(String(50), nullable=False)
+    Material = Column(String(20), nullable=False)
 
 class Runway(Base):
     __tablename__ = 'Runway'
@@ -77,11 +81,11 @@ class ILS(Base):
     __tablename__ = 'ILS'
 
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
-    Ident = Column(String(20), nullable=False)
+    Ident = Column(String(3), nullable=False)
     RunwayHead = Column(String(3), nullable=False)
     Frequency = Column(DECIMAL(6, 3), nullable=False)
     Category = Column(String(10), ForeignKey('ILSCategory.Category'), nullable=False)
-    CRS = Column(String(10), nullable=False)
+    CRS = Column(Integer, nullable=False)
     Minimum = Column(Integer)
 
     __table_args__ = (
@@ -93,7 +97,7 @@ class VOR(Base):
     __tablename__ = 'VOR'
 
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
-    Ident = Column(String(20), nullable=False)
+    Ident = Column(String(3), nullable=False)
     Frequency = Column(DECIMAL(6, 3), nullable=False)
 
     __table_args__ = (
@@ -105,7 +109,7 @@ class VOR(Base):
 # GRANT ALL PRIVILEGES ON aero.* TO 'aero-user'@'localhost';
 # FLUSH PRIVILEGES;
 
-db_url = 'mysql+pymysql://aero-user:123@localhost:3306/aero'
+db_url = f'mysql+pymysql://aero-user:{CONFIG["DB_PASSWORD"]}@localhost:3306/aero'
 
 engine = create_engine(db_url)
 Base.metadata.create_all(engine)

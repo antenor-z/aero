@@ -54,8 +54,8 @@ session.add_all([
     Runway(ICAO="SBSP", Head1="17R", Head2="35L", RunwayLength=1883, RunwayWidth=45, PavementCode="ASP"),
 ])
 session.add_all([
-    ILS(ICAO="SBSP", Ident="ISP", RunwayHead="17R", Frequency=109.3, Category="I", CRS="169", Minimum=200),
-    ILS(ICAO="SBSP", Ident="ISO", RunwayHead="35L", Frequency=109.7, Category="I", CRS="349", Minimum=200),
+    ILS(ICAO="SBSP", Ident="ISP", RunwayHead="17R", Frequency=109.3, Category="I", CRS=169, Minimum=200),
+    ILS(ICAO="SBSP", Ident="ISO", RunwayHead="35L", Frequency=109.7, Category="I", CRS=349, Minimum=200),
 ])
 session.add_all([
     VOR(ICAO="SBSP", Ident="CGO", Frequency=116.9),
@@ -88,10 +88,10 @@ session.add_all([
     Runway(ICAO="SBGR", Head1="10L", Head2="28R", RunwayLength=3700, RunwayWidth=30, PavementCode="ASP"),
 ])
 session.add_all([
-    ILS(ICAO="SBGR", Ident="IBC", RunwayHead="28L", Frequency=111.1, Category="I", CRS="275", Minimum=200),
-    ILS(ICAO="SBGR", Ident="IGH", RunwayHead="10R", Frequency=111.7, Category="IIIC", CRS="095", Minimum=0),
-    ILS(ICAO="SBGR", Ident="IGS", RunwayHead="28R", Frequency=111.9, Category="I", CRS="275", Minimum=200),
-    ILS(ICAO="SBGR", Ident="IUC", RunwayHead="10L", Frequency=110.7, Category="II", CRS="095", Minimum=100),
+    ILS(ICAO="SBGR", Ident="IBC", RunwayHead="28L", Frequency=111.1, Category="I", CRS=275, Minimum=200),
+    ILS(ICAO="SBGR", Ident="IGH", RunwayHead="10R", Frequency=111.7, Category="IIIC", CRS=95, Minimum=0),
+    ILS(ICAO="SBGR", Ident="IGS", RunwayHead="28R", Frequency=111.9, Category="I", CRS=275, Minimum=200),
+    ILS(ICAO="SBGR", Ident="IUC", RunwayHead="10L", Frequency=110.7, Category="II", CRS=95, Minimum=100),
 ])
 
 
@@ -130,9 +130,9 @@ session.add_all([
     VOR(ICAO='SBGL', Ident='CXI', Frequency=112.3),
 ])
 session.add_all([
-    ILS(ICAO="SBGL", Ident="IJB", RunwayHead="15", Frequency=110.5, Category="I", CRS="149", Minimum=217),
-    ILS(ICAO="SBGL", Ident="ITB", RunwayHead="10", Frequency=109.3, Category="II", CRS="097", Minimum=100),
-    ILS(ICAO="SBGL", Ident="ILM", RunwayHead="28", Frequency=111.5, Category="I", CRS="278", Minimum=500),
+    ILS(ICAO="SBGL", Ident="IJB", RunwayHead="15", Frequency=110.5, Category="I", CRS=149, Minimum=217),
+    ILS(ICAO="SBGL", Ident="ITB", RunwayHead="10", Frequency=109.3, Category="II", CRS=97, Minimum=100),
+    ILS(ICAO="SBGL", Ident="ILM", RunwayHead="28", Frequency=111.5, Category="I", CRS=278, Minimum=500),
 ])
 
 session.add(Aerodrome(ICAO='SBKP', AerodromeName='Viracopos', City='Campinas', Latitude=-23.006848, Longitude=-47.136147))
@@ -146,7 +146,7 @@ session.add_all([
     Runway(ICAO="SBKP", Head1="15", Head2="33", RunwayLength=3240, RunwayWidth=45, PavementCode="ASP"),
 ])
 session.add_all([
-    ILS(ICAO="SBKP", Ident="IKP", RunwayHead="15", Frequency=110.3, Category="I", CRS="149", Minimum=200),
+    ILS(ICAO="SBKP", Ident="IKP", RunwayHead="15", Frequency=110.3, Category="I", CRS=149, Minimum=200),
 ])
 
 session.add_all([
