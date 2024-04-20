@@ -158,7 +158,7 @@ session.add_all([
     Communication(ICAO='SBFZ', Frequency=127.7, CommType='ATIS'),
     ILS(ICAO='SBFZ', Ident='IFO', RunwayHead='13', Frequency=110.3, CRS='126', Category='I', Minimum=200),
     VOR(ICAO='SBFZ', Ident='FLZ', Frequency=114.1),
-    Runway(ICAO='SBFZ', Head1='13', Head2='31', RunwayLength=2755, PavementCode="ASP"),
+    Runway(ICAO='SBFZ', Head1='13', Head2='31', RunwayLength=2755, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -166,7 +166,7 @@ session.add_all([
     Communication(ICAO='SBTE', Frequency=118.8, CommType='Torre'),
     Communication(ICAO='SBTE', Frequency=127.8, CommType='ATIS'),
     VOR(ICAO='SBTE', Ident='TNA', Frequency=112.9),
-    Runway(ICAO='SBTE', Head1='20', Head2='02', RunwayLength=2200, PavementCode="ASP"),
+    Runway(ICAO='SBTE', Head1='20', Head2='02', RunwayLength=2200, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -179,8 +179,8 @@ session.add_all([
     ILS(ICAO='SBCT', Ident='ITA', RunwayHead='33', Frequency=110.3, CRS='334', Category='I', Minimum=200),
     ILS(ICAO='SBCT', Ident='ICT', RunwayHead='15', Frequency=109.3, CRS='154', Category='II', Minimum=110),
     VOR(ICAO='SBCT', Ident='CTB', Frequency=116.5),
-    Runway(ICAO='SBCT', Head1='15', Head2='33', RunwayLength=2218, PavementCode="ASP"),
-    Runway(ICAO='SBCT', Head1='11', Head2='29', RunwayLength=1798, PavementCode="ASP"),
+    Runway(ICAO='SBCT', Head1='15', Head2='33', RunwayLength=2218, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO='SBCT', Head1='11', Head2='29', RunwayLength=1798, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -193,7 +193,7 @@ session.add_all([
     ILS(ICAO='SBCF', Ident='ITN', RunwayHead='34', Frequency=110.3, CRS='342', Category='I', Minimum=200),
     ILS(ICAO='SBCF', Ident='ICF', RunwayHead='16', Frequency=109.7, CRS='162', Category='I', Minimum=200),
     VOR(ICAO='SBCF', Ident='CNF', Frequency=114.4),
-    Runway(ICAO='SBCF', Head1='16', Head2='34', RunwayLength=3600, PavementCode="ASP"),
+    Runway(ICAO='SBCF', Head1='16', Head2='34', RunwayLength=3600, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -205,7 +205,7 @@ session.add_all([
     Communication(ICAO='SBSG', Frequency=127.600, CommType='ATIS'),
     ILS(ICAO='SBSG', Ident='ISG', RunwayHead='12', Frequency=109.7, CRS='121', Category='I', Minimum=203),
     VOR(ICAO='SBSG', Ident='SGA', Frequency=115.9),
-    Runway(ICAO='SBSG', Head1='12', Head2='30', RunwayLength=3000, PavementCode="ASP"),
+    Runway(ICAO='SBSG', Head1='12', Head2='30', RunwayLength=3000, RunwayWidth=60, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -225,8 +225,8 @@ session.add_all([
     ILS(ICAO='SBBR', Ident='IDF', RunwayHead='11R', Frequency=109.9, CRS='108', Category='I', Minimum=250),
     VOR(ICAO='SBBR', Ident='FSA', Frequency=112.7),
     VOR(ICAO='SBBR', Ident='VJK', Frequency=117.5),
-    Runway(ICAO='SBBR', Head1='11L', Head2='29R', RunwayLength=3200, PavementCode="ASP"),
-    Runway(ICAO='SBBR', Head1='11R', Head2='29L', RunwayLength=3300, PavementCode="ASP"),
+    Runway(ICAO='SBBR', Head1='11L', Head2='29R', RunwayLength=3200, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO='SBBR', Head1='11R', Head2='29L', RunwayLength=3300, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -241,7 +241,7 @@ session.add_all([
     Communication(ICAO='SBRF', Frequency=127.650, CommType='ATIS'),
     ILS(ICAO='SBRF', Ident='IRF', RunwayHead='18', Frequency=110.3, CRS='183', Category='I', Minimum=200),
     VOR(ICAO='SBRF', Ident='REC', Frequency=116.9),
-    Runway(ICAO='SBRF', Head1='18', Head2='36', RunwayLength=2751, PavementCode="ASP"),
+    Runway(ICAO='SBRF', Head1='18', Head2='36', RunwayLength=2751, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -257,8 +257,8 @@ session.add_all([
     ILS(ICAO='SBSV', Ident='ILD', RunwayHead='28', Frequency=110.9, CRS='282', Category='I', Minimum=200),
     ILS(ICAO='SBSV', Ident='ISA', RunwayHead='10', Frequency=111.9, CRS='102', Category='I', Minimum=200),
     VOR(ICAO='SBSV', Ident='SVD', Frequency=116.5),
-    Runway(ICAO='SBSV', Head1='17', Head2='35', RunwayLength=1518, PavementCode="ASP"),
-    Runway(ICAO='SBSV', Head1='10', Head2='28', RunwayLength=3003, PavementCode="ASP"),
+    Runway(ICAO='SBSV', Head1='17', Head2='35', RunwayLength=1518, RunwayWidth=45, PavementCode="ASP"),
+    Runway(ICAO='SBSV', Head1='10', Head2='28', RunwayLength=3003, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 session.add_all([
@@ -270,7 +270,7 @@ session.add_all([
     Communication(ICAO='SBPA', Frequency=132.350, CommType='ATIS'),
     ILS(ICAO='SBPA', Ident='IPA', RunwayHead='11', Frequency=110.3, CRS='110', Category='I', Minimum=200),
     VOR(ICAO='SBPA', Ident='FIG', Frequency=114.7),
-    Runway(ICAO='SBPA', Head1='11', Head2='29', RunwayLength=3200, PavementCode="ASP"),
+    Runway(ICAO='SBPA', Head1='11', Head2='29', RunwayLength=3200, RunwayWidth=45, PavementCode="ASP"),
 ])
 
 # Commit the changes
