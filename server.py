@@ -62,6 +62,11 @@ def wind(icao:str):
                            wind_speed=wind_speed,
                            lat=info["Latitude"],
                            lon=info["Longitude"])
+
+@app.get("/descent")
+def descent():
+    return render_template("vertical.html")
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("error.html", error="404 | Página não encontrada."), 404
