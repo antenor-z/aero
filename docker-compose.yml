@@ -1,11 +1,50 @@
-version: '3'
-
 services:
   web:
     build: .
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "aero"
+      MYSQL_USER: "aero-user"
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
     ports:
       - "5000:5000"
     depends_on:
       - redis
+      - db
+    networks:
+      - aeronet
+    secrets:
+      - db_password
+
   redis:
     image: "redis:alpine"
+    restart: unless-stopped
+    networks:
+      - aeronet
+
+  db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: "/run/secrets/db_root_password"
+      MYSQL_DATABASE: "aero"
+      MYSQL_USER: "aero-user"
+      MYSQL_PASSWORD_FILE: "/run/secrets/db_password"
+    ports:
+      - "3306:3306"
+    volumes:
+      - .db-data:/var/lib/mysql
+    networks:
+      - aeronet
+    secrets:
+      - db_root_password
+      - db_password
+
+secrets:
+  db_password:
+    file: ./passwords/db_password.txt
+  db_root_password:
+    file: ./passwords/db_root_password.txt
+
+networks:
+  aeronet:

@@ -1,10 +1,8 @@
+from os import environ
 from sqlalchemy import PrimaryKeyConstraint, create_engine,\
     Column, Integer, String, DECIMAL, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-from dotenv import dotenv_values
-
-CONFIG: dict = dotenv_values()
 
 Base = declarative_base()
 
@@ -109,7 +107,19 @@ class VOR(Base):
 # GRANT ALL PRIVILEGES ON aero.* TO 'aero-user'@'localhost';
 # FLUSH PRIVILEGES;
 
-db_url = f'mysql+pymysql://aero-user:{CONFIG["DB_PASSWORD"]}@localhost:3306/aero'
+DB_PASSWORD = None
+with open(environ["MYSQL_PASSWORD_FILE"]) as fp:
+    DB_PASSWORD = fp.read()
+
+DB_USER = environ.get("MYSQL_USER")
+DB_DATABASE = environ.get("MYSQL_DATABASE")
+
+assert DB_PASSWORD is not None, "No db password supplied"
+assert DB_USER is not None, "No MYSQL user supplied"
+assert DB_DATABASE is not None, "No MYSQL database supplied"
+
+
+db_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@db:3306/{DB_DATABASE}'
 
 engine = create_engine(db_url)
 Base.metadata.create_all(engine)

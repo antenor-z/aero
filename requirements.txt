@@ -1,4 +1,6 @@
 python-dotenv
+pymysql
+SQLAlchemy
 requests
 pydantic
 flask
