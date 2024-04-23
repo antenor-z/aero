@@ -2,3 +2,5 @@ apikey.txt
 venv
 __pycache__
 *.rdb
+.db-data
+.env
