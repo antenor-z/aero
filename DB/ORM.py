@@ -119,7 +119,7 @@ assert DB_USER is not None, "No MYSQL user supplied"
 assert DB_DATABASE is not None, "No MYSQL database supplied"
 
 
-db_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@db:3306/{DB_DATABASE}'
+db_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@aero-db:3306/{DB_DATABASE}'
 
 engine = create_engine(db_url)
 Base.metadata.create_all(engine)
