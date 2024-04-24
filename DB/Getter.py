@@ -1,8 +1,7 @@
 from DB.ORM import *
 from sqlalchemy import types
 
-Session = sessionmaker(bind=engine)
-session = Session()
+engine = create_engine(db_url)
 
 def model_to_dict(instance, include_relationships=True):
     instance_dict = {}
@@ -24,16 +23,18 @@ def model_to_dict(instance, include_relationships=True):
     return instance_dict
 
 def get_info(icao):
-    aerodrome = session.get(Aerodrome, icao)
-    if aerodrome is not None:
-        return model_to_dict(aerodrome) 
-    else:
-        raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
+    with Session(engine) as session:
+        aerodrome = session.get(Aerodrome, icao)
+        if aerodrome is not None:
+            return model_to_dict(aerodrome) 
+        else:
+            raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
     
 def get_all_names():
     aerodromes = []
-    for aerodrome in session.query(Aerodrome).all():
-        aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, aerodrome.City))
+    with Session(engine) as session:
+        for aerodrome in session.query(Aerodrome).all():
+            aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, aerodrome.City))
 
     return aerodromes
 

@@ -1,7 +1,7 @@
 from os import environ
 from sqlalchemy import PrimaryKeyConstraint, create_engine,\
     Column, Integer, String, DECIMAL, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 
 
 Base = declarative_base()

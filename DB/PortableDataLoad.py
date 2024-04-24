@@ -273,10 +273,6 @@ session.add_all([
     Runway(ICAO='SBPA', Head1='11', Head2='29', RunwayLength=3200, RunwayWidth=45, PavementCode="ASP"),
 ])
 
-# Commit the changes
-session.commit()
-
-
 
 session.commit()
 session.close()
