@@ -25,6 +25,11 @@ header {
   align-content: center;
   justify-content: space-between;
 }
+@media screen and (max-width: 400px) {
+  .first-line {
+    display: block;
+  }
+}
 .metar {
   font-family: monospace;
   font-size: 20px;
@@ -52,6 +57,11 @@ header {
 }
 .line-margin {
   margin: 0 25%;
+}
+@media screen and (max-width: 400px) {
+  .line-margin {
+    margin: 0;
+  }
 }
 .box-rounded {
   border-radius: 8px;

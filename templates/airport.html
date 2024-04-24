@@ -11,14 +11,11 @@
 	<header>
 		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
 		<div class="metar" style="margin-top: 5px;">
-			{{ metar }} <span class="button-small"><a href="/wind/{{icao}}">Vento 🆕</a></span>
+			{{ metar }} <span class="button-small"><a href="/wind/{{icao}}">Vento</a></span>
 		</div>
 	</header>
 	<main>
-	<div class="first-line">
-		<a href="/">&lt Voltar</a>
-		<span>APENAS PARA USO EM SIMULADOR</span>
-	</div>
+	<a class="button-small" href="/">&lt Voltar</a>
 	{% if info is not none %}
 	<div class="line line-margin">
 		{% for runway in info.runways %}
@@ -27,18 +24,19 @@
 				<div>
 					<div class="runway-number tooltip">
 						{{ runway.Head1 }} - {{ runway.Head2 }}
-					</div>
-					<span class="runway-length center-text tooltip">ⓘ
-						<span class="tooltip tooltip-text">
-							Comprimento: {{ runway.RunwayLength }} m<br />
-							Largura: {{ runway.RunwayWidth }} m
+						<span class="runway-length center-text tooltip">ⓘ
+							<span class="tooltip tooltip-text">
+								Comprimento: {{ runway.RunwayLength }} m<br />
+								Largura: {{ runway.RunwayWidth }} m
+							</span>
 						</span>
-					</span>
+					</div>
 				</div>
 			</div>
 		</div>
 		{% endfor %}
 	</div>
+	<span>APENAS PARA USO EM SIMULADOR</span>
 	<div class="line">
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
