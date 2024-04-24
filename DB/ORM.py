@@ -1,6 +1,6 @@
 from os import environ
 from sqlalchemy import PrimaryKeyConstraint, create_engine,\
-    Column, Integer, String, DECIMAL, ForeignKey, UniqueConstraint
+    Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 
 
@@ -17,8 +17,8 @@ class Aerodrome(Base):
     ICAO = Column(String(4), primary_key=True)
     AerodromeName = Column(String(50), nullable=False)
     City = Column(String(30), ForeignKey('City.CityName'), nullable=False)
-    Latitude = Column(DECIMAL(9, 6), nullable=False)
-    Longitude = Column(DECIMAL(9, 6), nullable=False)
+    Latitude = Column(Integer, nullable=False)
+    Longitude = Column(Integer, nullable=False)
     METAR = Column(String(100), nullable=True)
     __table_args__ = (
         UniqueConstraint('AerodromeName'),
@@ -62,7 +62,7 @@ class Communication(Base):
     __tablename__ = 'Communication'
 
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
-    Frequency = Column(DECIMAL(6, 3), nullable=False)
+    Frequency = Column(Integer, nullable=False)
     CommType = Column(String(20), ForeignKey('CommunicationType.CommType'), nullable=False)
 
     __table_args__ = (
@@ -81,7 +81,7 @@ class ILS(Base):
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
     Ident = Column(String(3), nullable=False)
     RunwayHead = Column(String(3), nullable=False)
-    Frequency = Column(DECIMAL(6, 3), nullable=False)
+    Frequency = Column(Integer, nullable=False)
     Category = Column(String(10), ForeignKey('ILSCategory.Category'), nullable=False)
     CRS = Column(Integer, nullable=False)
     Minimum = Column(Integer)
@@ -96,7 +96,7 @@ class VOR(Base):
 
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), nullable=False)
     Ident = Column(String(3), nullable=False)
-    Frequency = Column(DECIMAL(6, 3), nullable=False)
+    Frequency = Column(Integer, nullable=False)
 
     __table_args__ = (
         PrimaryKeyConstraint('ICAO', 'Ident'),
