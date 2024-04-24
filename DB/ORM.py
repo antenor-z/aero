@@ -67,7 +67,6 @@ class Communication(Base):
 
     __table_args__ = (
         PrimaryKeyConstraint('ICAO', 'Frequency'),
-        UniqueConstraint('ICAO', 'Frequency'),
     )
 
 class ILSCategory(Base):
@@ -87,8 +86,7 @@ class ILS(Base):
     Minimum = Column(Integer)
 
     __table_args__ = (
-        PrimaryKeyConstraint('ICAO', 'Ident'),
-        UniqueConstraint('ICAO', 'Frequency'),
+        PrimaryKeyConstraint('ICAO', 'Frequency'),
     )
 
 class VOR(Base):
@@ -99,8 +97,7 @@ class VOR(Base):
     Frequency = Column(Integer, nullable=False)
 
     __table_args__ = (
-        PrimaryKeyConstraint('ICAO', 'Ident'),
-        UniqueConstraint('ICAO', 'Frequency'),
+        PrimaryKeyConstraint('ICAO', 'Frequency'),
     )
 
 # CREATE USER 'aero-user'@'localhost' IDENTIFIED BY '123';
