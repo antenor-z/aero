@@ -151,11 +151,10 @@ session.add_all([
 
 session.add_all([
     Aerodrome(ICAO='SBFZ', AerodromeName='Pinto Martins', City='Fortaleza', Latitude=-3.7764, Longitude=-38.532041),
-    Communication(ICAO='SBFZ', Frequency=1215, CommType='Torre'),
-    Communication(ICAO='SBFZ', Frequency=1290, CommType='Torre'),
-    Communication(ICAO='SBFZ', Frequency=12195, CommType='Solo'),
-    Communication(ICAO='SBFZ', Frequency=1225, CommType='Operações'),
-    Communication(ICAO='SBFZ', Frequency=1277, CommType='ATIS'),
+    Communication(ICAO='SBFZ', Frequency=121500, CommType='Torre'),
+    Communication(ICAO='SBFZ', Frequency=121950, CommType='Solo'),
+    Communication(ICAO='SBFZ', Frequency=122500, CommType='Operações'),
+    Communication(ICAO='SBFZ', Frequency=127700, CommType='ATIS'),
     ILS(ICAO='SBFZ', Ident='IFO', RunwayHead='13', Frequency=1103, CRS='126', Category='I', Minimum=200),
     VOR(ICAO='SBFZ', Ident='FLZ', Frequency=1141),
     Runway(ICAO='SBFZ', Head1='13', Head2='31', RunwayLength=2755, RunwayWidth=45, PavementCode="ASP"),
