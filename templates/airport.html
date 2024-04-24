@@ -42,7 +42,7 @@
 	<div class="line">
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
-			<div class="box-name">{{comm.CommType}}</div><div class="box-value"><b>{{"{:,.3f}".format(comm.Frequency)}}</b></div>
+			<div class="box-name">{{comm.CommType}}</div><div class="box-value"><b>{{"{:,.3f}".format(comm.Frequency/1000)}}</b></div>
 		</div>
 		{% endfor %}
 	</div>
@@ -53,7 +53,7 @@
 			<div class="box-name">ILS pista {{ ils.RunwayHead }}</div>
 			<div class="box-value" style="justify-content: space-between; display: flex;">
 				<span>
-				<b>{{ ils.Frequency }}</b> {{ ils.Ident }}
+				<b>{{ ils.Frequency/10 }}</b> {{ ils.Ident }}
 				</span>
 
 				<span class="tooltip">ⓘ
@@ -72,7 +72,7 @@
 	<div class="line">
 		{% for vor in info.vor %}
 		<div class="box-rounded box-orange">
-			<div class="box-name">VOR</div><div class="box-value"><b>{{ vor.Frequency }}</b> {{ vor.Ident }}</div>
+			<div class="box-name">VOR</div><div class="box-value"><b>{{ vor.Frequency/10 }}</b> {{ vor.Ident }}</div>
 		</div>
 		{% endfor %}
 	</div>
