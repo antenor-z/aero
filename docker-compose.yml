@@ -10,7 +10,7 @@ services:
       - "5000:5000"
     depends_on:
       - redis
-      - db
+      - aero-db
     networks:
       - aeronet
     secrets:
@@ -22,7 +22,7 @@ services:
     networks:
       - aeronet
 
-  db:
+  aero-db:
     image: mariadb
     restart: unless-stopped
     environment:
