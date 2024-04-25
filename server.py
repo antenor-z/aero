@@ -35,33 +35,33 @@ def info(icao:str):
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
 
-@app.get("/wind/<string:icao>")
-def wind(icao:str):
-    icao_upper = icao.upper()
-    if icao != icao_upper:
-        return redirect(f"/wind/{icao_upper}")
+# @app.get("/wind/<string:icao>")
+# def wind(icao:str):
+#     icao_upper = icao.upper()
+#     if icao != icao_upper:
+#         return redirect(f"/wind/{icao_upper}")
     
-    try:
-        metar = get_metar(icao)
-    except IcaoError as e:
-        return render_template("error.html", error=e), 400
+#     try:
+#         metar = get_metar(icao)
+#     except IcaoError as e:
+#         return render_template("error.html", error=e), 400
     
-    wind_direction, wind_speed, _, _, _ = get_wind(metar)
+#     wind_direction, wind_speed, _, _, _ = get_wind(metar)
     
-    try:
-        info = get_info(icao)
-    except ValueError as e:
-        info = None
+#     try:
+#         info = get_info(icao)
+#     except ValueError as e:
+#         info = None
 
-    get_components(icao, metar)
+#     get_components(icao, metar)
 
-    return render_template("wind.html", runways=get_components(icao, metar), 
-                           nome_aeroporto=info["AerodromeName"], 
-                           icao=icao,
-                           wind_direction=wind_direction,
-                           wind_speed=wind_speed,
-                           lat=info["Latitude"],
-                           lon=info["Longitude"])
+#     return render_template("wind.html", runways=get_components(icao, metar), 
+#                            nome_aeroporto=info["AerodromeName"], 
+#                            icao=icao,
+#                            wind_direction=wind_direction,
+#                            wind_speed=wind_speed,
+#                            lat=info["Latitude"],
+#                            lon=info["Longitude"])
 
 @app.get("/descent")
 def descent():
