@@ -79,10 +79,14 @@ def decode(metar: str) -> dict:
     #metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
 
     metar = metar.split(" ")
-    day = metar[0][0:2]
-    timeZ = metar[0][2:6]
+    day = int(metar[0][0:2])
+    hour = int(metar[0][2:4])
+    minute = int(metar[0][4:6])
     ret = []
-    ret.append((metar[0], f"Dia {day[0:3]}. Horário {timeZ[0:2]}:{timeZ[2:4]} zulu (UTC)."))
+
+    ts_utc = datetime(day=day, month=datetime.utcnow().month, year=datetime.utcnow().year, hour=hour, minute=minute)
+    ts_local = ts_utc - timedelta(hours=3)
+    ret.append((metar[0], f"METAR válido para dia {ts_local.day} as {ts_local.hour}:{ts_local.minute} (hora de Brasília)"))
 
     metar = metar[1:]
 
