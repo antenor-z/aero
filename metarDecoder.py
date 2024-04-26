@@ -126,15 +126,23 @@ def decode(metar: str) -> dict:
             [(wind1, wind2)] = wind
             ret.append((item, f"Vento <b>variável</b> de proa {wind1}° até {wind2}°."))
         
-        elif (cloud := re.findall("([A-Z]{3})(\d{3})", item)) != []:
-            [(cloud_type, cloud_altitude)] = cloud
+        elif (cloud := re.findall("([A-Z]{3})(\d{3})(CB|TCU)*", item)) != []:
+            [(cloud_type, cloud_altitude, formation)] = cloud
             cloud_altitude = int(cloud_altitude) * 100
 
             if cloud_type == "OVC": cloud_type = "Totalmente encoberto"
             elif cloud_type == "BKN": cloud_type = "Nuvens broken (5/8 a 7/8 do céu com nuvens)"
             elif cloud_type == "SCT": cloud_type = "Nuvens espalhadas (3/8 a 4/8 do céu com nuvens)"
             elif cloud_type == "FEW": cloud_type = "Poucas nuvens (1/8 a 2/8 do céu com nuvens)"
-            ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude."))
+            
+            extra = ""
+            if formation == "CB":
+                extra = "Atenção: nuvens de tempestade."
+            elif formation == "TCU"
+                extra = "Atenção: nuvens de grande extensão vertical."
+
+
+            ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude. {extra}"))
 
         elif (temp := re.findall("(\d+)/(\d+)", item)) != []:
             [(temperature, dew_point)] = temp
