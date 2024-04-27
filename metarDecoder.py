@@ -73,6 +73,8 @@ other_items = {
     "WS": "Tesoura de vento (windshear)",
     "NSC": "No Significant Cloud, podem haver algumas nuvens, mas nenhuma está abaixo de 5000 pés ou dentro de 10 quilômetros.",
     "VCSH": "Chuva leve na vizinhança do aeroporto",
+    "TSRA": "Trovoada com chuva.",
+    "+TSRA": "Trovoada com chuva forte.",
 }
 
 def decode(metar: str) -> dict:
