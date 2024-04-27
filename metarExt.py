@@ -9,7 +9,7 @@ try:
 except redis.exceptions.ConnectionError:
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-def load_every_10_minutes():
+def download_ext():
     while True:
         minute = datetime.now().minute
         second = datetime.now().second
@@ -19,7 +19,7 @@ def load_every_10_minutes():
             except:
                 # If any problem occours, ignore and download nothing
                 pass
-        time.sleep(1)
+        time.sleep(40)
         
 def load_now():
     print("Downloading METARs", datetime.now())
@@ -32,6 +32,7 @@ def load_now():
         BRAZIL_PREFIX = "SB"
         if airport['station_id'].startswith(BRAZIL_PREFIX):
             metar = airport["raw_text"].replace(airport['station_id'] + " ", "")
+            print(metar)
             r.set(f"metar:{airport['station_id']}", metar)
     print("Done")
 

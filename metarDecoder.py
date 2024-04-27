@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 # Fonte: https://ajuda.decea.mil.br/base-de-conhecimento/como-decodificar-o-metar-e-o-speci/
 
@@ -86,7 +87,7 @@ def decode(metar: str) -> dict:
 
     ts_utc = datetime(day=day, month=datetime.utcnow().month, year=datetime.utcnow().year, hour=hour, minute=minute)
     ts_local = ts_utc - timedelta(hours=3)
-    ret.append((metar[0], f"METAR válido para dia {ts_local.day} as {ts_local.hour}:{ts_local.minute} (hora de Brasília)"))
+    ret.append((metar[0], f"METAR válido para dia {ts_local.day} as {ts_local.hour}:{ts_local.minute:02d} (hora de Brasília)"))
 
     metar = metar[1:]
 
@@ -142,7 +143,7 @@ def decode(metar: str) -> dict:
             extra = ""
             if formation == "CB":
                 extra = "Atenção: nuvens de tempestade."
-            elif formation == "TCU"
+            elif formation == "TCU":
                 extra = "Atenção: nuvens de grande extensão vertical."
 
 
