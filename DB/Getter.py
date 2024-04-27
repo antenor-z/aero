@@ -44,7 +44,18 @@ def get_info(icao):
             return adjust_frequencies(model_to_dict(aerodrome))
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
+        
+def get_metar(icao: str) -> str:
+    with Session(engine) as session:
+        aerodrome: Aerodrome = session.get(Aerodrome, icao)
+        return aerodrome.METAR
     
+def set_metar(icao: str, metar: str):
+    with Session(engine) as session:
+        aerodrome: Aerodrome = session.get(Aerodrome, icao)
+        aerodrome.METAR = metar
+        session.commit()
+        
 def get_all_names():
     aerodromes = []
     with Session(engine) as session:

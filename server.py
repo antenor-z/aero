@@ -1,15 +1,9 @@
-import threading
 from flask import Flask, render_template, redirect
 from DB.Getter import get_all_names, get_info
-from metarExt import IcaoError, get_metar, download_ext, load_now
+from metarExt import IcaoError, get_metar
 from metarDecoder import DecodeError, decode, get_wind_info
 from wind.Wind import get_components, get_wind
 app = Flask(__name__)
-
-thread = threading.Thread(target=download_ext, daemon=True)
-thread.start()
-
-load_now()
 
 @app.get("/")
 def list_all():

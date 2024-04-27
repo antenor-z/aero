@@ -1,46 +1,31 @@
-import time
-import pandas
-import redis
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+from DB.Getter import get_metar as db_get_metar, set_metar as db_set_metar
+import requests
 
-try:
-    r = redis.Redis(host='redis', port=6379, decode_responses=True)
-    r.keys("a")
-except redis.exceptions.ConnectionError:
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-
-def download_ext():
-    while True:
-        minute = datetime.now().minute
-        second = datetime.now().second
-        if (minute % 10 == 0) and second == 0:
-            try:
-                load_now()
-            except:
-                # If any problem occours, ignore and download nothing
-                pass
-        time.sleep(40)
-        
-def load_now():
-    print("Downloading METARs", datetime.now())
-    df = pandas.read_csv("https://aviationweather.gov/data/cache/metars.cache.csv.gz", 
-                     compression='infer',
-                     header=5)
-    df = df[["station_id", "raw_text"]]
-
-    for airport in df.iloc:
-        BRAZIL_PREFIX = "SB"
-        if airport['station_id'].startswith(BRAZIL_PREFIX):
-            metar = airport["raw_text"].replace(airport['station_id'] + " ", "")
-            print(metar)
-            r.set(f"metar:{airport['station_id']}", metar)
-    print("Done")
 
 def get_metar(icao: str) -> str | None:
-    metar = r.get(f"metar:{icao.upper()}")
-    if metar is None:
-        raise IcaoError("Aeroporto não encontrado.")
+    metar = db_get_metar(icao=icao)
+    if not is_metar_valid(metar=metar):
+        metar = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao}").text
+        metar = metar.replace("\n", "")
+        metar = metar.replace(f"{icao} ", "")
+        db_set_metar(icao=icao, metar=metar)
     return metar
+
+def is_metar_valid(metar):
+    if metar is None: return False
+
+    # Check if no more than 30 min has passed
+    metar = metar.split(" ")
+    day = int(metar[0][0:2])
+    hour = int(metar[0][2:4])
+    minute = int(metar[0][4:6])
+    now = datetime.now(tz=timezone.utc)
+    ts_metar = datetime(day=day, month=now.month, year=now.year, hour=hour, minute=minute, tzinfo=timezone.utc)
+    delta = now - ts_metar
+
+    return delta < timedelta(minutes=30)
+
 
 class IcaoError(Exception):
     def __init__(self, message):
