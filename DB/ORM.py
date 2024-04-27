@@ -1,6 +1,6 @@
 from os import environ
 from sqlalchemy import PrimaryKeyConstraint, create_engine,\
-    Column, Integer, String, ForeignKey, UniqueConstraint, DECIMAL
+    Column, Integer, String, ForeignKey, UniqueConstraint, DECIMAL, DateTime
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 
 
@@ -20,6 +20,7 @@ class Aerodrome(Base):
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
     METAR = Column(String(100), nullable=True)
+    METAR_gotOn = Column(DateTime(timezone=True), nullable=True)
     __table_args__ = (
         UniqueConstraint('AerodromeName'),
     )

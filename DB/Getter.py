@@ -1,5 +1,6 @@
 from DB.ORM import *
 from sqlalchemy import types
+from datetime import datetime, timezone
 
 engine = create_engine(db_url)
 
@@ -45,15 +46,18 @@ def get_info(icao):
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
         
-def get_metar(icao: str) -> str:
+def get_metar(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         aerodrome: Aerodrome = session.get(Aerodrome, icao)
-        return aerodrome.METAR
+        if aerodrome.METAR is None: return None, None
+        METAR_gotOn = aerodrome.METAR_gotOn.replace(tzinfo=timezone.utc)
+        return aerodrome.METAR, METAR_gotOn
     
 def set_metar(icao: str, metar: str):
     with Session(engine) as session:
         aerodrome: Aerodrome = session.get(Aerodrome, icao)
         aerodrome.METAR = metar
+        aerodrome.METAR_gotOn = datetime.now(tz=timezone.utc)
         session.commit()
         
 def get_all_names():

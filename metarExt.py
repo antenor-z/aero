@@ -4,25 +4,21 @@ import requests
 
 
 def get_metar(icao: str) -> str | None:
-    metar = db_get_metar(icao=icao)
-    if not is_metar_valid(metar=metar):
+    metar, METAR_gotOn = db_get_metar(icao=icao)
+    if not is_metar_valid(metar=metar, METAR_gotOn=METAR_gotOn):
         metar = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao}").text
         metar = metar.replace("\n", "")
         metar = metar.replace(f"{icao} ", "")
         db_set_metar(icao=icao, metar=metar)
     return metar
 
-def is_metar_valid(metar):
+def is_metar_valid(metar, METAR_gotOn):
     if metar is None: return False
 
     # Check if no more than 1 hour has passed
-    metar = metar.split(" ")
-    day = int(metar[0][0:2])
-    hour = int(metar[0][2:4])
-    minute = int(metar[0][4:6])
     now = datetime.now(tz=timezone.utc)
-    ts_metar = datetime(day=day, month=now.month, year=now.year, hour=hour, minute=minute, tzinfo=timezone.utc)
-    delta = now - ts_metar
+    delta = now - METAR_gotOn
+    print("Delta is", delta, "result:", delta < timedelta(hours=1))
 
     return delta < timedelta(hours=1)
 
