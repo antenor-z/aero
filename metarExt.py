@@ -15,7 +15,7 @@ def get_metar(icao: str) -> str | None:
 def is_metar_valid(metar):
     if metar is None: return False
 
-    # Check if no more than 30 min has passed
+    # Check if no more than 1 hour has passed
     metar = metar.split(" ")
     day = int(metar[0][0:2])
     hour = int(metar[0][2:4])
@@ -24,7 +24,7 @@ def is_metar_valid(metar):
     ts_metar = datetime(day=day, month=now.month, year=now.year, hour=hour, minute=minute, tzinfo=timezone.utc)
     delta = now - ts_metar
 
-    return delta < timedelta(minutes=30)
+    return delta < timedelta(hours=1)
 
 
 class IcaoError(Exception):
