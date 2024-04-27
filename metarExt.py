@@ -20,7 +20,7 @@ def is_metar_valid(metar, METAR_gotOn):
     delta = now - METAR_gotOn
     print("Delta is", delta, "result:", delta < timedelta(hours=1))
 
-    return delta < timedelta(hours=1)
+    return delta < timedelta(hours=1) and now.hour == METAR_gotOn.hour
 
 
 class IcaoError(Exception):
