@@ -18,7 +18,7 @@ def is_metar_valid(metar, METAR_gotOn):
     # Check if no more than 1 hour has passed
     now = datetime.now(tz=timezone.utc)
     delta = now - METAR_gotOn
-    print("Delta is", delta, "result:", delta < timedelta(hours=1))
+    print("Delta is", delta, "result:", delta < timedelta(hours=1) and now.hour == METAR_gotOn.hour)
 
     return delta < timedelta(hours=1) and now.hour == METAR_gotOn.hour
 
