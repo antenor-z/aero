@@ -72,6 +72,7 @@ other_items = {
     "RERA": "Fenômenos meteorológicos recentes.",
     "WS": "Tesoura de vento (windshear)",
     "NSC": "No Significant Cloud, podem haver algumas nuvens, mas nenhuma está abaixo de 5000 pés ou dentro de 10 quilômetros.",
+    "VCSH": "Chuva leve na vizinhança do aeroporto",
 }
 
 def decode(metar: str) -> dict:
