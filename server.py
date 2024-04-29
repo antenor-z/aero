@@ -1,8 +1,8 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from DB.Getter import get_all_names, get_info
 from metarExt import IcaoError, get_metar
 from metarDecoder import DecodeError, decode, get_wind_info
-from wind.Wind import get_components, get_wind
+from wind.Wind import get_components, get_components_one_runway, get_wind
 app = Flask(__name__)
 
 @app.get("/")
@@ -29,33 +29,22 @@ def info(icao:str):
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
 
-# @app.get("/wind/<string:icao>")
-# def wind(icao:str):
-#     icao_upper = icao.upper()
-#     if icao != icao_upper:
-#         return redirect(f"/wind/{icao_upper}")
-    
-#     try:
-#         metar = get_metar(icao)
-#     except IcaoError as e:
-#         return render_template("error.html", error=e), 400
-    
-#     wind_direction, wind_speed, _, _, _ = get_wind(metar)
-    
-#     try:
-#         info = get_info(icao)
-#     except ValueError as e:
-#         info = None
 
-#     get_components(icao, metar)
+@app.get("/windcalc/")
+def wind():
+    try:
+        runway_head = request.args["runway_head"]
+        wind_dir = request.args["wind_dir"]
+        wind_speed = request.args["wind_speed"]
+    except KeyError:
+        return {"error": "mising args"}, 400
 
-#     return render_template("wind.html", runways=get_components(icao, metar), 
-#                            nome_aeroporto=info["AerodromeName"], 
-#                            icao=icao,
-#                            wind_direction=wind_direction,
-#                            wind_speed=wind_speed,
-#                            lat=info["Latitude"],
-#                            lon=info["Longitude"])
+    ret = get_components_one_runway(
+        runway_head=runway_head,
+        wind_dir=wind_dir,
+        wind_speed=wind_speed)
+    return ret
+
 
 @app.get("/descent")
 def descent():
