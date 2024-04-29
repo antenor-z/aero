@@ -30,14 +30,21 @@ def info(icao:str):
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
 
 
-@app.get("/windcalc/")
+@app.get("/wind/")
 def wind():
+    return render_template("wind.html")
+
+
+@app.get("/windcalc/")
+def windcalc():
     try:
-        runway_head = request.args["runway_head"]
-        wind_dir = request.args["wind_dir"]
-        wind_speed = request.args["wind_speed"]
+        runway_head = int(request.args["runway_head"])
+        wind_dir = int(request.args["wind_dir"])
+        wind_speed = int(request.args["wind_speed"])
     except KeyError:
         return {"error": "mising args"}, 400
+    except ValueError:
+        return {"error": "invalid args"}, 400
 
     ret = get_components_one_runway(
         runway_head=runway_head,
@@ -49,6 +56,7 @@ def wind():
 @app.get("/descent")
 def descent():
     return render_template("vertical.html")
+
 
 @app.errorhandler(404)
 def not_found(e):

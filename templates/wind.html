@@ -1,82 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vento - {{nome_aeroporto}}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/tooltip.css">
-    <link rel="stylesheet" href="/static/rwy.css">
-    <link rel="stylesheet" href="/static/wind.css">
-    <link rel="stylesheet" href="/static/3p/leaflet.css" />
-    <style>
-        #map { height: 335px; width: 30%; margin-right: 10px; margin-top: 15px; border-radius: 5px};
-    </style>
+  <title>Perfil de descida</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/wind.css">
 </head>
 <body>
-	<header>
-		<span style="background-color: #eee; color: #565656; padding: 3px;">{{icao}}</span> {{ nome_aeroporto }}
-		<div class="metar" style="margin-top: 5px;">
-			{{ metar }}
-		</div>
-	</header>
-	<main>
-    <div class="first-line">
-        <a href="/info/{{icao}}">&lt Voltar</a>
-        <span>APENAS PARA USO EM SIMULADOR</span>
+  
+	<div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center; text-align: left;">
+    
+    <div style="display: block;">
+      <h1>CALCULAR VENTO</h1>
+      <svg id="w" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
+        <style>
+          .small {
+            font: normal 13px sans-serif;
+            fill: white;
+          }
+        </style>
+        <text id="angle" x="0" y="20" class="small">angle</text>
+        <text id="cross" x="0" y="40" class="small">cross</text>
+        <text id="head" x="0" y="60" class="small">head</text>
+      </svg>
     </div>
-    <div style="display: flex;">
-        <div id="map"></div>
-        <div class="line-big" id="runways" style="width: 70%;">
-            {% for runway in runways %}
-            <div id="{{runway}}" class="box-rounded box-outlined">
-                <div class="box-name" style="margin-bottom: 10px;">Cabeçeira {{runway}}</div>
-                <div class="box-value">
-                    {% if runways[runway].head >= 0 %}
-                        <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].head }}</span> kt de proa
-                    {% else %}
-                        <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].head }}</span> kt de cauda
-                    {% endif %}
-                    <br />
-                    {% if runways[runway].cross >= 0 %}
-                        <span style="font-size: 2em; font-weight: lighter;">{{ runways[runway].cross}}</span> kt vindo da direita
-                    {% else %}
-                        <span style="font-size: 2em; font-weight: lighter;">{{ -runways[runway].cross}}</span> kt vindo da esquerda
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+
+    <div style="display: grid;">
+      <label class="m20 b1" for="runway-head">Direção da Pista (graus): </label>
+      <input id="runway-head" type="text" value="100"/>
+      
+      <label class="m20 b1" for="wind-dir">Direção do vento (graus): </label>
+      <input id="wind-dir" type="text" value="100"/>
+      
+      <label class="m20 b1" for="wind-speed">Velocidade do vento (nós): </label>
+      <input id="wind-speed" type="text" value="6"/>
+      
+     
+      <button class="m20" onclick="calculateWind()" type="button">Calcular</button>
+      
     </div>
-	</main>
-
-    <script src="/static/3p/leaflet.js"></script>
-    <script>
-        var map = L.map('map');
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        var svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        svgElement.setAttribute('viewBox', '0 0 200 200');
-        
-        var arrowPoints = "100,150 120,120 110,120 110,50 90,50 90,120 80,120";
-        svgElement.innerHTML = '<polygon points="' + arrowPoints + '" style="fill:green; \
-        stroke:white; stroke-width:3px; transform-origin: 100px 100px; transform:rotate({{wind_direction}}deg)"/>/>';
-        var latLngBounds = L.latLngBounds([[{{lat}} - 0.01, {{lon}} - 0.01], [{{lat}} + 0.01, {{lon}} + 0.01]]);
-        map.fitBounds(latLngBounds);
-        var svgOverlay = L.svgOverlay(svgElement, latLngBounds, {
-            opacity: 0.7,
-            interactive: true
-        }).addTo(map);
-
-        var tooltip = L.tooltip([{{lat}} + 0.007, {{lon}}], {
-            content: 'Vento {{wind_direction}}° {{wind_speed}}kt',
-            permanent: true,
-            direction: "top"})
-        .addTo(map);
-    </script>
+	</div>
+  <script src="/static/wind.js">
+  </script>
 </body>
 </html>
-

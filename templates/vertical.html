@@ -4,46 +4,7 @@
   <title>Perfil de descida</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
-  <style>
-    input {
-      font-size: 24px;
-      color: white;
-      border: solid rgba(255, 255, 255, 0) 3px;
-      border-radius: 10px;
-      padding: 5px;
-      box-sizing: border-box;
-      background-color: rgba(255, 255, 255, 0.3);
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-    button {
-      font-size: 20px;
-      background-color: #4e3965;
-      color: white;
-      border: 4px solid #4e3965;
-      border-radius: 20px;
-      padding: 3px 20px;
-      height: 40px;
-    }
-    button:hover {
-      background-color: #2d203a;
-    }
-    .m20{
-      margin-top: 20px;
-    }
-    h1 {
-      text-align: center;
-      font-size: 24px;
-      text-decoration: underline;
-      font-family: monospace;
-    }
-    input:focus {
-	    border: solid rgba(255, 255, 255, 0.75) 3px;
-    }
-    .b1 {
-      margin-bottom: 1px;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/wind.css">
 </head>
 <body>
   
@@ -93,55 +54,7 @@
       
     </div>
 	</div>
-  <script>
-    function feetToNM(feet) {
-      return parseFloat(feet) / 6076
-    }
-    function minToHour(min) {
-      return parseFloat(min) / 60
-    }
-    function hourToMin(hour) {
-      return parseFloat(hour) * 60
-    }
-
-    function calcular() {
-      let currentAltitude = parseFloat(document.getElementById("curent-altitude").value)
-      let desiredAltitude = parseFloat(document.getElementById("desired-altitude").value)
-      let descentRate = parseFloat(document.getElementById("descent-rate").value)
-      let speed = parseFloat(document.getElementById("speed").value)
-
-      let isDegrees = document.getElementById("graus").checked
-
-      let requiredDistance;
-      if (isDegrees) {
-        requiredDistance = feetToNM(currentAltitude - desiredAltitude) / Math.tan((descentRate * Math.PI) / 180)
-        if (descentRate >= 4)
-          document.getElementById("triangle").getElementById("remark").textContent = "Razão alta"
-        else
-          document.getElementById("triangle").getElementById("remark").textContent = ""
-      } else {
-        requiredDistance = minToHour((currentAltitude - desiredAltitude) / descentRate) * speed
-        if (descentRate >= 3500)
-          document.getElementById("triangle").getElementById("remark").textContent = "Razão alta"
-        else
-          document.getElementById("triangle").getElementById("remark").textContent = ""
-      }
-
-      let requiredTime = Math.round(hourToMin(requiredDistance / speed))
-
-      if (!Number.isNaN(requiredDistance)) {
-        requiredDistance = Math.round(requiredDistance)
-        document.getElementById("triangle").getElementById("current-alt").textContent = `${currentAltitude}ft`
-        document.getElementById("triangle").getElementById("desired-alt").textContent = `${desiredAltitude}ft`
-        document.getElementById("triangle").getElementById("required-dist").textContent = `${requiredDistance}NM`
-        document.getElementById("triangle").getElementById("required-time").textContent = `Tempo: ${requiredTime} min`
-      }
-      else
-      {
-        document.getElementById("req").innerHTML = `<span class="req-dist">Não foi possível calcular</span>`
-      }
-      
-    }
+  <script src="/static/vertical.js">
   </script>
 </body>
 </html>
