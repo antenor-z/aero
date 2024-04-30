@@ -12,16 +12,17 @@
     
     <div style="display: block;">
       <h1>CALCULAR VENTO</h1>
-      <svg id="w" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
-        <style>
-          .small {
-            font: normal 13px sans-serif;
-            fill: white;
-          }
-        </style>
-        <text id="angle" x="0" y="20" class="small">angle</text>
-        <text id="cross" x="0" y="40" class="small">cross</text>
-        <text id="head" x="0" y="60" class="small">head</text>
+      <svg id="w" width="350" height="350" style='background-color: rgb(80, 80, 80);' xmlns="http://www.w3.org/2000/svg" class="m20">
+        <rect width="200" height="350" x="70" y="0" fill="black" transform="rotate(0 0 0)"/>
+        <rect width="8" height="65" x="165" y="0" fill="white" transform="rotate(0 0 0)"/>
+        <rect width="8" height="65" x="165" y="90" fill="white" transform="rotate(0 0 0)"/>
+        <rect width="8" height="65" x="165" y="180" fill="white" transform="rotate(0 0 0)"/>
+        <text x="130" y="320" class="small" fill="white" font-size="72px">36</text>
+        <g transform="translate(170 170) rotate(180 0 0)">
+          <rect width="3" height="170" x="0" y="0" fill="green" transform="rotate(0 0 0)" id="vector-head"/>
+          <rect width="3" height="170" x="0" y="0" fill="red" transform="rotate(45 0 0)" id="vector"/>
+          <rect width="3" height="170" x="0" y="0" fill="green" transform="rotate(90 0 0)" id="vector-cross"/>
+        </g> 
       </svg>
     </div>
 
