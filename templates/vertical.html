@@ -7,53 +7,55 @@
   <link rel="stylesheet" href="/static/wind.css">
 </head>
 <body>
-  
-	<div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center; text-align: left;">
-    
-    <div style="display: block;">
-      <h1>PERFIL DE DESCIDA</h1>
-      <svg id="triangle" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
-        <style>
-          .small {
-            font: normal 13px sans-serif;
-            fill: white;
-          }
-        </style>
-        <polygon points="50,20 50,100 300,100" stroke="white" fill="white" fill-opacity="0.3" stroke-width="2" stroke-linejoin="round" />
-        <text id="current-alt" x="0" y="20" class="small">42000ft</text>
-        <text id="desired-alt" x="0" y="100" class="small">10000ft</text>
-        <text id="required-dist" x="160" y="120" text-anchor="middle" class="small">100NM</text>
-
-        <text id="required-time" x="0" y="180" text-anchor="left" class="small">Tempo: 20 min</text>
-        <text id="remark" x="0" y="240" text-anchor="left" color="red" class="small"></text>
-      </svg>
-    </div>
-
-    <div style="display: grid;">
-      
-
-      <label class="m20 b1" for="curent-altitude">Altitude Atual (pés): </label>
-      <input id="curent-altitude" type="text" value="38000"/>
-      
-      <label class="m20 b1" for="desired-altitude">Altitude Desejada (pés): </label>
-      <input id="desired-altitude" type="text" value="10000"/>
-      
-      <label class="m20 b1" for="speed">Velocidade (nós): </label>
-      <input id="speed" type="text" value="300"/>
-      
-      <div class="m20 b1" style="display: flex;">
-        <label for="descent-rate">Razão de descida:</label>
-        <input type="radio" id="graus" name="des" value="graus">
-        <label for="graus">graus</label><br>
-        <input type="radio" id="ftmin" name="des" value="ftmin" checked>
-        <label for="ftmin">ft/min</label><br>
+  <div style="display: flex; height: 100vh; justify-content: center; align-items: center; text-align: center;">
+    <div>    
+      <div style="display: block;">
+        <h1>PERFIL DE DESCIDA</h1>
+        <div style="display: flex;">
+          <svg id="triangle" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
+            <style>
+              .small {
+                font: normal 13px sans-serif;
+                fill: white;
+              }
+            </style>
+            <polygon points="50,20 50,100 300,100" stroke="white" fill="white" fill-opacity="0.3" stroke-width="2" stroke-linejoin="round" />
+            <text id="current-alt" x="0" y="20" class="small">42000ft</text>
+            <text id="desired-alt" x="0" y="100" class="small">10000ft</text>
+            <text id="required-dist" x="160" y="120" text-anchor="middle" class="small">100NM</text>
+            
+            <text id="required-time" x="0" y="180" text-anchor="left" class="small">Tempo: 20 min</text>
+            <text id="remark" x="0" y="240" text-anchor="left" color="red" class="small"></text>
+          </svg>
+          
+          <div style="display: grid;">
+            
+            
+            <label class="m20 b1" for="curent-altitude">Altitude Atual (pés): </label>
+            <input id="curent-altitude" type="text" value="38000"/>
+            
+            <label class="m20 b1" for="desired-altitude">Altitude Desejada (pés): </label>
+            <input id="desired-altitude" type="text" value="10000"/>
+            
+            <label class="m20 b1" for="speed">Velocidade (nós): </label>
+            <input id="speed" type="text" value="300"/>
+            
+            <div class="m20 b1" style="display: flex;">
+              <label for="descent-rate">Razão de descida:</label>
+              <input type="radio" id="graus" name="des" value="graus">
+              <label for="graus">graus</label><br>
+              <input type="radio" id="ftmin" name="des" value="ftmin" checked>
+              <label for="ftmin">ft/min</label><br>
+            </div>
+            <input id="descent-rate" type="text" value="1400" />
+            
+            <button class="m20" onclick="calcular()" type="button">Calcular</button>
+            
+          </div>
+        </div>
       </div>
-      <input id="descent-rate" type="text" value="1400" />
-     
-      <button class="m20" onclick="calcular()" type="button">Calcular</button>
-      
     </div>
-	</div>
+  </div>
   <script src="/static/vertical.js">
   </script>
 </body>

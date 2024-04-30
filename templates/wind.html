@@ -7,40 +7,43 @@
   <link rel="stylesheet" href="/static/wind.css">
 </head>
 <body>
-  
-	<div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center; text-align: left;">
-    
-    <div style="display: block;">
-      <h1>CALCULAR VENTO</h1>
-      <svg id="w" width="350" height="350" style='background-color: rgb(80, 80, 80);' xmlns="http://www.w3.org/2000/svg" class="m20">
-        <rect width="200" height="350" x="70" y="0" fill="black" transform="rotate(0 0 0)"/>
-        <rect width="8" height="65" x="165" y="0" fill="white" transform="rotate(0 0 0)"/>
-        <rect width="8" height="65" x="165" y="90" fill="white" transform="rotate(0 0 0)"/>
-        <rect width="8" height="65" x="165" y="180" fill="white" transform="rotate(0 0 0)"/>
-        <text x="130" y="320" class="small" fill="white" font-size="72px">36</text>
-        <g transform="translate(170 170) rotate(180 0 0)">
-          <rect width="3" height="170" x="0" y="0" fill="green" transform="rotate(0 0 0)" id="vector-head"/>
-          <rect width="3" height="170" x="0" y="0" fill="red" transform="rotate(45 0 0)" id="vector"/>
-          <rect width="3" height="170" x="0" y="0" fill="green" transform="rotate(90 0 0)" id="vector-cross"/>
-        </g> 
-      </svg>
-    </div>
+  <div style="display: flex; height: 100vh; justify-content: center; align-items: center; text-align: center;">
+    <div>
+        <h1>CALCULAR VENTO</h1>
+        <div style="display: flex;">
+          <div style="display: block;">
+              <svg id="w" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
+                  <rect width="200" height="350" x="70" y="0" fill="black" transform="rotate(0 0 0)"/>
+                  <rect width="8" height="65" x="165" y="0" fill="white" transform="rotate(0 0 0)"/>
+                  <rect width="8" height="65" x="165" y="90" fill="white" transform="rotate(0 0 0)"/>
+                  <rect width="8" height="65" x="165" y="180" fill="white" transform="rotate(0 0 0)"/>
+                  <text x="130" y="320" class="small" fill="white" font-size="72px" id="runway-number">X</text>
+                  <g transform="translate(170 170) rotate(180 0 0)">
+                      <rect width="3" height="0" x="0" y="0" fill="green" transform="rotate(0 0 0)" id="vector-head"/>
+                      <rect width="3" height="0" x="0" y="0" fill="white" transform="rotate(45 0 0)" id="vector"/>
+                      <rect width="3" height="0" x="0" y="0" fill="red" transform="rotate(90 0 0)" id="vector-cross"/>
+                  </g> 
+                  <text x="75" y="20" class="small" fill="green" font-size="16px" id="aa">Vento de proa: 4kt</text>
+                  <text x="75" y="40" class="small" fill="red" font-size="16px" id="aa">Vento da esquerda: 5kt</text>
+              </svg>
+          </div>
 
-    <div style="display: grid;">
-      <label class="m20 b1" for="runway-head">Direção da Pista (graus): </label>
-      <input id="runway-head" type="text" value="100"/>
-      
-      <label class="m20 b1" for="wind-dir">Direção do vento (graus): </label>
-      <input id="wind-dir" type="text" value="100"/>
-      
-      <label class="m20 b1" for="wind-speed">Velocidade do vento (nós): </label>
-      <input id="wind-speed" type="text" value="6"/>
-      
-     
-      <button class="m20" onclick="calculateWind()" type="button">Calcular</button>
-      
+          <div style="display: grid;">
+              <label class="m20 b1" for="runway-head">Direção da Pista (graus): </label>
+              <input id="runway-head" type="text" value="100"/>
+              
+              <label class="m20 b1" for="wind-dir">Direção do vento (graus): </label>
+              <input id="wind-dir" type="text" value="100"/>
+              
+              <label class="m20 b1" for="wind-speed">Velocidade do vento (nós): </label>
+              <input id="wind-speed" type="text" value="6"/>
+              
+              <button class="m20" onclick="calculateWind()" type="button">Calcular</button>
+          </div>
+        </div>
     </div>
-	</div>
+</div>
+
   <script src="/static/wind.js">
   </script>
 </body>

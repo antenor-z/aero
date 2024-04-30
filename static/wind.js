@@ -26,6 +26,9 @@ function calculateWind() {
     document.getElementById("vector").setAttribute('transform', 'rotate(' + result.angle + ' 0 0)')
     document.getElementById("vector").setAttribute("height", Math.abs(speed))
 
+    document.getElementById("runway-number").textContent = Math.round(runwayHead / 10)
+    
+
   })
   }
 function calculateWindReq(wind_dir, wind_speed, runway_head) {
