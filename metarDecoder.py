@@ -82,10 +82,14 @@ def decode(metar: str) -> dict:
     #metar = "METAR SBSP 290400Z AUTO VRB08KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
     #metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
 
-    metar = metar.split(" ")
-    day = int(metar[0][0:2])
-    hour = int(metar[0][2:4])
-    minute = int(metar[0][4:6])
+    try:
+        metar = metar.split(" ")
+        day = int(metar[0][0:2])
+        hour = int(metar[0][2:4])
+        minute = int(metar[0][4:6])
+    except ValueError:
+        return [(" ", "METAR indisponível.")]
+
     ret = []
 
     ts_utc = datetime(day=day, month=datetime.utcnow().month, year=datetime.utcnow().year, hour=hour, minute=minute)
