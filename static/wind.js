@@ -12,16 +12,28 @@ function calculateWind() {
 
     document.getElementById("vector-head").setAttribute("height", Math.abs(head))
     if (head < 0)
+    {
       document.getElementById("vector-head").setAttribute('transform', 'rotate(' + 180 + ' 0 0)')
+      document.getElementById("label-head").textContent = `vento de cauda ${Math.abs(result.head)} nós`
+    }
     else 
-    document.getElementById("vector-head").setAttribute('transform', 'rotate(' + 0 + ' 0 0)')
+    {
+      document.getElementById("vector-head").setAttribute('transform', 'rotate(' + 0 + ' 0 0)')
+      document.getElementById("label-head").textContent = `vento de proa ${Math.abs(result.head)} nós`
+    }
   
 
     document.getElementById("vector-cross").setAttribute("height", Math.abs(cross))
     if (cross < 0)
+    {
       document.getElementById("vector-cross").setAttribute('transform', 'rotate(' + 270 + ' 0 0)')
+      document.getElementById("label-cross").textContent = `vindo pela esquerda com ${Math.abs(result.cross)} nós`
+    }
     else
-    document.getElementById("vector-cross").setAttribute('transform', 'rotate(' + 90 + ' 0 0)')
+    {
+      document.getElementById("vector-cross").setAttribute('transform', 'rotate(' + 90 + ' 0 0)')
+      document.getElementById("label-cross").textContent = `vindo pela direita com ${Math.abs(result.cross)} nós`
+    }
 
     document.getElementById("vector").setAttribute('transform', 'rotate(' + result.angle + ' 0 0)')
     document.getElementById("vector").setAttribute("height", Math.abs(speed))
