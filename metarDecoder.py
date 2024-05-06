@@ -158,10 +158,7 @@ def decode(metar: str) -> dict:
 
         elif (temp := re.findall("(\d+)/(\d+)", item)) != []:
             [(temperature, dew_point)] = temp
-            if (int(temperature) - int(dew_point) < 4):
-                ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C. Existe chance de chuva, pois as duas temperaturas estão próximas."))
-            else:
-                ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C. Provavelmente não choverá, pois as duas temperaturas estão distantes."))
+            ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
         
         elif (qnh := re.findall("Q(\d{4})", item)) != []:
             [qnh] = qnh
