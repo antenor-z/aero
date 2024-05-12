@@ -162,8 +162,8 @@ session.add_all([
 
 session.add_all([
     Aerodrome(ICAO='SBTE', AerodromeName='Senador Petrônio Portella', City='Teresina', Latitude=-5.059275, Longitude=-42.823784),
-    Communication(ICAO='SBTE', Frequency=1188, CommType='Torre'),
-    Communication(ICAO='SBTE', Frequency=1278, CommType='ATIS'),
+    Communication(ICAO='SBTE', Frequency=118800, CommType='Torre'),
+    Communication(ICAO='SBTE', Frequency=127800, CommType='ATIS'),
     VOR(ICAO='SBTE', Ident='TNA', Frequency=1129),
     Runway(ICAO='SBTE', Head1='20', Head2='02', RunwayLength=2200, RunwayWidth=45, PavementCode="ASP"),
 ])
