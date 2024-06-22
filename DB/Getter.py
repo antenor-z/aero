@@ -2,7 +2,7 @@ from DB.ORM import *
 from sqlalchemy import types
 from datetime import datetime, timezone
 
-engine = create_engine(db_url)
+engine = create_engine(db_url, pool_pre_ping=True)
 
 def model_to_dict(instance, include_relationships=True):
     instance_dict = {}
