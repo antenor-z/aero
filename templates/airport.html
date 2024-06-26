@@ -13,6 +13,7 @@
 	</header>
 	<main>
 	<a class="button-small" href="/">&lt Voltar</a>
+	<a class="button-small" href="javascript:void(0);" onclick="copyMETAR('{{metar}}')">Copiar METAR</a>
 	{% if info is not none %}
 	<div class="line line-margin">
 		{% for runway in info.runways %}
@@ -83,6 +84,7 @@
 		{% endfor %}
 	</table>
 	</main>
+	<script src="/static/copyMetar.js"></script>
 </body>
 </html>
 
