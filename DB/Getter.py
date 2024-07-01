@@ -54,11 +54,25 @@ def get_metar(icao: str) -> tuple[str, str]:
         return aerodrome.METAR, METAR_gotOn
     
 def set_metar(icao: str, metar: str):
+    now_utc = datetime.now(tz=timezone.utc)
     with Session(engine) as session:
         aerodrome: Aerodrome = session.get(Aerodrome, icao)
         aerodrome.METAR = metar
-        aerodrome.METAR_gotOn = datetime.now(tz=timezone.utc)
-        session.commit()
+        try:
+            metar = metar.split(" ")
+            day = int(metar[0][0:2])
+            hour = int(metar[0][2:4])
+            minute = int(metar[0][4:6])
+        except ValueError:
+            day = now_utc.day
+            hour = now_utc.hour
+            minute = now_utc.minute
+
+    ret = []
+
+    ts_utc = datetime(day=day, month=now_utc.month, year=now_utc.year, hour=hour, minute=minute, tzinfo=timezone.utc)
+    aerodrome.METAR_gotOn = ts_utc
+    session.commit()
         
 def get_all_names():
     aerodromes = []
