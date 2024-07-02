@@ -5,7 +5,9 @@ import requests
 
 def get_metar(icao: str) -> str | None:
     metar, METAR_gotOn = db_get_metar(icao=icao)
+    print("get_metar() called")
     if not is_metar_valid(metar=metar, METAR_gotOn=METAR_gotOn):
+        print("METAR was not valid. Updating...")
         metar = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao}").text
         metar = metar.replace("\n", "")
         metar = metar.replace(f"{icao} ", "")
@@ -15,12 +17,14 @@ def get_metar(icao: str) -> str | None:
 def is_metar_valid(metar, METAR_gotOn):
     if metar is None: return False
 
-    # Check if no more than 1 hour has passed
     now = datetime.now(tz=timezone.utc)
     delta = now - METAR_gotOn
-    print("Delta is", delta, "result:", delta < timedelta(minutes=15))
 
-    return delta < timedelta(minutes=15)
+    condition = delta < timedelta(minutes=15) or (now.minute == 0 and delta < timedelta(minutes=1))
+
+    print("Delta is", delta, "now", now, "result:", condition)
+
+    return condition
 
 
 class IcaoError(Exception):
