@@ -9,14 +9,16 @@ Base = declarative_base()
 class City(Base):
     __tablename__ = 'City'
 
-    CityName = Column(String(50), primary_key=True)
+    CityCode = Column(Integer, primary_key=True)
+    CityName = Column(String(50))
+
 
 class Aerodrome(Base):
     __tablename__ = 'Aerodrome'
 
     ICAO = Column(String(4), primary_key=True)
     AerodromeName = Column(String(50), nullable=False)
-    City = Column(String(30), ForeignKey('City.CityName'), nullable=False)
+    CityCode = Column(Integer, ForeignKey('City.CityCode'), nullable=False)
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
     __table_args__ = (

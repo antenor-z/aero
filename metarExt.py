@@ -20,7 +20,7 @@ def is_metar_valid(metar, METAR_valid_on):
     now = datetime.now(tz=timezone.utc)
     delta = now - METAR_valid_on
 
-    condition = delta < timedelta(minutes=30)
+    condition = delta < timedelta(minutes=60)
 
     print(f"Now: {now}")
     print(f"ValidOn: {METAR_valid_on}")

@@ -42,7 +42,11 @@ def get_info(icao):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
         if aerodrome is not None:
-            return adjust_frequencies(model_to_dict(aerodrome))
+            aerodrome = adjust_frequencies(model_to_dict(aerodrome))
+            city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
+            aerodrome.pop("CityCode")
+            aerodrome["City"] = city
+            return aerodrome
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
         
@@ -80,7 +84,8 @@ def get_all_names():
     aerodromes = []
     with Session(engine) as session:
         for aerodrome in session.query(Aerodrome).all():
-            aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, aerodrome.City))
+            city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
+            aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
 
     return aerodromes
 
