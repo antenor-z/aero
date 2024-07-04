@@ -5,5 +5,4 @@ requests
 pydantic
 flask
 gunicorn
-pytest
-pandas
+apscheduler

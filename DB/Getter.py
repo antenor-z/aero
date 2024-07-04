@@ -89,4 +89,12 @@ def get_all_names():
 
     return aerodromes
 
+def get_all_icao():
+    icao = []
+    with Session(engine) as session:
+        for aerodrome in session.query(Aerodrome).all():
+            icao.append(aerodrome.ICAO)
+
+    return icao
+
 

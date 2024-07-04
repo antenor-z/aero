@@ -1,8 +1,15 @@
 from flask import Flask, render_template, redirect, request
-from DB.Getter import get_all_names, get_info
-from metarExt import IcaoError, get_metar
+from DB.Getter import get_all_icao, get_all_names, get_info
+from metarExt import IcaoError, get_metar, update_metars
 from metarDecoder import DecodeError, decode, get_wind_info
 from wind.Wind import get_components, get_components_one_runway, get_wind
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+
+scheduler = BackgroundScheduler()
+job = scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
+scheduler.start()
+
 app = Flask(__name__)
 
 @app.get("/")
