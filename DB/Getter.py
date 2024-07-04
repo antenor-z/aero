@@ -90,4 +90,3 @@ def get_all_names():
     return aerodromes
 
 
-print(get_all_names())
