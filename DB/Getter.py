@@ -1,5 +1,5 @@
 from DB.ORM import *
-from sqlalchemy import types
+from sqlalchemy import types, desc
 from datetime import datetime, timezone
 
 engine = create_engine(db_url, pool_pre_ping=True)
@@ -48,19 +48,33 @@ def get_info(icao):
         
 def get_metar(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
-        aerodrome: Aerodrome = session.get(Aerodrome, icao)
-        if aerodrome.METAR is None: return None, None
-        METAR_gotOn = aerodrome.METAR_gotOn.replace(tzinfo=timezone.utc)
-        return aerodrome.METAR, METAR_gotOn
+        latest_metar = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).first()
+        if latest_metar:
+            return latest_metar.METAR, latest_metar.ValidOn.replace(tzinfo=timezone.utc)
+        return None, None
     
 def set_metar(icao: str, metar: str):
     with Session(engine) as session:
-        aerodrome: Aerodrome = session.get(Aerodrome, icao)
-        ts_utc = datetime.now(tz=timezone.utc)
-        aerodrome.METAR = metar
-        aerodrome.METAR_gotOn = ts_utc
-        session.commit()
-        print(f"setting METAR '{metar}' for {icao}. Received on {ts_utc}")
+        now = datetime.now(tz=timezone.utc)
+        try:
+            metar_timestamp = metar.split(" ")[0]
+            day = int(metar_timestamp[0:2])
+            hour = int(metar_timestamp[2:4])
+            minute = int(metar_timestamp[4:6])
+            assert metar_timestamp[6] == "Z"
+        except:
+            # Fallback to not overload the API
+            day = now.day
+            hour = 0
+            minute = 0
+        
+        try:
+            valid_on = datetime(day=day, month=now.month, year=now.year, hour=hour, minute=minute)
+            new_metar = METAR(ICAO=icao, ValidOn=valid_on, METAR=metar)
+            session.add(new_metar)
+            session.commit()
+        except:
+            pass
         
 def get_all_names():
     aerodromes = []

@@ -19,8 +19,6 @@ class Aerodrome(Base):
     City = Column(String(30), ForeignKey('City.CityName'), nullable=False)
     Latitude = Column(DECIMAL(9, 6), nullable=False)
     Longitude = Column(DECIMAL(9, 6), nullable=False)
-    METAR = Column(String(100), nullable=True)
-    METAR_gotOn = Column(DateTime(timezone=True), nullable=True)
     __table_args__ = (
         UniqueConstraint('AerodromeName'),
     )
@@ -29,6 +27,12 @@ class Aerodrome(Base):
     ils = relationship("ILS", backref="aerodrome")
     vor = relationship("VOR", backref="aerodrome")
     communication = relationship("Communication", backref="aerodrome")
+
+class METAR(Base):
+    __tablename__ = 'METAR'
+    ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), primary_key=True)
+    ValidOn = Column(DateTime(timezone=True), nullable=True, primary_key=True)
+    METAR = Column(String(200), nullable=True)
 
 class PavementType(Base):
     __tablename__ = 'PavementType'

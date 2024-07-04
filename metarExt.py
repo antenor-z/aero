@@ -4,9 +4,9 @@ import requests
 
 
 def get_metar(icao: str) -> str | None:
-    metar, METAR_gotOn = db_get_metar(icao=icao)
+    metar, METAR_valid_on = db_get_metar(icao=icao)
     print("get_metar() called")
-    if not is_metar_valid(metar=metar, METAR_gotOn=METAR_gotOn):
+    if not is_metar_valid(metar=metar, METAR_valid_on=METAR_valid_on):
         print("METAR was not valid. Updating...")
         metar = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao}").text
         metar = metar.replace("\n", "")
@@ -14,15 +14,18 @@ def get_metar(icao: str) -> str | None:
         db_set_metar(icao=icao, metar=metar)
     return metar
 
-def is_metar_valid(metar, METAR_gotOn):
+def is_metar_valid(metar, METAR_valid_on):
     if metar is None: return False
 
     now = datetime.now(tz=timezone.utc)
-    delta = now - METAR_gotOn
+    delta = now - METAR_valid_on
 
-    condition = delta < timedelta(minutes=15) or (now.minute == 0 and delta < timedelta(minutes=1))
+    condition = delta < timedelta(minutes=30)
 
-    print("Delta is", delta, "now", now, "result:", condition)
+    print(f"Now: {now}")
+    print(f"ValidOn: {METAR_valid_on}")
+    print(f"Delta: {delta}")
+    print(f"Result: {condition}")
 
     return condition
 
