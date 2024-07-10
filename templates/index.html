@@ -11,7 +11,7 @@
 	</header>
 	<main>
 	<div class="direct-icao">
-		<button><img src="static/search.svg"></button>
+		<button id="searchButton"><img src="static/search.svg"></button>
 		<input type="text" id="searchInput" oninput="searchAirports()" placeholder="Pesquisar...">
 	</div>
 	<div class="line-airports">
@@ -27,6 +27,7 @@
 		{% endfor %}
 	</div>
 	<div id="noResultMessage" style="display: none; text-align:center">Sem resultados.</div>
+	<div id="enterMessage" style="display: none; text-align:center">Pressione <span style="font-family: monospace;">&ltEnter&gt</span> para acessar o aeroporto.</div>
 	</main>
 	
 	<script>
