@@ -75,6 +75,7 @@ other_items = {
     "VCSH": "Chuva leve na vizinhança do aeroporto",
     "TSRA": "Trovoada com chuva.",
     "+TSRA": "Trovoada com chuva forte.",
+    "VCTS": "Trovoada na vizinhança"
 }
 
 def decode(metar: str) -> dict:
