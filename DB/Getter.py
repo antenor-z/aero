@@ -56,6 +56,13 @@ def get_metar(icao: str) -> tuple[str, str]:
         if latest_metar:
             return latest_metar.METAR, latest_metar.ValidOn.replace(tzinfo=timezone.utc)
         return None, None
+
+def get_taf(icao: str) -> tuple[str, str]:
+    with Session(engine) as session:
+        latest_metar = session.query(TAF).filter(TAF.ICAO == icao).order_by(desc(TAF.ValidOn)).first()
+        if latest_metar:
+            return latest_metar.TAF, latest_metar.ValidOn.replace(tzinfo=timezone.utc)
+        return None, None
     
 def set_metar(icao: str, metar: str):
     with Session(engine) as session:
@@ -79,6 +86,29 @@ def set_metar(icao: str, metar: str):
             session.commit()
         except:
             pass
+
+def set_taf(icao: str, taf: str):
+    with Session(engine) as session:
+        now = datetime.now(tz=timezone.utc)
+        try:
+            metar_timestamp = taf.split(" ")[0]
+            day = int(metar_timestamp[0:2])
+            hour = int(metar_timestamp[2:4])
+            minute = int(metar_timestamp[4:6])
+            assert metar_timestamp[6] == "Z"
+        except:
+            # Fallback to not overload the API
+            day = now.day
+            hour = 0
+            minute = 0
+        
+        try:
+            valid_on = datetime(day=day, month=now.month, year=now.year, hour=hour, minute=minute)
+            new_taf = TAF(ICAO=icao, ValidOn=valid_on, TAF=taf)
+            session.add(new_taf)
+            session.commit()
+        except:
+            pass
         
 def get_all_names():
     aerodromes = []
@@ -96,5 +126,3 @@ def get_all_icao():
             icao.append(aerodrome.ICAO)
 
     return icao
-
-
