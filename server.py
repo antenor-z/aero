@@ -1,7 +1,8 @@
 from flask import Flask, render_template, redirect, request
 from DB.Getter import get_all_icao, get_all_names, get_info
-from ext import IcaoError, get_metar, update_metars, update_tafs
-from metarDecoder import DecodeError, decode, get_wind_info
+from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
+from metarDecoder import DecodeError, decode_metar, get_wind_info
+from tafDecoder import decode_taf
 from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -25,18 +26,28 @@ def info(icao:str):
     
     try:
         metar = get_metar(icao)
-    except IcaoError as e:
-        return render_template("error.html", error=e), 400
-    
-    try:
         info = get_info(icao)
-    except ValueError as e:
-        return render_template("error.html", error=e), 400
-
-    decoded = decode(metar)
+        decoded = decode_metar(metar)
+    except Exception:
+        return render_template("error.html", error="Erro ao obter o METAR"), 400
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
 
+@app.get("/info/taf/<string:icao>")
+def info_taf(icao:str):
+    icao_upper = icao.upper()
+    if icao != icao_upper:
+        return redirect(f"/info/taf/{icao_upper}")
+
+    try:
+        taf = get_taf(icao)
+        info = get_info(icao)
+        decoded = decode_taf(taf)
+        return decoded
+    except Exception:
+        return render_template("error.html", error="Erro ao obter o TAF"), 400
+
+    return render_template("taf.html", info=info, icao=icao, taf=taf, decoded=decoded)
 
 @app.get("/wind/")
 def wind():

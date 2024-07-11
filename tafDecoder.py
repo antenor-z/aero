@@ -1,16 +1,13 @@
 import re
-from datetime import datetime, timedelta
 
-# Fonte: https://ajuda.decea.mil.br/base-de-conhecimento/como-decodificar-o-metar-e-o-speci/
-
-other_items = {
+taf_items = {
     "SH": "Pancada(s) moderada.",
     "+SH": "Pancada(s) forte.",
     "-FZ": "Congelante leve.",
     "FZ": "Congelante moderado.",
     "+FZ": "Congelante forte.",
     "-DZ": "Chuvisco leve.",
-    "DZ": "Chuvisco moderado.",
+    "DZ": "Chuvisco moderada.",
     "+DZ": "Chuvisco forte.",
     "-RA": "Chuva leve.",
     "RA": "Chuva moderada.",
@@ -78,67 +75,87 @@ other_items = {
     "VCTS": "Trovoada na vizinhança"
 }
 
-def decode_metar(metar: str) -> dict:
-    #metar = "METAR SBSP 290400Z AUTO 19008KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
-    #metar = "METAR SBSP 290400Z AUTO VRB08KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
-    #metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
-
-    try:
-        metar = metar.split(" ")
-        day = int(metar[0][0:2])
-        hour = int(metar[0][2:4])
-        minute = int(metar[0][4:6])
-    except ValueError:
-        return [(" ", "METAR indisponível.")]
-
+def decode_taf(taf: str) -> list:
+    taf_lines = taf.split()
     ret = []
 
-    ts_utc = datetime(day=day, month=datetime.utcnow().month, year=datetime.utcnow().year, hour=hour, minute=minute)
-    ts_local = ts_utc - timedelta(hours=3)
-    ret.append((metar[0], f"METAR válido para dia {ts_local.day} as {ts_local.hour}:{ts_local.minute:02d} (hora de Brasília)"))
+    # Header and time of issue
+    issue_time = taf_lines[0]
+    ret.append((issue_time, f"Disponibilizado em {issue_time[2:4]}:{issue_time[4:6]}Z no dia {issue_time[0:2]}"))
 
-    metar = metar[1:]
+    # Validity period
+    valid_period = taf_lines[1]
+    start_day = int(valid_period[:2])
+    start_hour = int(valid_period[2:4])
+    end_day = int(valid_period[5:7])
+    end_hour = int(valid_period[7:9])
+    ret.append((valid_period, f"Válido do dia {start_day} as {start_hour}:00Z até dia {end_day} as {end_hour}:00Z"))
 
-    for item in metar:
-        if item == "AUTO":
-            ret.append((item, "Informação obtida automaticamente."))
-        
-        elif item == "9999":
-            ret.append((item, "Visibilidade ilimitada"))
-        
-        elif (vis := re.findall("^(\d{4})$", item)) != [] and vis != "9999":
-            [vis] = vis
-            ret.append((item, f"Visibilidade {vis} metros."))
-        
-        elif (vis := re.findall("^(\d{4})([A-Z]+)$", item)) != []:
-            [(vis, sector)] = vis
-            if sector == "N": sector = "norte"
-            elif sector == "S": sector = "sul"
-            elif sector == "W": sector = "oeste"
-            elif sector == "E": sector = "leste"
-            elif sector == "NE": sector = "nordeste"
-            elif sector == "NW": sector = "noroeste"
-            elif sector == "SE": sector = "sudeste"
-            elif sector == "SW": sector = "sudoeste"
-        
-            ret.append((item, f"No setor {sector} do aerodromo, visibilidade {vis}m."))
-        
+    context = ""
+
+    for item in taf_lines[1:]:
+        if item in ["BECMG", "TEMPO"]:
+            context = item
+        elif re.match(r"^\d{4}/\d{4}$", item):
+            from_time, to_time = item.split('/')
+            if context == "BECMG":
+                ret.append((f"{context} {item}", f"Condições previstas do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+                context = ""
+            elif context == "TEMPO":
+                ret.append((f"{context} {item}", f"Condições temporárias previstas do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+                context = ""
+            else:
+                ret.append((item, f"Do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+
         elif (wind := re.findall("(\d{3})(\d{2})KT", item)) != []:
             [(direction, speed)] = wind
             ret.append((item, f"Vento proa <b>{direction}</b>° com velocidade <b>{speed}</b> nós (kt)."))
-        
+
         elif (wind := re.findall("VRB(\d{2})KT", item)) != []:
             [speed] = wind
             ret.append((item, f"Vento com direção <b>variável</b> e velocidade {speed} nós (kt)."))
-        
+
         elif (wind := re.findall("(\d{3})(\d+)G(\d+)KT", item)) != []:
             [(direction, speed, gust)] = wind
             ret.append((item, f"Vento proa {direction}° com velocidade {speed} nós (kt) e <b>rajadas</b> de {gust} nós."))
-        
-        elif (wind := re.findall("(\d{3})V(\d{3})", item)) != []:
-            [(wind1, wind2)] = wind
-            ret.append((item, f"Vento <b>variável</b> de proa {wind1}° até {wind2}°."))
-        
+
+        elif item == "CAVOK":
+            ret.append((item, "Ceiling and Visibility OK. Sem nuvens e visibilidade OK."))
+
+        elif re.match(r"^\d{4}$", item):
+            visibility = int(item)
+            ret.append((item, f"Visibilidade {visibility} metros"))
+
+        elif item in taf_items:
+            ret.append((item, taf_items[item]))
+
+        elif re.match(r"^\d{4}/\d{4}$", item):
+            from_time, to_time = item.split('/')
+            ret.append((item, f"Do dia {from_time[0:2]} as {from_time[2:4]}:00(UTC) até dia {from_time[0:2]} as {to_time[2:4]}:00(UTC)"))
+
+        elif re.match(r"^PROB\d{2}$", item):
+            probability = item[4:]
+            ret.append((item, f"Probabilidade de {probability}% de ocorrer as seguintes condições"))
+
+        elif re.match(r"^NSW$", item):
+            ret.append((item, "Sem fenômenos significativos"))
+
+        elif re.match(r"^VV\d{3}$", item):
+            vertical_visibility = int(item[2:]) * 100
+            ret.append((item, f"Visibilidade vertical {vertical_visibility} pés"))
+
+        elif re.match(r"^TN\d{2}/\d{4}Z$", item):
+            temperature = item[2:4]
+            day = item[5:7]
+            hour = item[7:9]
+            ret.append((item, f"A temperatura mínima é de {temperature}°C prevista de ocorrer dia {day} as {hour}"))
+
+        elif re.match(r"^TX\d{2}/\d{4}Z$", item):
+            temperature = item[2:4]
+            day = item[5:7]
+            hour = item[7:9]
+            ret.append((item, f"A temperatura máxima é de {temperature}°C prevista de ocorrer dia {day} as {hour}"))
+
         elif (cloud := re.findall("([A-Z]{3})(\d{3})(CB|TCU)*", item)) != []:
             [(cloud_type, cloud_altitude, formation)] = cloud
             cloud_altitude = int(cloud_altitude) * 100
@@ -147,54 +164,26 @@ def decode_metar(metar: str) -> dict:
             elif cloud_type == "BKN": cloud_type = "Nuvens broken (5/8 a 7/8 do céu com nuvens)"
             elif cloud_type == "SCT": cloud_type = "Nuvens espalhadas (3/8 a 4/8 do céu com nuvens)"
             elif cloud_type == "FEW": cloud_type = "Poucas nuvens (1/8 a 2/8 do céu com nuvens)"
-            
+
             extra = ""
             if formation == "CB":
-                extra = "Atenção: nuvens de tempestade."
+                extra = "<b>Atenção:</b> nuvens de tempestade."
             elif formation == "TCU":
-                extra = "Atenção: nuvens de grande extensão vertical."
+                extra = "<b>Atenção:</b> nuvens de grande extensão vertical."
 
 
             ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude. {extra}"))
 
-        elif (temp := re.findall("(\d+)/(\d+)", item)) != []:
-            [(temperature, dew_point)] = temp
-            ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
-        
-        elif (qnh := re.findall("Q(\d{4})", item)) != []:
-            [qnh] = qnh
-            ret.append((item, f"O altímetro deve ser ajustado para <b>{qnh}</b> hPa ({convert_to_inhg(qnh)} inHg)"))
-        
-        elif item == "CAVOK":
-            ret.append((item, "Ceiling and Visibility OK. Sem nuvens e visibilidade OK."))
-        
-        elif (runway := re.findall("RWY(\d{2}[RLC]*)", item)) != []:
-            [runway] = runway
-            ret.append((item, f"Informação anterior se refere a pista {runway}"))
-        
-        elif item in other_items:
-            ret.append((item, other_items[item]))
-        
         else:
-            ret.append((item, ""))
+            ret.append((item, "Item desconhecido"))
+
 
     return ret
 
-def convert_to_inhg(hpa):
-    return round(float(hpa) / 33.8639, 2)
-
-
-def get_wind_info(metar: str) -> dict:
-    if (wind := re.findall("(\d{3})(\d{2})KT", metar)) != []:
-        [(direction, speed)] = wind
-        return {"direction": int(direction), "speed": int(speed)}
-    else:
-        raise DecodeError("Could not find wind information.")
-
-class DecodeError(Exception):
-    def __init__(self, message):
-        super().__init__(message)
-
 if __name__ == "__main__":
-    metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA -DU BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
-    print(decode(metar))
+    taf = """112008Z 1200/1224 19006KT 9999 SCT025 TN21/1209Z TX27/1215Z
+  TEMPO 1207/1212 4000 RA BR BKN010 OVC040
+  BECMG 1213/1215 10010KT RMK PGX
+"""
+    decoded_taf = decode_taf(taf)
+    print(decoded_taf)

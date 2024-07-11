@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aeroporto {{ info.AerodromeName }} - TAF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/tooltip.css">
+  <link rel="stylesheet" href="/static/rwy.css">
+</head>
+<body>
+	<header>
+		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
+	</header>
+	<main>
+	<a class="button-small" href="/info/{{ icao }}">&lt Voltar para o METAR</a>
+	<a class="button-small" href="javascript:void(0);" onclick="copy(`{{taf}}`)">Copiar TAF</a>
+	
+	<p>APENAS PARA USO EM SIMULADOR</p>
+
+	<table class="padded-table">
+		{% for (item, description) in decoded %}
+		<tr>
+			<td class="metarItem">{{ item }}</td>
+			<td>{{ description|safe }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	</main>
+	<script src="/static/copy.js"></script>
+</body>
+</html>
+

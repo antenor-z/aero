@@ -1,4 +1,4 @@
-async function copyMETAR(metar) {
+async function copy(metar) {
     try {
       await navigator.clipboard.writeText(metar);
     } catch (error) {
