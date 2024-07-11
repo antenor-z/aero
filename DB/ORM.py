@@ -40,7 +40,7 @@ class TAF(Base):
     __tablename__ = 'TAF'
     ICAO = Column(String(4), ForeignKey('Aerodrome.ICAO'), primary_key=True)
     ValidOn = Column(DateTime(timezone=True), nullable=True, primary_key=True)
-    TAF = Column(String(200), nullable=True)
+    TAF = Column(String(3000), nullable=True)
 
 class PavementType(Base):
     __tablename__ = 'PavementType'
