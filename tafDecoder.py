@@ -177,6 +177,14 @@ def decode_taf(taf: str) -> list:
         else:
             ret.append((item, "Item desconhecido"))
 
+    grouped = []
+    group = []
+    for (item, meaning) in ret:
+        if item.startswith("BECMG ") or item.startswith("TEMPO "):
+            if len(group > 0):
+                grouped.append(group)
+        
+
 
     return ret
 
