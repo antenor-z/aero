@@ -1,6 +1,7 @@
 from os import environ
 from sqlalchemy import PrimaryKeyConstraint, create_engine,\
-    Column, Integer, String, ForeignKey, UniqueConstraint, DECIMAL, DateTime
+    Column, Integer, String, ForeignKey, UniqueConstraint, \
+    DECIMAL, DateTime, Boolean, Text
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 
 
@@ -112,6 +113,16 @@ class VOR(Base):
     __table_args__ = (
         PrimaryKeyConstraint('ICAO', 'Frequency'),
     )
+
+class User(Base):
+    __tablename__ = 'User'
+
+    Name = Column(String(30), primary_key=True)
+    PasswordHash = Column(String(60))
+    TwoFactorKey = Column(String(32), nullable=True)
+    CanEditAirportsList = Column(Text, nullable=True)
+    CanCreate = Column(Boolean, default=False)
+    CanDelete = Column(Boolean, default=False)
 
 # CREATE USER 'aero-user'@'localhost' IDENTIFIED BY '123';
 # GRANT ALL PRIVILEGES ON aero.* TO 'aero-user'@'localhost';

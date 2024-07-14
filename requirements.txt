@@ -6,3 +6,6 @@ pydantic
 flask
 gunicorn
 apscheduler
+pyotp
+qrcode
+bcrypt
