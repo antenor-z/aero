@@ -93,7 +93,7 @@ def decode_taf(taf: str) -> list:
 
     context = ""
 
-    for item in taf_lines[1:]:
+    for item in taf_lines[2:]:
         if item in ["BECMG", "TEMPO"]:
             context = item
         elif re.match(r"^\d{4}/\d{4}$", item):
@@ -135,7 +135,7 @@ def decode_taf(taf: str) -> list:
 
         elif re.match(r"^PROB\d{2}$", item):
             probability = item[4:]
-            ret.append((item, f"Probabilidade de {probability}% de ocorrer as seguintes condições"))
+            ret.append((item, f"Probabilidade de {probability}% de ocorrer estas condições"))
 
         elif re.match(r"^NSW$", item):
             ret.append((item, "Sem fenômenos significativos"))
@@ -177,16 +177,23 @@ def decode_taf(taf: str) -> list:
         else:
             ret.append((item, "Item desconhecido"))
 
-    grouped = []
+    grouped_taf = []
     group = []
+    grouped_started = False
     for (item, meaning) in ret:
         if item.startswith("BECMG ") or item.startswith("TEMPO "):
-            if len(group > 0):
-                grouped.append(group)
-        
+            grouped_started = True
+            if group != []:
+                grouped_taf.append(group)    
+                group = []
+            group.append((item, meaning))
+        else:
+            if grouped_started:
+                group.append((item, meaning))
+            else:
+                grouped_taf.append((item, meaning))
 
-
-    return ret
+    return grouped_taf
 
 if __name__ == "__main__":
     taf = """112008Z 1200/1224 19006KT 9999 SCT025 TN21/1209Z TX27/1215Z

@@ -135,6 +135,15 @@ td {
   background-color: #bbb;
 }
 
+.metarSubItem {
+  border-left: #333 solid 30px;
+}
+
+.tafGroupHeader {
+  background-color: #edb90c;
+  border-radius: 17px;
+}
+
 .direct-icao {
   display: flex;
   align-items: center;

@@ -6,6 +6,14 @@
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/tooltip.css">
   <link rel="stylesheet" href="/static/rwy.css">
+  <style>
+    .hidden {
+      display: none;
+    }
+    .expandable {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 	<header>
@@ -18,15 +26,49 @@
 	<p>APENAS PARA USO EM SIMULADOR</p>
 
 	<table class="padded-table">
-		{% for (item, description) in decoded %}
-		<tr>
-			<td class="metarItem">{{ item }}</td>
-			<td>{{ description|safe }}</td>
-		</tr>
+		{% for block in decoded %}
+			{% if block[0] is string %}
+				<tr>
+					<td class="metarItem">{{ block[0] }}</td>
+					<td>{{ block[1]|safe }}</td>
+				</tr>
+			{% else %}
+				<tr class="expandable" onclick="toggleExpand(this)">
+					<td class="metarItem tafGroupHeader">{{ block[0][0] }} ▼</td>
+					<td>{{ block[0][1]|safe }}</td>
+				</tr>
+				{% for item in block[1:] %}
+					<tr class="hidden">
+						<td class="metarItem metarSubItem">&nbsp;{{ item[0] }}</td>
+						<td>{{ item[1]|safe }}</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
 		{% endfor %}
 	</table>
 	</main>
 	<script src="/static/copy.js"></script>
+	<script>
+	  function toggleExpand(row) {
+	    var nextRow = row.nextElementSibling;
+	    var isExpanding = nextRow.classList.contains('hidden');
+	    
+	    while (nextRow && nextRow.querySelector('.metarItem') && nextRow.querySelector('.metarItem').innerText.startsWith(' ')) {
+	      if (isExpanding) {
+	        nextRow.classList.remove('hidden');
+	      } else {
+	        nextRow.classList.add('hidden');
+	      }
+	      nextRow = nextRow.nextElementSibling;
+	    }
+	    
+	    var arrow = row.querySelector('.metarItem');
+	    if (arrow.innerHTML.includes('▼')) {
+	      arrow.innerHTML = arrow.innerHTML.replace('▼', '▲');
+	    } else {
+	      arrow.innerHTML = arrow.innerHTML.replace('▲', '▼');
+	    }
+	  }
+	</script>
 </body>
 </html>
-

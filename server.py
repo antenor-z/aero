@@ -43,7 +43,6 @@ def info_taf(icao:str):
         taf = get_taf(icao)
         info = get_info(icao)
         decoded = decode_taf(taf)
-        return decoded
     except Exception:
         return render_template("error.html", error="Erro ao obter o TAF"), 400
 
