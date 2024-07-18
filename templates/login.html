@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Erro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+	<div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center; text-align: center;">
+    <form action="/area/restrita/login" method="post">
+      <input type="text" name="user">
+      <input type="password" name="password">
+      <input type="text" name="totp">
+      <button type="submit">OK</button>
+    </form>
+		<span style="font-size: 1.5rem; ">{{ error }}</span> 
+	</div>
+</body>
+</html>
+

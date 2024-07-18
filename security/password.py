@@ -3,21 +3,20 @@ from DB.ORM import *
 from security.TOTP import check2fa
 import os, hashlib
 
-def authenticate(user_name, password, totp_token):
+def authenticate(user_name, passwd, totp_token):
     with Session(engine) as session:
         user: User = session.query(User).filter(User.Name == user_name).first()
         if not user:
             raise Exception("Invalid credentials")
-        
-        is_pass_ok = _check_password(user.PasswordHash, password)
+        is_pass_ok = _check_password(user.PasswordHash, passwd)
         if not is_pass_ok:
             raise Exception("Invalid credentials")
-        
+
         if user.TwoFactorKey is not None and len(user.TwoFactorKey) == 32:
             totp_ok = check2fa(user.TwoFactorKey, totp_token)
             if not totp_ok:
                 raise Exception("Invalid TOTP")
-        
+
         return user
 
 

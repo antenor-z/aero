@@ -1,6 +1,7 @@
 from os import environ
 from flask import Flask, render_template, redirect, request, session
 from DB.Getter import get_all_icao, get_all_names, get_info
+from DB.ORM import User
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from metarDecoder import DecodeError, decode_metar, get_wind_info
 from tafDecoder import decode_taf
@@ -82,7 +83,12 @@ def descent():
 
 @app.get("/area/restrita")
 def restricted_area():
-    return "ok"
+    user: str | None = get_logged_user()
+    if user is None:
+        return redirect("/area/restrita/login")
+
+    return user
+
 
 @app.get("/area/restrita/login")
 def get_login():
@@ -90,14 +96,26 @@ def get_login():
 
 @app.post("/area/restrita/login")
 def post_login():
-    
-    password.authenticate(user_name, password, totp_token)
-    return render_template("login.html")
+    user_name = request.form.get('user')
+    passwd = request.form.get('password')
+    totp = request.form.get('totp')
+    try:
+        user: User = password.authenticate(user_name=user_name,
+                                           passwd=passwd,
+                                           totp_token=totp)
+        session["logged_user"] = user.Name
+        return redirect("/area/restrita")
+    except Exception:
+        return "Invalid credentials", 401
 
-def is_logged():
-    if session["logged"]:
-        return True
-    return False
+@app.get("/area/restrita/logout")
+def get_logout():
+    session.pop("logged_user")
+    return redirect("/area/restrita")
+
+def get_logged_user():
+    user = session.get("logged_user")
+    return user
 
 @app.errorhandler(404)
 def not_found(e):
