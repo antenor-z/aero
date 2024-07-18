@@ -6,6 +6,7 @@ services:
       MYSQL_DATABASE: "aero"
       MYSQL_USER: "aero-user"
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      SESSION_SECRET_KEY: /run/secrets/session_secret_key
     ports:
       - "5000:5000"
     depends_on:
@@ -14,6 +15,7 @@ services:
       - aeronet
     secrets:
       - db_password
+      - session_secret_key
 
   aero-db:
     image: mariadb
@@ -38,6 +40,8 @@ secrets:
     file: ./passwords/db_password.txt
   db_root_password:
     file: ./passwords/db_root_password.txt
+  session_secret_key:
+    file: ./passwords/session_secret_key.txt
 
 networks:
   aeronet:

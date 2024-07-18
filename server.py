@@ -1,4 +1,5 @@
-from flask import Flask, render_template, redirect, request
+from os import environ
+from flask import Flask, render_template, redirect, request, session
 from DB.Getter import get_all_icao, get_all_names, get_info
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -14,6 +15,9 @@ scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 
 app = Flask(__name__)
+DB_PASSWORD = None
+with open(environ["SESSION_SECRET_KEY"]) as fp:
+    app.config['SECRET_KEY'] = fp.read()
 
 @app.get("/")
 def list_all():
@@ -76,6 +80,24 @@ def windcalc():
 def descent():
     return render_template("vertical.html")
 
+@app.get("/area/restrita")
+def restricted_area():
+    return "ok"
+
+@app.get("/area/restrita/login")
+def get_login():
+    return render_template("login.html")
+
+@app.post("/area/restrita/login")
+def post_login():
+    
+    password.authenticate(user_name, password, totp_token)
+    return render_template("login.html")
+
+def is_logged():
+    if session["logged"]:
+        return True
+    return False
 
 @app.errorhandler(404)
 def not_found(e):

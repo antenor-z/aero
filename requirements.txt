@@ -1,4 +1,3 @@
-python-dotenv
 pymysql
 SQLAlchemy
 requests
