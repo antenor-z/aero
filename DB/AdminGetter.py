@@ -21,6 +21,6 @@ def get_communication(icao: str, frequency: int):
     with Session(engine) as session:
         communication: Communication = session.get_one(Communication, (icao, frequency))
         return {
-            "Frequency": communication.Frequency,
+            "Frequency": communication.Frequency / 1000,
             "CommType": communication.CommType
         }

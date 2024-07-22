@@ -51,7 +51,7 @@
 			<div class="box-name">{{comm.CommType}}</div>
 			<div class="box-value"><b>{{comm.Frequency}}</b>
 				{% if isAdmin %}
-				<a class="button-admin">Editar</a>
+				<a href="/area/restrita/{{icao}}/communication/{{float(comm.Frequency) * 1000}}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 	</div>
 	{% if isAdmin %}
 		<div class="line">
-			<a href="/area/restrita/{{icao}}/comm/add" class="button-admin">Adicionar Comunicação</a>
+			<a href="/area/restrita/{{icao}}/communication/add" class="button-admin">Adicionar Comunicação</a>
 		</div>
 	{% endif %}
 	{% if info.ils != None %}

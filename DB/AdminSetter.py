@@ -28,9 +28,9 @@ def create_runway(icao: str, head1, head2, runway_length, runway_width=None, pav
             session.rollback()
             return str(e)
 
-def patch_runway(icao: str, head1_pk, head1, head2, runway_length, runway_width=None, pavement_code=None):
+def patch_runway(icao: str, head1_old, head1, head2, runway_length, runway_width=None, pavement_code=None):
     with Session(engine) as session:
-        runway: Runway = session.get_one(Runway, (icao, head1_pk))
+        runway: Runway = session.get_one(Runway, (icao, head1_old))
         try:
             if head1 is not None:
                 runway.Head1 = head1
@@ -49,7 +49,7 @@ def patch_runway(icao: str, head1_pk, head1, head2, runway_length, runway_width=
 
 def create_comm(icao, frequency, comm_type):
     with Session(engine) as session:
-        communication: Communication = Communication(ICAO=icao, Frequency=frequency, CommType=comm_type)
+        communication: Communication = Communication(ICAO=icao, Frequency=float(frequency) * 1000, CommType=comm_type)
         try:
             session.add(communication)
             session.commit()
@@ -57,14 +57,23 @@ def create_comm(icao, frequency, comm_type):
             session.rollback()
             return str(e)
 
-def patch_comm(icao: str, frequency, comm_type):
+def patch_comm(icao: str, frequency_old, frequency, comm_type):
     with Session(engine) as session:
-        communication: Communication = session.get_one(Communication, (icao, frequency))
+        communication: Communication = session.get_one(Communication, (icao, frequency_old))
         try:
             if frequency is not None:
-                communication.Frequency = frequency
+                communication.Frequency = float(frequency) * 1000
             if comm_type is not None:
                 communication.CommType = comm_type
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
+  
+def del_comm(icao: str, frequency):
+    with Session(engine) as session:
+        communication: Communication = session.delete(Communication, (icao, frequency))
+        try:
             session.commit()
         except Exception as e:
             session.rollback()

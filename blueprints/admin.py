@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
 from DB.AdminGetter import get_communication, get_runway
-from DB.AdminSetter import create_comm, create_runway, patch_aerodrome, patch_runway, patch_comm
+from DB.AdminSetter import create_comm, create_runway, del_comm, patch_aerodrome, patch_runway, patch_comm
 from DB.Getter import get_info
 from DB.ORM import User
 from ext import get_metar
@@ -138,11 +138,18 @@ def edit_communication(icao: str, frequency: int):
         frequency_new = request.form.get('Frequency')
         comm_type = request.form.get('CommType')
 
-        if (exc := patch_comm(icao, frequency_new, comm_type)) is not None:
+        if (exc := patch_comm(icao, frequency, frequency_new, comm_type)) is not None:
             return exc, 401
         
         return redirect(f"/area/restrita/{icao}")
-    
+
+
+@admin.post("/area/restrita/<string:icao>/communication/<int:frequency>/delete")
+def delete_communication(icao: str, frequency: int):
+    get_logged_user()
+    del_comm(icao, frequency)
+
+
 @admin.errorhandler(NotLoggedException)
 def not_logged(e):
     return redirect("/area/restrita/login")
