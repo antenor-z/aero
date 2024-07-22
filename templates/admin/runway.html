@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar {{ icao }} - Pista {{runway.Head1}} - {{runway.Head2}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+	<main>
+	<form method="post" action="{{ action }}">
+		<label for="head1">Cabeçeira 1: </label>
+		<input type="text" name="Head1" id="head1" value="{{runway.Head1}}">
+
+		<label for="head2">Cabeçeira 2: </label>
+		<input type="text" name="Head2" id="head2" value="{{runway.Head2}}">
+
+		<label for="RunwayLength">Comprimento: </label>
+		<input type="text" name="RunwayLength" id="RunwayLength" value="{{runway.RunwayLength}}">
+
+		<label for="RunwayWidth">Largura: </label>
+		<input type="text" name="RunwayWidth" id="RunwayWidth" value="{{runway.RunwayWidth}}">
+
+		<label for="PavementCode">Tipo do pavimento: </label>
+		<input type="text" name="PavementCode" id="PavementCode" value="{{runway.PavementCode}}">
+		<button type="submit">OK</button>
+	</form>
+	</main>
+</body>
+</html>

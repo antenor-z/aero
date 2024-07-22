@@ -1,0 +1,18 @@
+form {
+    display: grid; 
+    font-size: 24px;
+    * {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+}
+.button-admin {
+    background-color: rgb(0, 136, 68); 
+    border: 1px solid white ;
+    padding: 3px;
+    a, a:visited {color: white; text-decoration: none; }
+    font-family: sans-serif;
+    font-size: 10px !important;
+    width: fit-content !important;
+    height: fit-content !important;
+}

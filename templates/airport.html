@@ -6,10 +6,14 @@
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/tooltip.css">
   <link rel="stylesheet" href="/static/rwy.css">
+  <link rel="stylesheet" href="/static/admin.css">
 </head>
 <body>
 	<header>
 		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
+		{% if isAdmin %}
+			<a href="/area/restrita/{{ icao }}/edit" class="button-admin">Editar</a>
+		{% endif %}
 	</header>
 	<main>
 	<a class="button-small" href="/">&lt Voltar</a>
@@ -28,7 +32,13 @@
 								Largura: {{ runway.RunwayWidth }} m
 							</span>
 						</span>
+						{% if isAdmin %}
+							<a href="/area/restrita/{{icao}}/runway/{{runway.Head1}}/edit" class="button-admin">Editar</a>
+						{% endif %}
 					</div>
+					{% if isAdmin %}
+						<a class="button-admin">Adicionar</a>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -39,10 +49,19 @@
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
 			<div class="box-name">{{comm.CommType}}</div>
-			<div class="box-value"><b>{{comm.Frequency}}</b></div>
+			<div class="box-value"><b>{{comm.Frequency}}</b>
+				{% if isAdmin %}
+				<a class="button-admin">Editar</a>
+				{% endif %}
+			</div>
 		</div>
 		{% endfor %}
 	</div>
+	{% if isAdmin %}
+		<div class="line">
+			<a href="/area/restrita/{{icao}}/comm/add" class="button-admin">Adicionar Comunicação</a>
+		</div>
+	{% endif %}
 	{% if info.ils != None %}
 	<div class="line">
 		{% for ils in info.ils %}
@@ -60,20 +79,39 @@
 						Curso final: {{ils.CRS}}° 
 					</span>
 				</span>
+				{% if isAdmin %}
+				<a href="/area/restrita/{{ icao }}/ils/{{ ils.Frequency }}/editar" class="button-admin">Editar</a>
+				{% endif %}
 			</div>
 		</div>
 		{% endfor %}
 	</div>
 	{% endif %}
+	{% if isAdmin %}
+		<div class="line">
+			<a href="/area/restrita/{{icao}}/ILS/add" class="button-admin">Adicionar ILS</a>
+		</div>
+	{% endif %}
 	{% if info.vor != None %}
 	<div class="line">
 		{% for vor in info.vor %}
 		<div class="box-rounded box-orange">
-			<div class="box-name">VOR</div><div class="box-value"><b>{{ vor.Frequency }}</b> {{ vor.Ident }}</div>
+			<div class="box-name">VOR</div>
+			<div class="box-value">
+				<b>{{ vor.Frequency }}</b> {{ vor.Ident }}
+				{% if isAdmin %}
+					<a class="button-admin">Editar</a>
+				{% endif %}
+			</div>
 		</div>
 		{% endfor %}
 	</div>
 	{% endif %}
+	{% endif %}
+	{% if isAdmin %}
+		<div class="line">
+			<a href="/area/restrita/{{icao}}/VOR/add" class="button-admin">Adicionar VOR</a>
+		</div>
 	{% endif %}
 	<table class="padded-table">
 		{% for (item, description) in decoded %}
