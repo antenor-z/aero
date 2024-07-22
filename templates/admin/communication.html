@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar {{ icao }} - Pista {{runway.Head1}} - {{runway.Head2}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+	<main>
+	<form method="post" action="{{ action }}">
+		<label for="Frequency">Frequência: </label>
+		<input type="text" name="Frequency" id="Frequency" value="{{runway.Frequency}}">
+
+		<label for="CommType">Tipo: </label>
+		<input type="text" name="CommType" id="CommType" value="{{runway.CommType}}">
+
+		<button type="submit">OK</button>
+	</form>
+	</main>
+</body>
+</html>

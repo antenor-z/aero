@@ -46,8 +46,26 @@ def patch_runway(icao: str, head1_pk, head1, head2, runway_length, runway_width=
         except Exception as e:
             session.rollback()
             return str(e)
-        
-        
 
+def create_comm(icao, frequency, comm_type):
+    with Session(engine) as session:
+        communication: Communication = Communication(ICAO=icao, Frequency=frequency, CommType=comm_type)
+        try:
+            session.add(communication)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
 
-
+def patch_comm(icao: str, frequency, comm_type):
+    with Session(engine) as session:
+        communication: Communication = session.get_one(Communication, (icao, frequency))
+        try:
+            if frequency is not None:
+                communication.Frequency = frequency
+            if comm_type is not None:
+                communication.CommType = comm_type
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)

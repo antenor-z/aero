@@ -17,5 +17,10 @@ def get_runway(icao: str, runway_head: str):
            "PavementCode": runway.PavementCode
         }
 
-
-
+def get_communication(icao: str, frequency: int):
+    with Session(engine) as session:
+        communication: Communication = session.get_one(Communication, (icao, frequency))
+        return {
+            "Frequency": communication.Frequency,
+            "CommType": communication.CommType
+        }

@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_runway
-from DB.AdminSetter import create_runway, patch_aerodrome, patch_runway
+from DB.AdminGetter import get_communication, get_runway
+from DB.AdminSetter import create_comm, create_runway, patch_aerodrome, patch_runway, patch_comm
 from DB.Getter import get_info
 from DB.ORM import User
 from ext import get_metar
@@ -36,7 +36,7 @@ def restricted_area_airport(icao:str):
 
 @admin.get("/area/restrita/login")
 def get_login():
-    return render_template("edit/login.html")
+    return render_template("admin/login.html")
 
 
 @admin.post("/area/restrita/login")
@@ -112,7 +112,36 @@ def edit_runway(icao: str, runwayHead):
             return exc, 401
         
         return redirect(f"/area/restrita/{icao}")
+
+@admin.route("/area/restrita/<string:icao>/communication/add", methods=['GET', 'POST'])
+def add_communication(icao: str):
+    get_logged_user()
+    if request.method == 'GET':
+        empty_comm = {"Frequency": "", "CommType": ""}
+        return render_template("admin/communication.html", icao=icao, communication=empty_comm, action=f"/area/restrita/{icao}/communication/add")
+    else:
+        frequency = request.form.get('Frequency')
+        comm_type = request.form.get('CommType')
+
+        if (exc := create_comm(icao, frequency, comm_type)) is not None:
+            return exc, 401
+
+        return redirect(f"/area/restrita/{icao}")
+
+@admin.route("/area/restrita/<string:icao>/communication/<int:frequency>/edit", methods=['GET', 'POST'])
+def edit_communication(icao: str, frequency: int):
+    get_logged_user()
+    if request.method == 'GET':
+        communication = get_communication(icao=icao, frequency=frequency)
+        return render_template("admin/communication.html", icao=icao, communication=communication, action=f"/area/restrita/{icao}/communication/{frequency}/edit")
+    else:
+        frequency_new = request.form.get('Frequency')
+        comm_type = request.form.get('CommType')
+
+        if (exc := patch_comm(icao, frequency_new, comm_type)) is not None:
+            return exc, 401
         
+        return redirect(f"/area/restrita/{icao}")
     
 @admin.errorhandler(NotLoggedException)
 def not_logged(e):
