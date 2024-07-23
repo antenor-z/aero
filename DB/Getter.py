@@ -23,26 +23,12 @@ def model_to_dict(instance, include_relationships=True):
 
     return instance_dict
 
-def adjust_frequencies(model):
-    for communication in model["communication"]:
-        f = communication["Frequency"]
-        communication["Frequency"] = f"{f / 1000:.3f}"
-
-    for ils in model["ils"]:
-        f = ils["Frequency"]
-        ils["Frequency"] = f"{f / 10:.1f}"
-
-    for vor in model["vor"]:
-        f = vor["Frequency"]
-        vor["Frequency"] = f"{f / 10:.1f}"
-
-    return model
 
 def get_info(icao):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
         if aerodrome is not None:
-            aerodrome = adjust_frequencies(model_to_dict(aerodrome))
+            aerodrome = model_to_dict(aerodrome)
             city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
             aerodrome.pop("CityCode")
             aerodrome["City"] = city

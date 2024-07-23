@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar {{ icao }} - ILS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+	<main>
+	<form method="post" action="{{ action }}">
+		<label for="Ident">Ident: </label>
+		<input type="text" name="Ident" id="Ident" value="{{ils.Ident}}">
+
+		<label for="RunwayHead">Cabeçeira: </label>
+		<input type="text" name="RunwayHead" id="RunwayHead" value="{{ils.RunwayHead}}">
+
+		<label for="Frequency">Frequência: </label>
+		<input type="text" name="Frequency" id="Frequency" value="{{ils.Frequency}}">
+
+		<label for="Category">Categoria: </label>
+		<input type="text" name="Category" id="Category" value="{{ils.Category}}">
+
+		<label for="CRS">Curso final: </label>
+		<input type="text" name="CRS" id="CRS" value="{{ils.CRS}}">
+
+		<label for="Minimum">Minimum: </label>
+		<input type="text" name="Minimum" id="Minimum" value="{{ils.Minimum}}">
+
+		<button type="submit">OK</button>
+	</form>
+
+	<a class="button-admin" href="/area/restrita/{{icao}}/ils/{{ils.Frequency}}/delete">Apagar</a>
+	</main>
+</body>
+</html>

@@ -49,9 +49,9 @@
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
 			<div class="box-name">{{comm.CommType}}</div>
-			<div class="box-value"><b>{{comm.Frequency}}</b>
+			<div class="box-value"><b>{{comm.Frequency | frequency3 }}</b>
 				{% if isAdmin %}
-				<a href="/area/restrita/{{icao}}/communication/{{float(comm.Frequency) * 1000}}/edit" class="button-admin">Editar</a>
+				<a href="/area/restrita/{{icao}}/communication/{{ comm.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
 		</div>
@@ -69,7 +69,7 @@
 			<div class="box-name">ILS pista {{ ils.RunwayHead }}</div>
 			<div class="box-value" style="justify-content: space-between; display: flex;">
 				<span>
-				<b>{{ ils.Frequency }}</b> {{ ils.Ident }}
+				<b>{{ ils.Frequency | frequency1 }}</b> {{ ils.Ident }}
 				</span>
 
 				<span class="tooltip">ⓘ
@@ -80,7 +80,7 @@
 					</span>
 				</span>
 				{% if isAdmin %}
-				<a href="/area/restrita/{{ icao }}/ils/{{ ils.Frequency }}/editar" class="button-admin">Editar</a>
+				<a href="/area/restrita/{{ icao }}/ils/{{ ils.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
 		</div>
@@ -98,7 +98,7 @@
 		<div class="box-rounded box-orange">
 			<div class="box-name">VOR</div>
 			<div class="box-value">
-				<b>{{ vor.Frequency }}</b> {{ vor.Ident }}
+				<b>{{ vor.Frequency | frequency1 }}</b> {{ vor.Ident }}
 				{% if isAdmin %}
 					<a class="button-admin">Editar</a>
 				{% endif %}

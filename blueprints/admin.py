@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_communication, get_runway
-from DB.AdminSetter import create_comm, create_runway, del_comm, patch_aerodrome, patch_runway, patch_comm
+from DB.AdminGetter import get_communication, get_ils, get_runway
+from DB.AdminSetter import create_comm, create_ils, create_runway, del_comm, del_ils, patch_aerodrome, patch_ils, patch_runway, patch_comm
 from DB.Getter import get_info
 from DB.ORM import User
 from ext import get_metar
@@ -90,7 +90,12 @@ def add_runway(icao: str):
         runway_width = request.form.get('RunwayWidth')
         pavement_code = request.form.get('PavementCode')
 
-        if (exc := create_runway(icao, head1, head2, runway_length, runway_width, pavement_code)) is not None:
+        if (exc := create_runway(icao=icao, 
+                                 head1=head1, 
+                                 head2=head2, 
+                                 runway_length=runway_length, 
+                                 runway_width=runway_width, 
+                                 pavement_code=pavement_code)) is not None:
             return exc, 401
         
         return redirect(f"/area/restrita/{icao}")
@@ -108,7 +113,13 @@ def edit_runway(icao: str, runwayHead):
         runway_width = request.form.get('RunwayWidth')
         pavement_code = request.form.get('PavementCode')
 
-        if (exc := patch_runway(icao, runwayHead, head1, head2, runway_length, runway_width, pavement_code)) is not None:
+        if (exc := patch_runway(icao=icao, 
+                                head1_old=runwayHead, 
+                                head1=head1, 
+                                head2=head2, 
+                                runway_length=runway_length, 
+                                runway_width=runway_width, 
+                                pavement_code=pavement_code)) is not None:
             return exc, 401
         
         return redirect(f"/area/restrita/{icao}")
@@ -123,7 +134,7 @@ def add_communication(icao: str):
         frequency = request.form.get('Frequency')
         comm_type = request.form.get('CommType')
 
-        if (exc := create_comm(icao, frequency, comm_type)) is not None:
+        if (exc := create_comm(icao=icao, frequency=frequency, comm_type=comm_type)) is not None:
             return exc, 401
 
         return redirect(f"/area/restrita/{icao}")
@@ -149,6 +160,66 @@ def delete_communication(icao: str, frequency: int):
     get_logged_user()
     del_comm(icao, frequency)
 
+@admin.route("/area/restrita/<string:icao>/ils/add", methods=['GET', 'POST'])
+def add_ils(icao: str):
+    get_logged_user()
+    if request.method == 'GET':
+        ils = {"Ident": "", 
+               "RunwayHead": "",
+               "Frequency": "",
+               "Category": "",
+               "CRS": "",
+               "Minimum": ""}
+        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/ils/add")
+    else:
+        ident = request.form.get('Ident')
+        runway_head = request.form.get('RunwayHead')
+        frequency = request.form.get('Frequency')
+        category = request.form.get('Category')
+        crs = request.form.get('CRS')
+        minimum = request.form.get('Minimum')
+
+        if (exc := create_ils(icao=icao,
+                              ident=ident, 
+                              runway_head=runway_head, 
+                              frequency=frequency, 
+                              category=category, 
+                              crs=crs, 
+                              minimum=minimum)) is not None:
+            return exc, 401
+
+        return redirect(f"/area/restrita/{icao}")
+
+@admin.route("/area/restrita/<string:icao>/ils/<int:frequency>/edit", methods=['GET', 'POST'])
+def edit_ils(icao: str, frequency: int):
+    get_logged_user()
+    if request.method == 'GET':
+        ils = get_ils(icao=icao, frequency=frequency)
+        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/communication/{frequency}/edit")
+    else:
+        ident = request.form.get('Ident')
+        runway_head = request.form.get('RunwayHead')
+        frequency = request.form.get('Frequency')
+        category = request.form.get('Category')
+        crs = request.form.get('CRS')
+        minimum = request.form.get('Minimum')
+
+        if (exc :=  patch_ils(icao=icao,
+                              ident=ident, 
+                              runway_head=runway_head, 
+                              frequency=frequency, 
+                              category=category, 
+                              crs=crs, 
+                              minimum=minimum)) is not None:
+            return exc, 401
+        
+        return redirect(f"/area/restrita/{icao}")
+
+
+@admin.post("/area/restrita/<string:icao>/ils/<int:frequency>/delete")
+def delete_ils(icao: str, frequency: int):
+    get_logged_user()
+    del_ils(icao, frequency)
 
 @admin.errorhandler(NotLoggedException)
 def not_logged(e):

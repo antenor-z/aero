@@ -21,6 +21,19 @@ DB_PASSWORD = None
 with open(environ["SESSION_SECRET_KEY"]) as fp:
     app.config['SECRET_KEY'] = fp.read()
 
+@app.template_filter('frequency3')
+def frequency3(value):
+    value = float(value) / 1000
+    return "{:.3f}".format(round(value, 3))
+
+@app.template_filter('frequency1')
+def frequency1(value):
+    value = float(value) / 10
+    return "{:.1f}".format(round(value, 1))
+
+app.jinja_env.filters['frequency3'] = frequency3
+app.jinja_env.filters['frequency1'] = frequency1
+
 @app.get("/")
 def list_all():
     return render_template("index.html", airports=get_all_names())
