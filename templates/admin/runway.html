@@ -22,8 +22,19 @@
 		<input type="text" name="RunwayWidth" id="RunwayWidth" value="{{runway.RunwayWidth}}">
 
 		<label for="PavementCode">Tipo do pavimento: </label>
-		<input type="text" name="PavementCode" id="PavementCode" value="{{runway.PavementCode}}">
+		<select name="PavementCode" id="PavementCode">
+			{% for p in pavementCodes %}
+				{% if runway.PavementCode == p.Code %}
+					<option value="{{p.Code}}" selected>{{p.Material}}</option>
+				{% else %}
+					<option value="{{p.Code}}">{{p.Material}}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
 		<button type="submit">OK</button>
+	</form>
+	<form method="post" action="/area/restrita/{{ icao }}/runway/{{ runway.Head1 }}/delete">
+		<button type="submit">Deletar</button>
 	</form>
 	</main>
 </body>

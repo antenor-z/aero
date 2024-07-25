@@ -46,3 +46,13 @@ def get_vor(icao: str, frequency: int):
             "Ident": ils.Ident,
             "Frequency": ils.Frequency
         }
+
+def get_pavement_codes():
+    with Session(engine) as session:
+        pavs: list[PavementType] = session.query(PavementType).all()
+        return [{"Code": pav.Code, "Material": pav.Material} for pav in pavs]
+    
+def get_comm_types():
+    with Session(engine) as session:
+        comms: list[CommunicationType] = session.query(CommunicationType).all()
+        return [{"CommType": comm.CommType} for comm in comms]

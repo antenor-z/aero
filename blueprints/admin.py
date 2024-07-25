@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_communication, get_ils, get_runway
-from DB.AdminSetter import create_comm, create_ils, create_runway, del_comm, del_ils, patch_aerodrome, patch_ils, patch_runway, patch_comm
+from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_pavement_codes, get_runway
+from DB.AdminSetter import create_comm, create_ils, create_runway, del_comm, del_ils, del_runway, patch_aerodrome, patch_ils, patch_runway, patch_comm
 from DB.Getter import get_info
 from DB.ORM import User
 from ext import get_metar
@@ -82,7 +82,12 @@ def add_runway(icao: str):
     get_logged_user()
     if request.method == 'GET':
         empty_runway = {"Head1": "", "Head2": "", "RunwayLength": "", "RunwayWidth": "", "PavementCode": ""}
-        return render_template("admin/runway.html", icao=icao, runway=empty_runway, action=f"/area/restrita/{icao}/runway/add")
+        print(get_pavement_codes())
+        return render_template("admin/runway.html",
+                               icao=icao,
+                               runway=empty_runway,
+                               action=f"/area/restrita/{icao}/runway/add",
+                               pavementCodes=get_pavement_codes())
     else:
         head1 = request.form.get('Head1')
         head2 = request.form.get('Head2')
@@ -105,7 +110,11 @@ def edit_runway(icao: str, runwayHead):
     get_logged_user()
     if request.method == 'GET':
         runway = get_runway(icao=icao, runway_head=runwayHead)
-        return render_template("admin/runway.html", icao=icao, runway=runway, action=f"/area/restrita/{icao}/runway/{runwayHead}/edit")
+        return render_template("admin/runway.html",
+                               icao=icao,
+                               runway=runway,
+                               action=f"/area/restrita/{icao}/runway/{runwayHead}/edit",
+                               pavementCodes=get_pavement_codes())
     else:
         head1 = request.form.get('Head1')
         head2 = request.form.get('Head2')
@@ -124,12 +133,22 @@ def edit_runway(icao: str, runwayHead):
         
         return redirect(f"/area/restrita/{icao}")
 
+@admin.post("/area/restrita/<string:icao>/runway/<string:runwayHead>/delete")
+def delete_runway(icao: str, runwayHead: str):
+    get_logged_user()
+    del_runway(icao, runwayHead)
+    return redirect(f"/area/restrita/{icao}")
+
 @admin.route("/area/restrita/<string:icao>/communication/add", methods=['GET', 'POST'])
 def add_communication(icao: str):
     get_logged_user()
     if request.method == 'GET':
         empty_comm = {"Frequency": "", "CommType": ""}
-        return render_template("admin/communication.html", icao=icao, communication=empty_comm, action=f"/area/restrita/{icao}/communication/add")
+        return render_template("admin/communication.html",
+                               icao=icao,
+                               communication=empty_comm,
+                               action=f"/area/restrita/{icao}/communication/add",
+                               CommTypes=get_comm_types())
     else:
         frequency = request.form.get('Frequency')
         comm_type = request.form.get('CommType')
@@ -144,7 +163,11 @@ def edit_communication(icao: str, frequency: int):
     get_logged_user()
     if request.method == 'GET':
         communication = get_communication(icao=icao, frequency=frequency)
-        return render_template("admin/communication.html", icao=icao, communication=communication, action=f"/area/restrita/{icao}/communication/{frequency}/edit")
+        return render_template("admin/communication.html",
+                               icao=icao,
+                               communication=communication,
+                               action=f"/area/restrita/{icao}/communication/{frequency}/edit",
+                               CommTypes=get_comm_types())
     else:
         frequency_new = request.form.get('Frequency')
         comm_type = request.form.get('CommType')
@@ -159,6 +182,7 @@ def edit_communication(icao: str, frequency: int):
 def delete_communication(icao: str, frequency: int):
     get_logged_user()
     del_comm(icao, frequency)
+    return redirect(f"/area/restrita/{icao}")
 
 @admin.route("/area/restrita/<string:icao>/ils/add", methods=['GET', 'POST'])
 def add_ils(icao: str):
@@ -199,18 +223,19 @@ def edit_ils(icao: str, frequency: int):
     else:
         ident = request.form.get('Ident')
         runway_head = request.form.get('RunwayHead')
-        frequency = request.form.get('Frequency')
+        frequency_new = request.form.get('Frequency')
         category = request.form.get('Category')
         crs = request.form.get('CRS')
         minimum = request.form.get('Minimum')
 
-        if (exc :=  patch_ils(icao=icao,
-                              ident=ident, 
-                              runway_head=runway_head, 
-                              frequency=frequency, 
-                              category=category, 
-                              crs=crs, 
-                              minimum=minimum)) is not None:
+        if (exc := patch_ils(icao=icao,
+                            frequency_old=frequency,
+                            ident=ident,
+                            runway_head=runway_head,
+                            frequency=frequency_new,
+                            category=category,
+                            crs=crs,
+                            minimum=minimum)) is not None:
             return exc, 401
         
         return redirect(f"/area/restrita/{icao}")

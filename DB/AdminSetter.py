@@ -51,6 +51,16 @@ def patch_runway(icao: str, head1_old, head1, head2, runway_length, runway_width
             session.rollback()
             return str(e)
 
+def del_runway(icao: str, runway_head):
+    with Session(engine) as session:
+        try:
+            runway: Runway = session.get_one(Runway, (icao, runway_head))
+            session.delete(runway)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
+
 def create_comm(icao, frequency, comm_type):
     with Session(engine) as session:
         try:
@@ -77,7 +87,8 @@ def patch_comm(icao: str, frequency_old, frequency, comm_type):
 def del_comm(icao: str, frequency):
     with Session(engine) as session:
         try:
-            communication: Communication = session.delete(Communication, (icao, frequency))
+            communication: Communication = session.get_one(Communication, (icao, frequency))
+            session.delete(communication)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -117,7 +128,8 @@ def patch_ils(icao, frequency_old, ident, runway_head, frequency, category, crs,
 def del_ils(icao: str, frequency):
     with Session(engine) as session:
         try:
-            communication: ILS = session.delete(ILS, (icao, frequency))
+            ils: ILS = session.get_one(ILS, (icao, frequency))
+            session.delete(ils)
             session.commit()
         except Exception as e:
             session.rollback()

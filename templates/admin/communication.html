@@ -13,13 +13,21 @@
 		<input type="text" name="Frequency" id="Frequency" value="{{communication.Frequency}}">
 
 		<label for="CommType">Tipo: </label>
-		<input type="text" name="CommType" id="CommType" value="{{communication.CommType}}">
+		<select name="CommType" id="CommType">
+		{% for t in CommTypes %}
+			{% if communication.CommType == t.CommType %}
+				<option value="{{t.CommType}}" selected>{{t.CommType}}</option>
+			{% else %}
+				<option value="{{t.CommType}}">{{t.CommType}}</option>
+			{% endif %}
+		{% endfor %}
+		</select>
 
 		<button type="submit">OK</button>
 	</form>
 
 	<form method="post" action="/area/restrita/{{icao}}/communication/{{communication.Frequency }}/delete">
-		<button class="button-admin" type="submit">OK</button>
+		<button type="submit">Deletar</button>
 	</form>
 	</main>
 </body>

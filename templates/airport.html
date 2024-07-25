@@ -36,13 +36,13 @@
 							<a href="/area/restrita/{{icao}}/runway/{{runway.Head1}}/edit" class="button-admin">Editar</a>
 						{% endif %}
 					</div>
-					{% if isAdmin %}
-						<a class="button-admin">Adicionar</a>
-					{% endif %}
 				</div>
 			</div>
 		</div>
 		{% endfor %}
+		{% if isAdmin %}
+			<a href="/area/restrita/{{icao}}/runway/add" class="button-admin">Adicionar</a>
+		{% endif %}
 	</div>
 	<span>APENAS PARA USO EM SIMULADOR</span>
 	<div class="line">
