@@ -137,13 +137,33 @@ def del_ils(icao: str, frequency):
         
 def create_vor(icao, ident, frequency):
     with Session(engine) as session:
-        vor: VOR = Communication(ICAO=icao, 
-                                 Ident=ident, 
-                                 Frequency=frequency())
+        vor: VOR =  VOR(ICAO=icao, 
+                        Ident=ident, 
+                        Frequency=frequency)
         try:
             session.add(vor)
             session.commit()
         except Exception as e:
             session.rollback()
             return str(e)  
+        
+def patch_vor(icao, frequency_old, ident, frequency):
+    with Session(engine) as session:
+        try:
+            vor: VOR = session.get_one(VOR, (icao, frequency_old))
+            vor.Ident = ident
+            vor.Frequency = frequency
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
 
+def del_vor(icao: str, frequency):
+    with Session(engine) as session:
+        try:
+            vor: VOR = session.get_one(VOR, (icao, frequency))
+            session.delete(vor)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)

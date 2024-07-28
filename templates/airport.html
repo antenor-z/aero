@@ -100,7 +100,7 @@
 			<div class="box-value">
 				<b>{{ vor.Frequency | frequency1 }}</b> {{ vor.Ident }}
 				{% if isAdmin %}
-					<a class="button-admin">Editar</a>
+					<a href="/area/restrita/{{icao}}/vor/{{ vor.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
 		</div>
@@ -110,7 +110,7 @@
 	{% endif %}
 	{% if isAdmin %}
 		<div class="line">
-			<a href="/area/restrita/{{icao}}/VOR/add" class="button-admin">Adicionar VOR</a>
+			<a href="/area/restrita/{{icao}}/vor/add" class="button-admin">Adicionar VOR</a>
 		</div>
 	{% endif %}
 	<table class="padded-table">

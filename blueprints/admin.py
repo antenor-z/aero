@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_pavement_codes, get_runway
-from DB.AdminSetter import create_comm, create_ils, create_runway, del_comm, del_ils, del_runway, patch_aerodrome, patch_ils, patch_runway, patch_comm
+from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_pavement_codes, get_runway, get_vor
+from DB.AdminSetter import create_comm, create_ils, create_runway, create_vor, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor
 from DB.Getter import get_info
 from DB.ORM import User
 from ext import get_metar
@@ -245,6 +245,52 @@ def edit_ils(icao: str, frequency: int):
 def delete_ils(icao: str, frequency: int):
     get_logged_user()
     del_ils(icao, frequency)
+    return redirect(f"/area/restrita/{icao}")
+
+@admin.route("/area/restrita/<string:icao>/vor/add", methods=['GET', 'POST'])
+def add_vor(icao: str):
+    get_logged_user()
+    if request.method == 'GET':
+        vor = {"Ident": "", 
+               "Frequency": "",
+              }
+        return render_template("admin/vor.html", icao=icao, vor=vor, action=f"/area/restrita/{icao}/vor/add")
+    else:
+        ident = request.form.get('Ident')
+        frequency = request.form.get('Frequency')
+
+        if (exc := create_vor(icao=icao,
+                              ident=ident, 
+                              frequency=frequency, 
+                            )) is not None:
+            return exc, 401
+
+        return redirect(f"/area/restrita/{icao}")
+
+@admin.route("/area/restrita/<string:icao>/vor/<int:frequency>/edit", methods=['GET', 'POST'])
+def edit_vor(icao: str, frequency: int):
+    get_logged_user()
+    if request.method == 'GET':
+        vor = get_vor(icao=icao, frequency=frequency)
+        return render_template("admin/vor.html", icao=icao, vor=vor, action=f"/area/restrita/{icao}/vor/{frequency}/edit")
+    else:
+        ident = request.form.get('Ident')
+        frequency_new = request.form.get('Frequency')
+
+        if (exc := patch_vor(icao=icao,
+                            frequency_old=frequency,
+                            ident=ident,
+                            frequency=frequency_new,
+                            )) is not None:
+            return exc, 401
+        
+        return redirect(f"/area/restrita/{icao}")
+
+
+@admin.post("/area/restrita/<string:icao>/vor/<int:frequency>/delete")
+def delete_vor(icao: str, frequency: int):
+    get_logged_user()
+    del_vor(icao, frequency)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.errorhandler(NotLoggedException)

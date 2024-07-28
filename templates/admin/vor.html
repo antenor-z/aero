@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Editar {{ icao }} - ILS</title>
+  <title>Editar {{ icao }} - VOR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/admin.css">
@@ -10,15 +10,17 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident: </label>
-		<input type="text" name="Ident" id="Ident" value="{{ils.Ident}}">
+		<input type="text" name="Ident" id="Ident" value="{{vor.Ident}}">
 
 		<label for="Frequency">Frequência: </label>
-		<input type="text" name="Frequency" id="Frequency" value="{{ils.Frequency}}">
+		<input type="text" name="Frequency" id="Frequency" value="{{vor.Frequency}}">
 
 		<button type="submit">OK</button>
 	</form>
 
-	<a class="button-admin" href="/area/restrita/{{icao}}/ils/{{ils.Frequency}}/delete">Apagar</a>
+	<form method="post" action="/area/restrita/{{icao}}/vor/{{vor.Frequency}}/delete">
+		<button type="submit">Deletar</button>
+	</form>
 	</main>
 </body>
 </html>
