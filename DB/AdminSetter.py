@@ -96,13 +96,13 @@ def del_comm(icao: str, frequency):
 
 def create_ils(icao, ident, runway_head, frequency, category, crs, minimum):
     with Session(engine) as session:
-        ils: ILS = Communication(ICAO=icao, 
-                                 Ident=ident, 
-                                 RunwayHead=runway_head, 
-                                 Frequency=frequency, 
-                                 Category=category, 
-                                 CRS=crs, 
-                                 Minimum=minimum)
+        ils: ILS =  ILS(ICAO=icao, 
+                        Ident=ident, 
+                        RunwayHead=runway_head, 
+                        Frequency=frequency, 
+                        Category=category, 
+                        CRS=crs, 
+                        Minimum=minimum)
         try:
             session.add(ils)
             session.commit()

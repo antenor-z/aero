@@ -219,7 +219,7 @@ def edit_ils(icao: str, frequency: int):
     get_logged_user()
     if request.method == 'GET':
         ils = get_ils(icao=icao, frequency=frequency)
-        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/communication/{frequency}/edit")
+        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/ils/{frequency}/edit")
     else:
         ident = request.form.get('Ident')
         runway_head = request.form.get('RunwayHead')
@@ -245,6 +245,7 @@ def edit_ils(icao: str, frequency: int):
 def delete_ils(icao: str, frequency: int):
     get_logged_user()
     del_ils(icao, frequency)
+    return redirect(f"/area/restrita/{icao}")
 
 @admin.errorhandler(NotLoggedException)
 def not_logged(e):

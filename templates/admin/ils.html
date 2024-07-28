@@ -30,7 +30,9 @@
 		<button type="submit">OK</button>
 	</form>
 
-	<a class="button-admin" href="/area/restrita/{{icao}}/ils/{{ils.Frequency}}/delete">Apagar</a>
+	<form method="post" action="/area/restrita/{{icao}}/ils/{{ils.Frequency}}/delete">
+		<button type="submit">Deletar</button>
+	</form>
 	</main>
 </body>
 </html>
