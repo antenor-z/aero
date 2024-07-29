@@ -2,9 +2,10 @@ pymysql
 SQLAlchemy
 requests
 pydantic
-flask
+Flask
 gunicorn
 apscheduler
 pyotp
 qrcode
 bcrypt
+Flask-Minify

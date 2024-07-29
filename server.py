@@ -8,6 +8,7 @@ from tafDecoder import decode_taf
 from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from flask_minify import Minify
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
@@ -16,6 +17,8 @@ scheduler.start()
 
 app = Flask(__name__)
 app.register_blueprint(admin)
+Minify(app=app, html=True, js=True, cssless=True)
+Minify(app=app, passive=False)
 
 DB_PASSWORD = None
 with open(environ["SESSION_SECRET_KEY"]) as fp:
