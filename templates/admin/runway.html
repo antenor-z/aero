@@ -33,9 +33,11 @@
 		</select>
 		<button type="submit">OK</button>
 	</form>
+	{% if canDelete %}
 	<form method="post" action="/area/restrita/{{ icao }}/runway/{{ runway.Head1 }}/delete">
 		<button type="submit">Deletar</button>
 	</form>
+	{% endif %}
 	</main>
 </body>
 </html>

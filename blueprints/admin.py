@@ -71,7 +71,7 @@ def get_logged_user():
 def edit_aerodrome(icao: str):
     get_logged_user()
     if request.method == 'GET':
-        return render_template("admin/airport.html", icao=icao)
+        return render_template("admin/airport.html", icao=icao, canDelete=True)
     else:
         aerodrome_name = request.form.get('AerodromeName')
         patch_aerodrome(icao, aerodrome_name)
@@ -114,7 +114,9 @@ def edit_runway(icao: str, runwayHead):
                                icao=icao,
                                runway=runway,
                                action=f"/area/restrita/{icao}/runway/{runwayHead}/edit",
-                               pavementCodes=get_pavement_codes())
+                               pavementCodes=get_pavement_codes(),
+                               canDelete=True
+                               )
     else:
         head1 = request.form.get('Head1')
         head2 = request.form.get('Head2')
@@ -167,7 +169,8 @@ def edit_communication(icao: str, frequency: int):
                                icao=icao,
                                communication=communication,
                                action=f"/area/restrita/{icao}/communication/{frequency}/edit",
-                               CommTypes=get_comm_types())
+                               CommTypes=get_comm_types(),
+                               canDelete=True)
     else:
         frequency_new = request.form.get('Frequency')
         comm_type = request.form.get('CommType')
@@ -219,7 +222,11 @@ def edit_ils(icao: str, frequency: int):
     get_logged_user()
     if request.method == 'GET':
         ils = get_ils(icao=icao, frequency=frequency)
-        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/ils/{frequency}/edit")
+        return render_template("admin/ils.html",
+                               icao=icao,
+                               ils=ils,
+                               action=f"/area/restrita/{icao}/ils/{frequency}/edit",
+                               canDelete=True)
     else:
         ident = request.form.get('Ident')
         runway_head = request.form.get('RunwayHead')
@@ -272,7 +279,11 @@ def edit_vor(icao: str, frequency: int):
     get_logged_user()
     if request.method == 'GET':
         vor = get_vor(icao=icao, frequency=frequency)
-        return render_template("admin/vor.html", icao=icao, vor=vor, action=f"/area/restrita/{icao}/vor/{frequency}/edit")
+        return render_template("admin/vor.html",
+                               icao=icao,
+                               vor=vor,
+                               action=f"/area/restrita/{icao}/vor/{frequency}/edit",
+                               canDelete=True)
     else:
         ident = request.form.get('Ident')
         frequency_new = request.form.get('Frequency')
