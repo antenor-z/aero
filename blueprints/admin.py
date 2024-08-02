@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_pavement_codes, get_runway, get_vor
+from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_vor
 from DB.AdminSetter import create_comm, create_ils, create_runway, create_vor, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor
 from DB.Getter import get_info
 from DB.ORM import User
@@ -197,7 +197,11 @@ def add_ils(icao: str):
                "Category": "",
                "CRS": "",
                "Minimum": ""}
-        return render_template("admin/ils.html", icao=icao, ils=ils, action=f"/area/restrita/{icao}/ils/add")
+        return render_template("admin/ils.html",
+                               icao=icao,
+                               ils=ils,
+                               action=f"/area/restrita/{icao}/ils/add",
+                               ILSCats=get_ils_categories())
     else:
         ident = request.form.get('Ident')
         runway_head = request.form.get('RunwayHead')
@@ -226,6 +230,7 @@ def edit_ils(icao: str, frequency: int):
                                icao=icao,
                                ils=ils,
                                action=f"/area/restrita/{icao}/ils/{frequency}/edit",
+                               ILSCats=get_ils_categories(),
                                canDelete=True)
     else:
         ident = request.form.get('Ident')

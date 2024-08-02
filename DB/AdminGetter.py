@@ -56,3 +56,8 @@ def get_comm_types():
     with Session(engine) as session:
         comms: list[CommunicationType] = session.query(CommunicationType).all()
         return [{"CommType": comm.CommType} for comm in comms]
+
+def get_ils_categories():
+    with Session(engine) as session:
+        ils_cats: list[ILSCategory] = session.query(ILSCategory).all()
+        return [cat.Category for cat in ils_cats]

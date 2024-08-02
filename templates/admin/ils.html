@@ -19,7 +19,15 @@
 		<input type="text" name="Frequency" id="Frequency" value="{{ils.Frequency}}">
 
 		<label for="Category">Categoria: </label>
-		<input type="text" name="Category" id="Category" value="{{ils.Category}}">
+		<select name="Category" id="Category">
+		{% for t in ILSCats %}
+			{% if ils.Category == t %}
+				<option value="{{ t }}" selected>{{ t }}</option>
+			{% else %}
+				<option value="{{ t }}">{{ t }}</option>
+			{% endif %}
+		{% endfor %}
+		</select>
 
 		<label for="CRS">Curso final: </label>
 		<input type="text" name="CRS" id="CRS" value="{{ils.CRS}}">
