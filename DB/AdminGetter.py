@@ -61,3 +61,8 @@ def get_ils_categories():
     with Session(engine) as session:
         ils_cats: list[ILSCategory] = session.query(ILSCategory).all()
         return [cat.Category for cat in ils_cats]
+    
+def get_user(username):
+    with Session(engine) as session:
+        user: User = session.query(User).filter(User.Name == username).one_or_none()
+        return user

@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_vor
+from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_user, get_vor
 from DB.AdminSetter import create_comm, create_ils, create_runway, create_vor, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor
-from DB.Getter import get_info
+from DB.Getter import get_all_names, get_info
 from DB.ORM import User
 from ext import get_metar
 from metarDecoder import decode_metar
@@ -12,13 +12,18 @@ admin = Blueprint('admin', __name__)
 
 @admin.get("/area/restrita")
 def restricted_area():
-    user = get_logged_user()
+    user: User = get_logged_user()
 
-    return user
+    allowed_aerodromes_list = []
+    for (aerodrome_name, ICAO, _) in get_all_names():
+        if ICAO in user.CanEditAirportsList.split(","):
+            allowed_aerodromes_list.append((ICAO, aerodrome_name))
+    
+    return render_template("admin/index.html", allowed_aerodromes_list=allowed_aerodromes_list)
 
 @admin.get("/area/restrita/<string:icao>")
 def restricted_area_airport(icao:str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
 
     icao_upper = icao.upper()
     if icao != icao_upper:
@@ -62,14 +67,28 @@ def get_logout():
 class NotLoggedException(Exception):
     ...
 
-def get_logged_user():
-    user = session.get("logged_user")
-    if user is None: raise NotLoggedException
+class NotAllowedToEditAirport(Exception):
+    ...
+
+def get_logged_user(icao_to_check: str | None = None):
+    username = session.get("logged_user")
+    if username is None:
+        raise NotLoggedException
+    
+    user: User = get_user(username=username)
+    if user is None:
+        raise NotLoggedException
+    
+    if icao_to_check is not None:
+        authorized_aiports = user.CanEditAirportsList.split(",")
+        if icao_to_check not in authorized_aiports:
+            raise NotAllowedToEditAirport
+
     return user
 
 @admin.route("/area/restrita/<string:icao>/edit", methods=['GET', 'POST'])
 def edit_aerodrome(icao: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         return render_template("admin/airport.html", icao=icao, canDelete=True)
     else:
@@ -79,7 +98,7 @@ def edit_aerodrome(icao: str):
 
 @admin.route("/area/restrita/<string:icao>/runway/add", methods=['GET', 'POST'])
 def add_runway(icao: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         empty_runway = {"Head1": "", "Head2": "", "RunwayLength": "", "RunwayWidth": "", "PavementCode": ""}
         print(get_pavement_codes())
@@ -107,7 +126,7 @@ def add_runway(icao: str):
     
 @admin.route("/area/restrita/<string:icao>/runway/<string:runwayHead>/edit", methods=['GET', 'POST'])
 def edit_runway(icao: str, runwayHead):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         runway = get_runway(icao=icao, runway_head=runwayHead)
         return render_template("admin/runway.html",
@@ -137,13 +156,13 @@ def edit_runway(icao: str, runwayHead):
 
 @admin.post("/area/restrita/<string:icao>/runway/<string:runwayHead>/delete")
 def delete_runway(icao: str, runwayHead: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     del_runway(icao, runwayHead)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.route("/area/restrita/<string:icao>/communication/add", methods=['GET', 'POST'])
 def add_communication(icao: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         empty_comm = {"Frequency": "", "CommType": ""}
         return render_template("admin/communication.html",
@@ -162,7 +181,7 @@ def add_communication(icao: str):
 
 @admin.route("/area/restrita/<string:icao>/communication/<int:frequency>/edit", methods=['GET', 'POST'])
 def edit_communication(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         communication = get_communication(icao=icao, frequency=frequency)
         return render_template("admin/communication.html",
@@ -183,13 +202,13 @@ def edit_communication(icao: str, frequency: int):
 
 @admin.post("/area/restrita/<string:icao>/communication/<int:frequency>/delete")
 def delete_communication(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     del_comm(icao, frequency)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.route("/area/restrita/<string:icao>/ils/add", methods=['GET', 'POST'])
 def add_ils(icao: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         ils = {"Ident": "", 
                "RunwayHead": "",
@@ -223,7 +242,7 @@ def add_ils(icao: str):
 
 @admin.route("/area/restrita/<string:icao>/ils/<int:frequency>/edit", methods=['GET', 'POST'])
 def edit_ils(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         ils = get_ils(icao=icao, frequency=frequency)
         return render_template("admin/ils.html",
@@ -255,13 +274,13 @@ def edit_ils(icao: str, frequency: int):
 
 @admin.post("/area/restrita/<string:icao>/ils/<int:frequency>/delete")
 def delete_ils(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     del_ils(icao, frequency)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.route("/area/restrita/<string:icao>/vor/add", methods=['GET', 'POST'])
 def add_vor(icao: str):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         vor = {"Ident": "", 
                "Frequency": "",
@@ -281,7 +300,7 @@ def add_vor(icao: str):
 
 @admin.route("/area/restrita/<string:icao>/vor/<int:frequency>/edit", methods=['GET', 'POST'])
 def edit_vor(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         vor = get_vor(icao=icao, frequency=frequency)
         return render_template("admin/vor.html",
@@ -305,10 +324,14 @@ def edit_vor(icao: str, frequency: int):
 
 @admin.post("/area/restrita/<string:icao>/vor/<int:frequency>/delete")
 def delete_vor(icao: str, frequency: int):
-    get_logged_user()
+    get_logged_user(icao_to_check=icao)
     del_vor(icao, frequency)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.errorhandler(NotLoggedException)
 def not_logged(e):
     return redirect("/area/restrita/login")
+
+@admin.errorhandler(NotAllowedToEditAirport)
+def airport_not_allowed(e):
+    return "User can't edit this airport"
