@@ -10,7 +10,24 @@
 	<main>
 	<form method="post" action="/area/restrita/{{icao}}/edit">
 		<label for="AerodromeName">Nome do aerodromo: </label>
-		<input type="text" name="AerodromeName" id="AerodromeName">
+		<input type="text" name="AerodromeName" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
+
+		<label for="Latitude">Latitude: </label>
+		<input type="text" name="Latitude" id="Latitude" value="{{aerodrome.Latitude}}">
+
+		<label for="Longitude">Longitude: </label>
+		<input type="text" name="Longitude" id="Longitude" value="{{aerodrome.Longitude}}">
+
+		<select name="CityCode" id="CityCode">
+			{% for c in CityCodes %}
+				{% if aerodrome.CityCode == c.CityCode %}
+					<option value="{{ c.CityCode }}" selected>{{ c.City }}</option>
+				{% else %}
+					<option value="{{ c.CityCode }}">{{ c.City }}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
+
 		<button type="submit">OK</button>
 	</form>
 	</main>

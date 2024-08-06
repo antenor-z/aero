@@ -4,6 +4,20 @@ from datetime import datetime, timezone
 
 engine = create_engine(db_url, pool_pre_ping=True)
 
+def get_aerodrome(icao: str):
+    with Session(engine) as session:
+        aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
+        return {
+           "AerodromeName": aerodrome.AerodromeName,
+           "CityCode": aerodrome.CityCode,
+           "Latitude": aerodrome.Latitude,
+           "Longitude": aerodrome.Longitude,
+        }
+    
+def get_cities():
+    with Session(engine) as session:
+        cities: list[City] = session.query(City).all()
+        return [{"City": city.CityName, "CityCode": city.CityCode} for city in cities]
 
 def get_runway(icao: str, runway_head: str):
     with Session(engine) as session:

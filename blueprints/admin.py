@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
-from DB.AdminGetter import get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_user, get_vor
+from DB.AdminGetter import get_aerodrome, get_cities, get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_user, get_vor
 from DB.AdminSetter import create_comm, create_ils, create_runway, create_vor, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor
 from DB.Getter import get_all_names, get_info
 from DB.ORM import User
@@ -90,10 +90,24 @@ def get_logged_user(icao_to_check: str | None = None):
 def edit_aerodrome(icao: str):
     get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
-        return render_template("admin/airport.html", icao=icao, canDelete=True)
+        aerodrome = get_aerodrome(icao=icao)
+        city_codes = get_cities()
+        return render_template("admin/airport.html",
+                               icao=icao,
+                               aerodrome=aerodrome,
+                               CityCodes=city_codes,
+                               canDelete=True)
     else:
         aerodrome_name = request.form.get('AerodromeName')
-        patch_aerodrome(icao, aerodrome_name)
+        latitude = request.form.get('Latitude')
+        longitude = request.form.get('Longitude')
+        city_code = request.form.get('CityCode')
+
+        patch_aerodrome(icao=icao,
+                        aerodrome_name=aerodrome_name,
+                        latitude=float(latitude),
+                        longitude=float(longitude),
+                        city_code=city_code)
         return redirect(f"/area/restrita/{icao}")
 
 @admin.route("/area/restrita/<string:icao>/runway/add", methods=['GET', 'POST'])

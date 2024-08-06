@@ -9,14 +9,10 @@ def patch_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=Non
     with Session(engine) as session:
         try:
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
-            if aerodrome_name is not None:
-                aerodrome.AerodromeName = aerodrome_name
-            if latitude is not None:
-                aerodrome.Latitude = latitude
-            if longitude is not None:
-                aerodrome.Latitude = longitude
-            if city_code is not None:
-                aerodrome.CityCode = city_code
+            aerodrome.AerodromeName = aerodrome_name
+            aerodrome.Latitude = latitude
+            aerodrome.Longitude = longitude
+            aerodrome.CityCode = city_code
             session.commit()
         except Exception as e:
             session.rollback()
@@ -36,16 +32,11 @@ def patch_runway(icao: str, head1_old, head1, head2, runway_length, runway_width
     with Session(engine) as session:
         try:
             runway: Runway = session.get_one(Runway, (icao, head1_old))
-            if head1 is not None:
-                runway.Head1 = head1
-            if head2 is not None:
-                runway.Head2 = head2
-            if runway_length is not None:
-                runway.RunwayLength = runway_length
-            if runway_width is not None:
-                runway.RunwayWidth = runway_width
-            if pavement_code is not None:
-                runway.PavementCode = pavement_code
+            runway.Head1 = head1
+            runway.Head2 = head2
+            runway.RunwayLength = runway_length
+            runway.RunwayWidth = runway_width
+            runway.PavementCode = pavement_code
             session.commit()
         except Exception as e:
             session.rollback()
