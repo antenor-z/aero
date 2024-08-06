@@ -4,10 +4,6 @@
     padding: 6px;
     white-space: nowrap;
   }
-  .runway-length {
-    font-size: 0.7em;
-    color:rgb(155, 155, 155);
-  }
   .rwy-in-use {
     border-top: white solid 3px;
     font-style: italic;

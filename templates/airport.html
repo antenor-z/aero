@@ -18,6 +18,7 @@
 	<main>
 	<a class="button-small" href="/">&lt Voltar</a>
 	<a class="button-small" href="javascript:void(0);" onclick="copy('{{metar}}')">Copiar METAR</a>
+	<a class="button-small" href="/info/taf/{{icao}}">Previsão TAF</a>
 	{% if info is not none %}
 	<div class="line line-margin">
 		{% for runway in info.runways %}

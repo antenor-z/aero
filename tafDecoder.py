@@ -192,6 +192,8 @@ def decode_taf(taf: str) -> list:
                 group.append((item, meaning))
             else:
                 grouped_taf.append((item, meaning))
+    if group != []:
+        grouped_taf.append(group)
 
     return grouped_taf
 
