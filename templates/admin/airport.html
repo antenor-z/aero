@@ -28,8 +28,23 @@
 			{% endfor %}
 		</select>
 
+		<label for="OtherCity">Outra cidade: </label>
+		<input type="text" name="OtherCity" id="OtherCity" value="" oninput="toggleSelect()">
+
 		<button type="submit">OK</button>
 	</form>
 	</main>
+	<script>
+		function toggleSelect() {
+			var otherCityInput = document.getElementById("OtherCity")
+			var cityCodeSelect = document.getElementById("CityCode")
+
+			if (otherCityInput.value.trim() !== "") {
+				cityCodeSelect.disabled = true;
+			} else {
+				cityCodeSelect.disabled = false;
+			}
+		}
+	</script>
 </body>
 </html>

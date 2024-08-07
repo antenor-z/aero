@@ -4,7 +4,30 @@ from datetime import datetime, timezone
 
 engine = create_engine(db_url, pool_pre_ping=True)
 
+def create_city(city_code, city_name):
+    with Session(engine) as session:
+        try:
+            city: City = City(CityCode=city_code, CityName=city_name)
+            session.add(city)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
 
+def create_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=None, city_code=None):
+    with Session(engine) as session:
+        try:
+            aerodrome: Aerodrome = Aerodrome(
+                AerodromeName=aerodrome_name,
+                Latitude=latitude,
+                Longitude=longitude,
+                CityCode=city_code,
+            )
+            session.add(aerodrome)
+        except Exception as e:
+            session.rollback()
+            return str(e)
+        
 def patch_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=None, city_code=None):
     with Session(engine) as session:
         try:
