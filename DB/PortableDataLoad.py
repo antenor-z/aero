@@ -1,9 +1,9 @@
 from DB.ORM import *
 
-def insert_initial_data():
-    Session = sessionmaker(bind=engine)
-    with Session(engine) as session:
+engine = create_engine(db_url, pool_pre_ping=True)
 
+def insert_initial_data():
+    with Session(engine) as session:
         session.add_all([
             CommunicationType(CommType="Torre"),
             CommunicationType(CommType="Solo"),
