@@ -46,6 +46,16 @@ def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: 
         except Exception as e:
             session.rollback()
             return str(e)
+  
+def del_aerodrome(icao: str):
+    with Session(engine) as session:
+        try:
+            aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
+            session.delete(aerodrome)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
 
 def create_runway(icao: str, head1: str, head2: str, runway_length: int, runway_width: int, pavement_code: str):
     with Session(engine) as session:

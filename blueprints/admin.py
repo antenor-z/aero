@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, Blueprint, session, redirect
 
 from DB.AdminGetter import get_aerodrome, get_cities, get_comm_types, get_communication, get_ils, get_ils_categories, get_pavement_codes, get_runway, get_user, get_vor
-from DB.AdminSetter import create_city, create_comm, create_ils, create_runway, create_vor, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor, create_aerodrome
+from DB.AdminSetter import create_city, create_comm, create_ils, create_runway, create_vor, del_aerodrome, del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor, create_aerodrome
 from DB.Getter import get_all_names, get_info
 from DB.ORM import User
 from ext import get_metar
@@ -27,17 +27,20 @@ def restricted_area():
 @admin.get("/area/restrita/<string:icao>")
 def restricted_area_airport(icao:str):
     get_logged_user(icao_to_check=icao)
-
     icao_upper = icao.upper()
     if icao != icao_upper:
         return redirect(f"/info/{icao_upper}")
-    
+
+    try:
+        info = get_info(icao)
+    except Exception:
+        return render_template("error.html", error="Aeroporto não encontrado"), 400
+
     try:
         metar = get_metar(icao)
-        info = get_info(icao)
         decoded = decode_metar(metar)
     except Exception:
-        return render_template("error.html", error="Erro ao obter o METAR"), 400
+        decoded = [("", "Não foi possível obter o METAR")]
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, isAdmin=True)
 
@@ -162,6 +165,12 @@ def edit_aerodrome(icao: str):
                     longitude=float(longitude),
                     city_code=city_code)
     return redirect(f"/area/restrita/{icao}")
+
+@admin.post("/area/restrita/<string:icao>/delete")
+def delete_aerodrome(icao: str):
+    get_logged_user(icao_to_check=icao)
+    del_aerodrome(icao)
+    return redirect("/area/restrita")
 
 @admin.route("/area/restrita/<string:icao>/runway/add", methods=['GET', 'POST'])
 def add_runway(icao: str):

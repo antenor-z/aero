@@ -36,6 +36,11 @@
 
 		<button type="submit">OK</button>
 	</form>
+	{% if canDelete %}
+	<form method="post" action="/area/restrita/{{icao}}/delete">
+		<button type="submit">Deletar</button>
+	</form>
+	{% endif %}
 	</main>
 	<script>
 		function toggleSelect() {

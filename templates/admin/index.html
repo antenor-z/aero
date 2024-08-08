@@ -9,9 +9,12 @@
 <body>
 	<main>
 	<h1>Aeroportos autorizados</h1>
+	<a href="/area/restrita/add"><i>Adicionar Aeroporto</i></a>
+	<ul>
 	{% for icao, name in allowed_aerodromes_list %}
-		<a href="/area/restrita/{{ icao }}">{{ name }}</a>
+		<li><a href="/area/restrita/{{ icao }}">{{ name }}</a></li>
 	{% endfor %}
+	</ul>
 	</main>
 </body>
 </html>
