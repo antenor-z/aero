@@ -7,12 +7,19 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 
 Base = declarative_base()
 
+class State(Base):
+    __tablename__ = 'State'
+
+    StateCode = Column(Integer, primary_key=True)
+    StateName = Column(String(50), nullable=False)
+    StateAbbreviation = Column(String(2), nullable=False)
+
 class City(Base):
     __tablename__ = 'City'
 
     CityCode = Column(Integer, primary_key=True)
-    CityName = Column(String(50))
-
+    CityName = Column(String(50), nullable=False)
+    StateCode = Column(Integer, ForeignKey('State.StateCode'), nullable=False)
 
 class Aerodrome(Base):
     __tablename__ = 'Aerodrome'
