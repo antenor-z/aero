@@ -90,7 +90,7 @@ def get_logged_user(icao_to_check: str | None = None):
     return user
 
 @admin.route("/area/restrita/add", methods=['GET', 'POST'])
-def add_aerodrome(icao: str):
+def add_aerodrome():
     get_logged_user()
     if request.method == 'GET':
         city_codes = get_cities()
@@ -101,7 +101,7 @@ def add_aerodrome(icao: str):
             "Longitude": ""
         }
         return render_template("admin/airport.html",
-                               icao=icao,
+                               icao="",
                                aerodrome=empty_aerodrome,
                                CityCodes=city_codes,
                                )

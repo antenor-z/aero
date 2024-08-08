@@ -31,6 +31,9 @@ def get_city_and_code_from_IGBE(city):
         return None
 
     city = res.json()
+    if "id" in city.keys() and "nome" in city.keys():
+        return None
+    
     city_id = city["id"]
     city_name = city["nome"]
     return city_id, city_name
