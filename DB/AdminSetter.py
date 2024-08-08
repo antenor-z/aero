@@ -14,21 +14,27 @@ def create_city(city_code, city_name):
             session.rollback()
             return str(e)
 
-def create_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=None, city_code=None):
+def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: float, city_code: int, user: User):
     with Session(engine) as session:
         try:
             aerodrome: Aerodrome = Aerodrome(
+                ICAO=icao,
                 AerodromeName=aerodrome_name,
                 Latitude=latitude,
                 Longitude=longitude,
                 CityCode=city_code,
             )
             session.add(aerodrome)
+            user = session.get_one(User, user.Name)
+            can_edit_airport_list = user.CanEditAirportsList.split(",")
+            can_edit_airport_list.append(icao)
+            user.CanEditAirportsList = ",".join(can_edit_airport_list)
+            session.commit()
         except Exception as e:
             session.rollback()
             return str(e)
         
-def patch_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=None, city_code=None):
+def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: float, city_code: int):
     with Session(engine) as session:
         try:
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
@@ -41,7 +47,7 @@ def patch_aerodrome(icao: str, aerodrome_name=None, latitude=None, longitude=Non
             session.rollback()
             return str(e)
 
-def create_runway(icao: str, head1, head2, runway_length, runway_width=None, pavement_code=None):
+def create_runway(icao: str, head1: str, head2: str, runway_length: int, runway_width: int, pavement_code: str):
     with Session(engine) as session:
         try:
             runway: Runway = Runway(ICAO=icao, Head1=head1, Head2=head2, RunwayLength=runway_length, RunwayWidth=runway_width, PavementCode=pavement_code)
@@ -51,7 +57,7 @@ def create_runway(icao: str, head1, head2, runway_length, runway_width=None, pav
             session.rollback()
             return str(e)
 
-def patch_runway(icao: str, head1_old, head1, head2, runway_length, runway_width=None, pavement_code=None):
+def patch_runway(icao: str, head1_old: str, head1: str, head2: str, runway_length: int, runway_width: int, pavement_code: str):
     with Session(engine) as session:
         try:
             runway: Runway = session.get_one(Runway, (icao, head1_old))
@@ -65,7 +71,7 @@ def patch_runway(icao: str, head1_old, head1, head2, runway_length, runway_width
             session.rollback()
             return str(e)
 
-def del_runway(icao: str, runway_head):
+def del_runway(icao: str, runway_head: str):
     with Session(engine) as session:
         try:
             runway: Runway = session.get_one(Runway, (icao, runway_head))
@@ -75,7 +81,7 @@ def del_runway(icao: str, runway_head):
             session.rollback()
             return str(e)
 
-def create_comm(icao, frequency, comm_type):
+def create_comm(icao: str, frequency: str, comm_type: str):
     with Session(engine) as session:
         try:
             communication: Communication = Communication(ICAO=icao, Frequency=float(frequency), CommType=comm_type)

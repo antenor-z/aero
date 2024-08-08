@@ -102,10 +102,12 @@ def add_aerodrome():
         }
         return render_template("admin/airport.html",
                                icao="",
+                               action="/area/restrita/add",
                                aerodrome=empty_aerodrome,
                                CityCodes=city_codes,
                                )
     else:
+        icao = request.form.get('ICAO')
         aerodrome_name = request.form.get('AerodromeName')
         latitude = request.form.get('Latitude')
         longitude = request.form.get('Longitude')
@@ -123,7 +125,8 @@ def add_aerodrome():
                     aerodrome_name=aerodrome_name,
                     latitude=float(latitude),
                     longitude=float(longitude),
-                    city_code=city_code)
+                    city_code=city_code,
+                    user=get_logged_user())
     return redirect(f"/area/restrita/{icao}")
 
 
@@ -135,6 +138,7 @@ def edit_aerodrome(icao: str):
         city_codes = get_cities()
         return render_template("admin/airport.html",
                                icao=icao,
+                               action=f"/area/restrita/{icao}/edit",
                                aerodrome=aerodrome,
                                CityCodes=city_codes,
                                canDelete=True)

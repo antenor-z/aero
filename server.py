@@ -48,11 +48,15 @@ def info(icao:str):
         return redirect(f"/info/{icao_upper}")
     
     try:
-        metar = get_metar(icao)
         info = get_info(icao)
+    except Exception:
+        return render_template("error.html", error="Aeroporto não encontrado"), 400
+
+    try:
+        metar = get_metar(icao)
         decoded = decode_metar(metar)
     except Exception:
-        return render_template("error.html", error="Erro ao obter o METAR"), 400
+        decoded = [("", "Não foi possível obter o METAR")]
 
     return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
 

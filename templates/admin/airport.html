@@ -8,7 +8,10 @@
 </head>
 <body>
 	<main>
-	<form method="post" action="/area/restrita/{{icao}}/edit">
+	<form method="post" action="{{ action }}">
+		<label for="ICAO">ICAO: </label>
+		<input type="text" name="ICAO" id="ICAO" value="">
+
 		<label for="AerodromeName">Nome do aerodromo: </label>
 		<input type="text" name="AerodromeName" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
 
