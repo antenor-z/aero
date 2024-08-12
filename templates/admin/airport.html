@@ -9,8 +9,10 @@
 <body>
 	<main>
 	<form method="post" action="{{ action }}">
+		{% if canDelete %}
 		<label for="ICAO">ICAO: </label>
 		<input type="text" name="ICAO" id="ICAO" value="">
+		{% endif %}
 
 		<label for="AerodromeName">Nome do aerodromo: </label>
 		<input type="text" name="AerodromeName" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
