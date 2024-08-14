@@ -7,9 +7,13 @@ engine = create_engine(db_url, pool_pre_ping=True)
 def get_aerodrome(icao: str):
     with Session(engine) as session:
         aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
+        city: City = session.get_one(City, aerodrome.CityCode)
         return {
+           "ICAO": aerodrome.ICAO,
            "AerodromeName": aerodrome.AerodromeName,
            "CityCode": aerodrome.CityCode,
+           "CityName": city.CityName,
+           "StateCode": city.StateCode, 
            "Latitude": aerodrome.Latitude,
            "Longitude": aerodrome.Longitude,
         }

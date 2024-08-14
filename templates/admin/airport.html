@@ -9,10 +9,8 @@
 <body>
 	<main>
 	<form method="post" action="{{ action }}">
-		{% if canDelete %}
 		<label for="ICAO">ICAO: </label>
-		<input type="text" name="ICAO" id="ICAO" value="">
-		{% endif %}
+		<input type="text" name="ICAO" id="ICAO" value="{{aerodrome.ICAO}}">
 
 		<label for="AerodromeName">Nome do aerodromo: </label>
 		<input type="text" name="AerodromeName" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
@@ -24,12 +22,12 @@
 		<input type="text" name="Longitude" id="Longitude" value="{{aerodrome.Longitude}}">
 
 		<label for="CityName">Cidade: </label>
-		<input type="text" name="CityName" id="CityName" value="">
+		<input type="text" name="CityName" id="CityName" value="{{aerodrome.CityName}}">
 
 		<label for="StateCode">Estado: </label>
 		<select name="StateCode" id="StateCode">
 			{% for t in States %}
-			{% if StateCode == t.StateName %}
+			{% if aerodrome.StateCode == t.StateCode %}
 				<option value="{{t.StateCode}}" selected>{{t.StateName}} - {{t.StateAbbreviation}}</option>
 			{% else %}
 				<option value="{{t.StateCode}}">{{t.StateName}} - {{t.StateAbbreviation}}</option>

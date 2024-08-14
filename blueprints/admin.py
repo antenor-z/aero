@@ -124,7 +124,11 @@ def add_aerodrome():
         
         city = get_city(state_code=state_code, city_name=city_name)
         if not city:
-            raise Exception("city doesnt exist")
+            res = get_city_and_code_from_IGBE(city=city_name)
+            if res is None:
+                return "Cidade inválida"
+            city_code, city_name = res
+            city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
     
 
         create_aerodrome(icao=icao,
@@ -133,7 +137,7 @@ def add_aerodrome():
                     longitude=float(longitude),
                     city_code=city.CityCode,
                     user=get_logged_user())
-    return redirect(f"/area/restrita/")
+    return redirect(f"/area/restrita/{icao}")
 
 
 @admin.route("/area/restrita/<string:icao>/edit", methods=['GET', 'POST'])
@@ -141,32 +145,34 @@ def edit_aerodrome(icao: str):
     get_logged_user(icao_to_check=icao)
     if request.method == 'GET':
         aerodrome = get_aerodrome(icao=icao)
-        city_codes = get_cities()
         return render_template("admin/airport.html",
                                icao=icao,
                                action=f"/area/restrita/{icao}/edit",
                                aerodrome=aerodrome,
-                               CityCodes=city_codes,
+                               States=get_states(),
                                canDelete=True)
     else:
+        icao = request.form.get('ICAO')
         aerodrome_name = request.form.get('AerodromeName')
         latitude = request.form.get('Latitude')
         longitude = request.form.get('Longitude')
-        city_code = request.form.get('CityCode')
-        other_city = request.form.get('OtherCity')
+        city_name = request.form.get('CityName').replace("+", " ")
+        state_code = request.form.get('StateCode')
+        
+        city = get_city(state_code=state_code, city_name=city_name)
 
-    if other_city.strip() != "":
-        res = get_city_and_code_from_IGBE(city=other_city)
+    if city is None:
+        res = get_city_and_code_from_IGBE(city=city_name)
         if res is None:
             return "Cidade inválida"
         city_code, city_name = res
-        create_city(city_code=city_code, city_name=city_name)
+        city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
     patch_aerodrome(icao=icao,
                     aerodrome_name=aerodrome_name,
                     latitude=float(latitude),
                     longitude=float(longitude),
-                    city_code=city_code)
+                    city_code=city.CityCode)
     return redirect(f"/area/restrita/{icao}")
 
 @admin.post("/area/restrita/<string:icao>/delete")

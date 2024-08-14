@@ -25,13 +25,13 @@ def get_city_name_for_IBGE_API(city):
 
 def get_city_and_code_from_IGBE(city):
     formatted_city = get_city_name_for_IBGE_API(city)
-
+    print(city)
     res = requests.get(f"https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{formatted_city}")
     if res.status_code != 200:
         return None
 
     city = res.json()
-    if "id" in city.keys() and "nome" in city.keys():
+    if not ("id" in city.keys() and "nome" in city.keys()):
         return None
     
     city_id = city["id"]
