@@ -80,3 +80,20 @@ def get_user(username):
     with Session(engine) as session:
         user: User = session.query(User).filter(User.Name == username).one_or_none()
         return user
+    
+def get_states():
+    states = []
+    with Session(engine) as session:
+        for state in session.query(State).all():
+            states.append({
+                "StateCode": state.StateCode,
+                "StateName": state.StateName,
+                "StateAbbreviation": state.StateAbbreviation})
+
+    return states
+
+def get_city(state_code, city_name):
+    with Session(engine) as session:
+        return session.query(City).filter(City.CityName == city_name).\
+        filter(City.StateCode == state_code).first()
+

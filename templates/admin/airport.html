@@ -23,18 +23,19 @@
 		<label for="Longitude">Longitude: </label>
 		<input type="text" name="Longitude" id="Longitude" value="{{aerodrome.Longitude}}">
 
-		<select name="CityCode" id="CityCode">
-			{% for c in CityCodes %}
-				{% if aerodrome.CityCode == c.CityCode %}
-					<option value="{{ c.CityCode }}" selected>{{ c.City }}</option>
-				{% else %}
-					<option value="{{ c.CityCode }}">{{ c.City }}</option>
-				{% endif %}
+		<label for="CityName">Cidade: </label>
+		<input type="text" name="CityName" id="CityName" value="">
+
+		<label for="StateCode">Estado: </label>
+		<select name="StateCode" id="StateCode">
+			{% for t in States %}
+			{% if StateCode == t.StateName %}
+				<option value="{{t.StateCode}}" selected>{{t.StateName}} - {{t.StateAbbreviation}}</option>
+			{% else %}
+				<option value="{{t.StateCode}}">{{t.StateName}} - {{t.StateAbbreviation}}</option>
+			{% endif %}
 			{% endfor %}
 		</select>
-
-		<label for="OtherCity">Outra cidade: </label>
-		<input type="text" name="OtherCity" id="OtherCity" value="" oninput="toggleSelect()">
 
 		<button type="submit">OK</button>
 	</form>
@@ -44,17 +45,5 @@
 	</form>
 	{% endif %}
 	</main>
-	<script>
-		function toggleSelect() {
-			var otherCityInput = document.getElementById("OtherCity")
-			var cityCodeSelect = document.getElementById("CityCode")
-
-			if (otherCityInput.value.trim() !== "") {
-				cityCodeSelect.disabled = true;
-			} else {
-				cityCodeSelect.disabled = false;
-			}
-		}
-	</script>
 </body>
 </html>
