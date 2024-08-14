@@ -124,7 +124,7 @@ def add_aerodrome():
         
         city = get_city(state_code=state_code, city_name=city_name)
         if not city:
-            res = get_city_and_code_from_IGBE(city=city_name)
+            res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
             if res is None:
                 return "Cidade inválida"
             city_code, city_name = res
@@ -162,7 +162,7 @@ def edit_aerodrome(icao: str):
         city = get_city(state_code=state_code, city_name=city_name)
 
     if city is None:
-        res = get_city_and_code_from_IGBE(city=city_name)
+        res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
         if res is None:
             return "Cidade inválida"
         city_code, city_name = res

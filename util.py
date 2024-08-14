@@ -23,17 +23,21 @@ def get_city_name_for_IBGE_API(city):
     return replace_accents(city.strip()).lower().replace(" ", "-")
 
 
-def get_city_and_code_from_IGBE(city):
+def get_city_and_code_from_IGBE(city, state_code):
     formatted_city = get_city_name_for_IBGE_API(city)
     print(city)
     res = requests.get(f"https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{formatted_city}")
     if res.status_code != 200:
         return None
 
-    city = res.json()
-    if not ("id" in city.keys() and "nome" in city.keys()):
-        return None
-    
-    city_id = city["id"]
-    city_name = city["nome"]
-    return city_id, city_name
+    city_data = res.json()
+
+    if isinstance(city_data, list):
+        for city in city_data:
+            if str(city["microrregiao"]["mesorregiao"]["UF"]["id"]) == str(state_code):
+                return city["id"], city["nome"]
+    elif "id" in city_data and "nome" in city_data:
+        if city_data["microrregiao"]["mesorregiao"]["UF"]["id"] == state_code:
+            return city_data["id"], city_data["nome"]
+
+    return None

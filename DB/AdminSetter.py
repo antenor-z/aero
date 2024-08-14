@@ -10,7 +10,6 @@ def create_city(city_code, city_name, state_code):
             city: City = City(CityCode=city_code, CityName=city_name, StateCode=state_code)
             session.add(city)
             session.commit()
-            session.refresh()
             city: City = session.get_one(City, city_code)
             return city
         except Exception as e:
