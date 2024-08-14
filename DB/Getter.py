@@ -1,6 +1,9 @@
 from DB.ORM import *
 from sqlalchemy import types, desc
 from datetime import datetime, timezone
+import re
+
+from metarDecoder import parse_metar
 
 engine = create_engine(db_url, pool_pre_ping=True)
 
@@ -35,13 +38,38 @@ def get_info(icao):
             return aerodrome
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
-        
+
 def get_metar(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         latest_metar = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).first()
         if latest_metar:
             return latest_metar.METAR, latest_metar.ValidOn.replace(tzinfo=timezone.utc)
         return None, None
+
+def latest_n_metars(icao: str, n=10) -> list[tuple[str, str]]:
+    with Session(engine) as session:
+        metars = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).limit(n).all()
+        results = [('', '')] * n
+
+        for i, metar in enumerate(reversed(metars)):
+            results[-(i+1)] = (metar.METAR, metar.ValidOn.replace(tzinfo=timezone.utc))
+
+        return results
+
+def latest_n_metars_parsed(icao: str, n=10) -> list[dict]:
+    metars = latest_n_metars(icao, n)
+    result = []
+
+    for metar_str, valid_on in metars:
+        if metar_str:
+            parsed_data = parse_metar(metar_str)
+            parsed_data["timestamp"] = valid_on
+            result.append(parsed_data)
+        else:
+            result.append(None)
+
+    return result
+
 
 def get_taf(icao: str) -> tuple[str, str]:
     with Session(engine) as session:

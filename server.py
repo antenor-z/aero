@@ -1,6 +1,6 @@
 from os import environ
 from flask import Flask, render_template, redirect, request, session
-from DB.Getter import get_all_icao, get_all_names, get_info
+from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
 from blueprints.admin import admin
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -12,6 +12,7 @@ from flask_minify import Minify
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
+scheduler.add_job(update_history_plots, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
 scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 
@@ -58,7 +59,9 @@ def info(icao:str):
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]
 
-    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded)
+    history = latest_n_metars_parsed(icao=icao, n=10)
+
+    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, history=history)
 
 @app.get("/info/taf/<string:icao>")
 def info_taf(icao:str):

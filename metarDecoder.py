@@ -190,6 +190,28 @@ def get_wind_info(metar: str) -> dict:
         return {"direction": int(direction), "speed": int(speed)}
     else:
         raise DecodeError("Could not find wind information.")
+    
+def parse_metar(metar_str: str) -> dict:
+    wind_regex = re.compile(r'(\d{3})(\d{2})KT')
+    temp_regex = re.compile(r'M?(\d{2})/(M?\d{2})')
+    
+    wind_match = wind_regex.search(metar_str)
+    temp_match = temp_regex.search(metar_str)
+    
+    wind_direction = int(wind_match.group(1)) if wind_match else None
+    wind_speed = int(wind_match.group(2)) if wind_match else None
+    
+    if temp_match:
+        temp_str = temp_match.group(1)
+        temperature = -int(temp_str[1:]) if temp_str.startswith('M') else int(temp_str)
+    else:
+        temperature = None
+
+    return {
+        "wind_direction": wind_direction,
+        "wind_speed": wind_speed,
+        "temperature": temperature
+    }
 
 class DecodeError(Exception):
     def __init__(self, message):
