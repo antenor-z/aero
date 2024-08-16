@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aeroporto {{ info.AerodromeName }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/tooltip.css">
+  <link rel="stylesheet" href="/static/rwy.css">
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+	<header>
+		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
+	</header>
+	<main>
+	<a class="button-small" href="/info/{{icao}}">&lt Voltar</a>
+	
+	<img style="width: 100%" src="/static/{{icao}}-temperature.png">
+	<img style="width: 100%" src="/static/{{icao}}-wind_speed.png">
+	<img style="width: 100%" src="/static/{{icao}}-wind_direction.png">
+	</main>
+</body>
+</html>
+

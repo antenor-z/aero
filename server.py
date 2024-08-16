@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, session
 from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
 from blueprints.admin import admin
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
+from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
 from tafDecoder import decode_taf
 from wind.Wind import get_components, get_components_one_runway, get_wind
@@ -12,7 +13,7 @@ from flask_minify import Minify
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
-scheduler.add_job(update_history_plots, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
+scheduler.add_job(update_images, CronTrigger(minute='0,6,8,13,38,18,50'))
 scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 
@@ -105,6 +106,10 @@ def windcalc():
 def descent():
     return render_template("vertical.html")
 
+@app.get("/info/<string:icao>/history")
+def history(icao:str):
+    info = get_info(icao)
+    return render_template("history.html", icao=icao, info=info)
 
 @app.errorhandler(404)
 def not_found(e):
