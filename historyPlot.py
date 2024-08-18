@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
+from datetime import timedelta
 
 from DB.Getter import get_all_icao, latest_n_metars_parsed
 
