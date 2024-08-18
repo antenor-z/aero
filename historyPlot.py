@@ -5,7 +5,7 @@ import matplotlib.dates as mdates
 from DB.Getter import get_all_icao, latest_n_metars_parsed
 
 def plot_metar_data(icao: str, metar_data: list[dict], data_name, label_name: str, label_color: str):
-    timestamps = [data["timestamp"].strftime("%H:%M") for data in metar_data if data]
+    timestamps = [data["timestamp"].strftime("%d/%m %H:%M") for data in metar_data if data]
     dat = [data[data_name] for data in metar_data if data]
     fig, ax1 = plt.subplots()
 

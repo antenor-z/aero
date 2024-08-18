@@ -13,7 +13,7 @@ from flask_minify import Minify
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
-scheduler.add_job(update_images, CronTrigger(minute='0,6,8,13,38,18,50'))
+scheduler.add_job(update_images, CronTrigger(minute='0,8,21,41'))
 scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 

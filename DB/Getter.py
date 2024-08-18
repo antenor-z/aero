@@ -48,7 +48,7 @@ def get_metar(icao: str) -> tuple[str, str]:
 
 def latest_n_metars(icao: str, n=10) -> list[tuple[str, str]]:
     with Session(engine) as session:
-        metars = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).limit(n).all()
+        metars = session.query(METAR).filter(METAR.ICAO == icao).order_by(METAR.ValidOn).limit(n).all()
         results = [('', '')] * n
 
         for i, metar in enumerate(reversed(metars)):
