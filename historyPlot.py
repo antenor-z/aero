@@ -17,7 +17,7 @@ def plot_metar_data(icao: str, metar_data: list[dict], data_name, label_name: st
 
     fig.tight_layout()
 
-    filename = f"static/{icao}-{data_name}.png"
+    filename = f"static/plots/{icao}-{data_name}.png"
     plt.savefig(filename)
     plt.close(fig)
     print(f"Plot saved as {filename}")

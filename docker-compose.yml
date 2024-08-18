@@ -9,6 +9,8 @@ services:
       SESSION_SECRET_KEY: /run/secrets/session_secret_key
     ports:
       - "5000:5000"
+    volumes:
+      - ./static/plots:/app/static/plots
     depends_on:
       - aero-db
     networks:
