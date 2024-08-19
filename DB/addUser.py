@@ -17,9 +17,8 @@ def add_user():
         if not re.match("^[A-Z]{4}$", icao):
             exit("Invalid ICAO code:", icao)
 
-    CanCreate = input("Can create airports? (y/N)") in ["y", "Y"]
-    CanDelete = input("Can delete airports? (y/N)") in ["y", "Y"]
-    
+    isSuper = input("Can create/delete airports (superuser)? (y/N)") in ["y", "Y"]
+
     TwoFactorKey = None
     if input("Generate TOTP? (y/N)") in ["y", "Y"]:
         TwoFactorKey = TOTP.gen2fa(name)
@@ -31,8 +30,7 @@ def add_user():
     session.add(User(Name=name, 
                     PasswordHash=password_hash,
                     CanEditAirportsList=CanEditAirportsList,
-                    CanCreate=CanCreate,
-                    CanDelete=CanDelete,
+                    IsSuper=isSuper,
                     TwoFactorKey=TwoFactorKey))
 
     session.commit()

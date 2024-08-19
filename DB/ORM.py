@@ -128,8 +128,7 @@ class User(Base):
     PasswordHash = Column(String(60))
     TwoFactorKey = Column(String(32), nullable=True)
     CanEditAirportsList = Column(Text, nullable=True)
-    CanCreate = Column(Boolean, default=False)
-    CanDelete = Column(Boolean, default=False)
+    IsSuper = Column(Boolean, default=False)
 
 # CREATE USER 'aero-user'@'localhost' IDENTIFIED BY '123';
 # GRANT ALL PRIVILEGES ON aero.* TO 'aero-user'@'localhost';

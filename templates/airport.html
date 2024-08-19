@@ -11,7 +11,7 @@
 <body>
 	<header>
 		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
-		{% if isAdmin %}
+		{% if isLogged %}
 			<a href="/area/restrita/{{ icao }}/edit" class="button-admin">Editar</a>
 		{% endif %}
 	</header>
@@ -27,13 +27,13 @@
 				<div>
 					<div class="runway-number tooltip">
 						{{ runway.Head1 }} - {{ runway.Head2 }}
-						<span class="center-text tooltip">ⓘ
+						<span style="font-weight: normal;" class="center-text tooltip">ⓘ
 							<span class="tooltip tooltip-text">
 								Comprimento: {{ runway.RunwayLength }} m<br />
 								Largura: {{ runway.RunwayWidth }} m
 							</span>
 						</span>
-						{% if isAdmin %}
+						{% if isLogged %}
 							<a href="/area/restrita/{{icao}}/runway/{{runway.Head1}}/edit" class="button-admin">Editar</a>
 						{% endif %}
 					</div>
@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		{% endfor %}
-		{% if isAdmin %}
+		{% if isLogged %}
 			<a href="/area/restrita/{{icao}}/runway/add" class="button-admin">Adicionar Pista</a>
 		{% endif %}
 	</div>
@@ -51,14 +51,14 @@
 		<div class="box-rounded box-outlined">
 			<div class="box-name">{{comm.CommType}}</div>
 			<div class="box-value"><b>{{comm.Frequency | frequency3 }}</b>
-				{% if isAdmin %}
+				{% if isLogged %}
 				<a href="/area/restrita/{{icao}}/communication/{{ comm.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
 		</div>
 		{% endfor %}
 	</div>
-	{% if isAdmin %}
+	{% if isLogged %}
 		<div class="line">
 			<a href="/area/restrita/{{icao}}/communication/add" class="button-admin">Adicionar Comunicação</a>
 		</div>
@@ -80,7 +80,7 @@
 						Curso final: {{ils.CRS}}° 
 					</span>
 				</span>
-				{% if isAdmin %}
+				{% if isLogged %}
 				<a href="/area/restrita/{{ icao }}/ils/{{ ils.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
@@ -88,7 +88,7 @@
 		{% endfor %}
 	</div>
 	{% endif %}
-	{% if isAdmin %}
+	{% if isLogged %}
 		<div class="line">
 			<a href="/area/restrita/{{icao}}/ils/add" class="button-admin">Adicionar ILS</a>
 		</div>
@@ -100,7 +100,7 @@
 			<div class="box-name">VOR</div>
 			<div class="box-value">
 				<b>{{ vor.Frequency | frequency1 }}</b> {{ vor.Ident }}
-				{% if isAdmin %}
+				{% if isLogged %}
 					<a href="/area/restrita/{{icao}}/vor/{{ vor.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
 			</div>
@@ -109,7 +109,7 @@
 	</div>
 	{% endif %}
 	{% endif %}
-	{% if isAdmin %}
+	{% if isLogged %}
 		<div class="line">
 			<a href="/area/restrita/{{icao}}/vor/add" class="button-admin">Adicionar VOR</a>
 		</div>
