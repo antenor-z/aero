@@ -1,7 +1,7 @@
 from os import environ
 from flask import Flask, render_template, redirect, request, session
 from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
-from blueprints.admin import admin
+from blueprints.admin import admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -48,6 +48,9 @@ def info(icao:str):
     icao_upper = icao.upper()
     if icao != icao_upper:
         return redirect(f"/info/{icao_upper}")
+    
+    if get_logged_user() is not None:
+        return redirect(f"/area/restrita/{icao}")
     
     try:
         info = get_info(icao)
