@@ -1,17 +1,18 @@
-FROM alpine
+FROM alpine:latest
 
-WORKDIR /app/
+WORKDIR /app
 
-COPY . /app/
-RUN apk add python3
-RUN apk add py3-pip
+RUN apk add python3 py3-virtualenv
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN ${VIRTUAL_ENV}/bin/pip install -r requirements.txt
+
+COPY . /app
 
 EXPOSE 5000
 
-CMD ["python3", "-u", "-m", "gunicorn", "-c", "gunicorn_config.py", "server:app"]
+# -u: print Python's print() on docker logs
+CMD exec ${VIRTUAL_ENV}/bin/python3 -u -m uvicorn server:app --host 0.0.0.0 --port 5000

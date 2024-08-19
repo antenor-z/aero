@@ -1,7 +1,10 @@
 from os import environ
-from flask import Flask, render_template, redirect, request, session
+from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
-from blueprints.admin import admin, get_logged_user
+# from blueprints.admin import admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -9,7 +12,10 @@ from tafDecoder import decode_taf
 from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from flask_minify import Minify
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
@@ -17,45 +23,43 @@ scheduler.add_job(update_images, CronTrigger(minute='0,8,21,41'))
 scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 
-app = Flask(__name__)
-app.register_blueprint(admin)
-Minify(app=app, html=True, js=True, cssless=True)
-Minify(app=app, passive=False)
-
 DB_PASSWORD = None
 with open(environ["SESSION_SECRET_KEY"]) as fp:
-    app.config['SECRET_KEY'] = fp.read()
+    SECRET_KEY = fp.read()
 
-@app.template_filter('frequency3')
+
 def frequency3(value):
     value = float(value) / 1000
     return "{:.3f}".format(round(value, 3))
 
-@app.template_filter('frequency1')
+
 def frequency1(value):
     value = float(value) / 10
     return "{:.1f}".format(round(value, 1))
 
-app.jinja_env.filters['frequency3'] = frequency3
-app.jinja_env.filters['frequency1'] = frequency1
 
-@app.get("/")
-def list_all():
-    return render_template("index.html", airports=get_all_names())
+templates.env.filters['frequency3'] = frequency3
+templates.env.filters['frequency1'] = frequency1
 
-@app.get("/info/<string:icao>")
-def info(icao:str):
+
+@app.get("/", response_class=HTMLResponse)
+async def list_all(request: Request):
+    airports = get_all_names()
+    return templates.TemplateResponse("index.html", {"request": request, "airports": airports})
+
+@app.get("/info/{icao}", response_class=HTMLResponse)
+async def info(request: Request, icao: str):
     icao_upper = icao.upper()
     if icao != icao_upper:
-        return redirect(f"/info/{icao_upper}")
+        return RedirectResponse(url=f"/info/{icao_upper}")
     
-    if get_logged_user() is not None:
-        return redirect(f"/area/restrita/{icao}")
+    # if get_logged_user() is not None:
+    #     return RedirectResponse(url=f"/area/restrita/{icao}")
     
     try:
         info = get_info(icao)
     except Exception:
-        return render_template("error.html", error="Aeroporto não encontrado"), 400
+        raise HTTPException(status_code=400, detail="Aeroporto não encontrado")
 
     try:
         metar = get_metar(icao)
@@ -65,38 +69,37 @@ def info(icao:str):
 
     history = latest_n_metars_parsed(icao=icao, n=10)
 
-    return render_template("airport.html", info=info, icao=icao, metar=metar, decoded=decoded, history=history)
+    return templates.TemplateResponse("airport.html", {"request": request, "info": info, "icao": icao, "metar": metar, "decoded": decoded, "history": history})
 
-@app.get("/info/taf/<string:icao>")
-def info_taf(icao:str):
+@app.get("/info/taf/{icao}", response_class=HTMLResponse)
+async def info_taf(request: Request, icao: str):
     icao_upper = icao.upper()
     if icao != icao_upper:
-        return redirect(f"/info/taf/{icao_upper}")
+        return RedirectResponse(url=f"/info/taf/{icao_upper}")
 
     try:
         taf = get_taf(icao)
         info = get_info(icao)
         decoded = decode_taf(taf)
     except Exception:
-        return render_template("error.html", error="Erro ao obter o TAF"), 400
+        raise HTTPException(status_code=400, detail="Erro ao obter o TAF")
 
-    return render_template("taf.html", info=info, icao=icao, taf=taf, decoded=decoded)
+    return templates.TemplateResponse("taf.html", {"request": request, "info": info, "icao": icao, "taf": taf, "decoded": decoded})
 
-@app.get("/wind/")
-def wind():
-    return render_template("wind.html")
-
+@app.get("/wind/", response_class=HTMLResponse)
+async def wind(request: Request):
+    return templates.TemplateResponse("wind.html", {"request": request})
 
 @app.get("/windcalc/")
-def windcalc():
+async def windcalc(request: Request):
     try:
-        runway_head = int(request.args["runway_head"])
-        wind_dir = int(request.args["wind_dir"])
-        wind_speed = int(request.args["wind_speed"])
+        runway_head = int(request.query_params["runway_head"])
+        wind_dir = int(request.query_params["wind_dir"])
+        wind_speed = int(request.query_params["wind_speed"])
     except KeyError:
-        return {"error": "mising args"}, 400
+        raise HTTPException(status_code=400, detail="missing args")
     except ValueError:
-        return {"error": "invalid args"}, 400
+        raise HTTPException(status_code=400, detail="invalid args")
 
     ret = get_components_one_runway(
         runway_head=runway_head,
@@ -104,19 +107,19 @@ def windcalc():
         wind_speed=wind_speed)
     return ret
 
+@app.get("/descent", response_class=HTMLResponse)
+async def descent(request: Request):
+    return templates.TemplateResponse("vertical.html", {"request": request})
 
-@app.get("/descent")
-def descent():
-    return render_template("vertical.html")
-
-@app.get("/info/<string:icao>/history")
-def history(icao:str):
+@app.get("/info/{icao}/history", response_class=HTMLResponse)
+async def history(request: Request, icao: str):
     info = get_info(icao)
-    return render_template("history.html", icao=icao, info=info)
+    return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
 
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("error.html", error="404 | Página não encontrada."), 404
+@app.exception_handler(404)
+async def not_found(request: Request, exc: HTTPException):
+    return templates.TemplateResponse("error.html", {"request": request, "error": "404 | Página não encontrada."}, status_code=404)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="debug")

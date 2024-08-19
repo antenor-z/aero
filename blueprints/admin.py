@@ -10,8 +10,6 @@ from DB.ORM import User
 from ext import get_metar
 from metarDecoder import decode_metar
 from security import password
-import requests
-
 from util import get_city_and_code_from_IGBE
 
 admin = Blueprint('admin', __name__)

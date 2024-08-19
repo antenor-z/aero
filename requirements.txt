@@ -1,9 +1,9 @@
+fastapi
 pymysql
 SQLAlchemy
 requests
 pydantic
-Flask
-gunicorn
+uvicorn
 apscheduler
 pyotp
 qrcode
