@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
-# from blueprints.admin import admin, get_logged_user
+from blueprints.admin import admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -16,6 +16,7 @@ from apscheduler.triggers.cron import CronTrigger
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(admin)
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,8,21,41'), args=[get_all_icao()])
