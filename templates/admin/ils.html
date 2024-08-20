@@ -10,17 +10,17 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident: </label>
-		<input type="text" name="Ident" id="Ident" value="{{ils.Ident}}">
+		<input type="text" name="ident" id="Ident" value="{{ils.Ident}}">
 
 		<label for="RunwayHead">Cabeçeira: </label>
-		<input type="text" name="RunwayHead" id="RunwayHead" value="{{ils.RunwayHead}}">
+		<input type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
 
 		<label for="Frequency">Frequência: </label>
-		<input type="text" name="Frequency" id="Frequency" value="{{ils.Frequency}}">
+		<input type="text" name="frequency" id="Frequency" value="{{ils.Frequency}}">
 
 		<label for="Category">Categoria: </label>
-		<select name="Category" id="Category">
-		{% for t in ILSCats %}
+		<select name="category" id="Category">
+		{% for t in ILS_Categories %}
 			{% if ils.Category == t %}
 				<option value="{{ t }}" selected>{{ t }}</option>
 			{% else %}
@@ -30,10 +30,10 @@
 		</select>
 
 		<label for="CRS">Curso final: </label>
-		<input type="text" name="CRS" id="CRS" value="{{ils.CRS}}">
+		<input type="text" name="crs" id="CRS" value="{{ils.CRS}}">
 
 		<label for="Minimum">Minimum: </label>
-		<input type="text" name="Minimum" id="Minimum" value="{{ils.Minimum}}">
+		<input type="text" name="minimum" id="Minimum" value="{{ils.Minimum}}">
 
 		<button type="submit">OK</button>
 	</form>

@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Form, HTTPException, Request
+from fastapi import APIRouter, Form, HTTPException, Request, status
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.sessions import SessionMiddleware
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing import Optional
 
 from DB.AdminGetter import get_aerodrome, get_cities, get_comm_types, get_communication, get_ils, get_ils_categories, \
@@ -19,9 +17,10 @@ from security import password
 from util import get_city_and_code_from_IGBE
 
 admin = APIRouter()
-admin.add_middleware(SessionMiddleware, secret_key="your_secret_key")
 
 templates = Jinja2Templates(directory="templates")
+templates.env.filters['frequency3'] = lambda value: "{:.3f}".format(round(float(value) / 1000, 3))
+templates.env.filters['frequency1'] = lambda value: "{:.1f}".format(round(float(value) / 10, 1))
 admin.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -73,7 +72,7 @@ async def restricted_area(request: Request):
     })
 
 
-@admin.get("/area/restrita/{icao}", response_class=HTMLResponse)
+@admin.get("/area/restrita/info/{icao}", response_class=HTMLResponse)
 async def restricted_area_airport(request: Request, icao: str):
     get_logged_user(request, icao_to_check=icao)
     icao_upper = icao.upper()
@@ -107,23 +106,23 @@ async def get_login(request: Request):
 
 
 @admin.post("/area/restrita/login", response_class=HTMLResponse)
-async def post_login(request: Request, user: str = Form(...), password: str = Form(...), totp: str = Form(...)):
+async def post_login(request: Request, user: str = Form(...), passwd: str = Form(...), totp: Optional[str] = Form(None)):
     try:
-        user: User = password.authenticate(user_name=user, passwd=password, totp_token=totp)
+        user: User = password.authenticate(user_name=user, passwd=passwd, totp_token=totp)
         request.session["logged_user"] = user.Name
         return RedirectResponse("/area/restrita", status_code=303)
     except Exception:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
 
-@admin.get("/area/restrita/logout", response_class=HTMLResponse)
-async def get_logout(request: Request):
+@admin.post("/area/restrita/logout", response_class=HTMLResponse)
+async def logout(request: Request):
     request.session.pop("logged_user")
     return RedirectResponse("/area/restrita", status_code=303)
 
 
 @admin.get("/area/restrita/add", response_class=HTMLResponse)
-async def add_aerodrome_get(request: Request):
+async def add_aerodrome(request: Request):
     get_logged_user(request, super_only=True)
     empty_aerodrome = {
         "AerodromeName": "",
@@ -144,16 +143,21 @@ async def add_aerodrome_get(request: Request):
 
 
 @admin.post("/area/restrita/add")
-async def add_aerodrome_post(request: Request, icao: str = Form(...), aerodrome_name: str = Form(...),
-                             latitude: float = Form(...), longitude: float = Form(...),
-                             city_name: str = Form(...), state_code: str = Form(...)):
+async def add_aerodrome_post(request: Request,
+                             icao: str = Form(...),
+                             aerodrome_name: str = Form(...),
+                             latitude: float = Form(...),
+                             longitude: float = Form(...),
+                             city_name: str = Form(...),
+                             state_code: str = Form(...)):
+
     get_logged_user(request, super_only=True)
 
     city = get_city(state_code=state_code, city_name=city_name.replace("+", " "))
     if not city:
         res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
         if res is None:
-            return HTMLResponse("Cidade inválida", status_code=400)
+            return HTMLResponse("Cidade inválida", status_code=status.HTTP_400_BAD_REQUEST)
         city_code, city_name = res
         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
@@ -164,302 +168,365 @@ async def add_aerodrome_post(request: Request, icao: str = Form(...), aerodrome_
                      city_code=city.CityCode,
                      user=get_logged_user(request))
 
-    return RedirectResponse(f"/area/restrita/{icao}", status_code=303)
+    return RedirectResponse(f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
-# @admin.route("/area/restrita/<string:icao>/edit", methods=['GET', 'POST'])
-# def edit_aerodrome(icao: str):
-#     if request.method == 'GET':
-#         user = get_logged_user(icao_to_check=icao)
-#         aerodrome = get_aerodrome(icao=icao)
-#         return render_template("admin/airport.html",
-#                                icao=icao,
-#                                action=f"/area/restrita/{icao}/edit",
-#                                aerodrome=aerodrome,
-#                                States=get_states(),
-#                                canDelete=user.IsSuper)
-#     else:
-#         user = get_logged_user(icao_to_check=icao, super_only=True)
-#         icao = request.form.get('ICAO')
-#         aerodrome_name = request.form.get('AerodromeName')
-#         latitude = request.form.get('Latitude')
-#         longitude = request.form.get('Longitude')
-#         city_name = request.form.get('CityName').replace("+", " ")
-#         state_code = request.form.get('StateCode')
+@admin.get("/area/restrita/{icao}/edit")
+async def edit_aerodrome(icao: str, request: Request):
+    user = get_logged_user(request=request, icao_to_check=icao)
+    aerodrome = get_aerodrome(icao=icao)
+    return templates.TemplateResponse("admin/airport.html", {
+        "request": request,
+        "icao": icao,
+        "action": f"/area/restrita/{icao}/edit",
+        "aerodrome": aerodrome,
+        "States": get_states(),
+        "canDelete": user.IsSuper
+    })
 
-#         city = get_city(state_code=state_code, city_name=city_name)
+@admin.post("/area/restrita/{icao}/edit")
+async def edit_aerodrome_post(request: Request,
+                              icao: str,
+                              aerodrome_name: str = Form(...),
+                              latitude: float = Form(...),
+                              longitude: float = Form(...),
+                              city_name: str = Form(...),
+                              state_code: str = Form(...)):
+    user = get_logged_user(request=request, icao_to_check=icao, super_only=True)
 
-#     if city is None:
-#         res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
-#         if res is None:
-#             return "Cidade inválida"
-#         city_code, city_name = res
-#         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
+    city = get_city(state_code=state_code, city_name=city_name)
+    if city is None:
+        res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
+        if res is None:
+            return "Cidade inválida"
+        city_code, city_name = res
+        city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
-#     patch_aerodrome(icao=icao,
-#                     aerodrome_name=aerodrome_name,
-#                     latitude=float(latitude),
-#                     longitude=float(longitude),
-#                     city_code=city.CityCode)
-#     return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.post("/area/restrita/<string:icao>/delete")
-# def delete_aerodrome(icao: str):
-#     get_logged_user(icao_to_check=icao, super_only=True)
-#     del_aerodrome(icao)
-#     return redirect("/area/restrita")
+    patch_aerodrome(icao=icao,
+                    aerodrome_name=aerodrome_name,
+                    latitude=float(latitude),
+                    longitude=float(longitude),
+                    city_code=city.CityCode)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
-# @admin.route("/area/restrita/<string:icao>/runway/add", methods=['GET', 'POST'])
-# def add_runway(icao: str):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         empty_runway = {"Head1": "", "Head2": "", "RunwayLength": "", "RunwayWidth": "", "PavementCode": ""}
-#         print(get_pavement_codes())
-#         return render_template("admin/runway.html",
-#                                icao=icao,
-#                                runway=empty_runway,
-#                                action=f"/area/restrita/{icao}/runway/add",
-#                                pavementCodes=get_pavement_codes())
-#     else:
-#         head1 = request.form.get('Head1')
-#         head2 = request.form.get('Head2')
-#         runway_length = request.form.get('RunwayLength')
-#         runway_width = request.form.get('RunwayWidth')
-#         pavement_code = request.form.get('PavementCode')
+@admin.post("/area/restrita/{icao}/delete")
+async def delete_aerodrome(request: Request, icao: str):
 
-#         if (exc := create_runway(icao=icao, 
-#                                  head1=head1, 
-#                                  head2=head2, 
-#                                  runway_length=runway_length, 
-#                                  runway_width=runway_width, 
-#                                  pavement_code=pavement_code)) is not None:
-#             return exc, 401
+    get_logged_user(request=request, icao_to_check=icao, super_only=True)
 
-#         return redirect(f"/area/restrita/{icao}")
+    del_aerodrome(icao)
+    return RedirectResponse(url="/area/restrita", status_code=status.HTTP_303_SEE_OTHER)
 
 
-# @admin.route("/area/restrita/<string:icao>/runway/<string:runwayHead>/edit", methods=['GET', 'POST'])
-# def edit_runway(icao: str, runwayHead):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         runway = get_runway(icao=icao, runway_head=runwayHead)
-#         return render_template("admin/runway.html",
-#                                icao=icao,
-#                                runway=runway,
-#                                action=f"/area/restrita/{icao}/runway/{runwayHead}/edit",
-#                                pavementCodes=get_pavement_codes(),
-#                                canDelete=True
-#                                )
-#     else:
-#         head1 = request.form.get('Head1')
-#         head2 = request.form.get('Head2')
-#         runway_length = request.form.get('RunwayLength')
-#         runway_width = request.form.get('RunwayWidth')
-#         pavement_code = request.form.get('PavementCode')
+@admin.get("/area/restrita/{icao}/runway/add")
+async def add_runway(request: Request, icao: str):
 
-#         if (exc := patch_runway(icao=icao, 
-#                                 head1_old=runwayHead, 
-#                                 head1=head1, 
-#                                 head2=head2, 
-#                                 runway_length=runway_length, 
-#                                 runway_width=runway_width, 
-#                                 pavement_code=pavement_code)) is not None:
-#             return exc, 401
+    get_logged_user(request=request, icao_to_check=icao)
+
+    empty_runway = {"Head1": "", "Head2": "", "RunwayLength": "", "RunwayWidth": "", "PavementCode": ""}
+    return templates.TemplateResponse("admin/runway.html", {
+        "request": request,
+        "icao": icao,
+        "runway": empty_runway,
+        "action": f"/area/restrita/{icao}/runway/add",
+        "pavementCodes": get_pavement_codes()
+    })
+
+@admin.post("/area/restrita/{icao}/runway/add")
+async def add_runway(request: Request,
+                     icao: str,
+                     head1: str = Form(...),
+                     head2: str = Form(...),
+                     runway_length: float = Form(...),
+                     runway_width: str = Form(...),
+                     pavement_code: str = Form(...)):
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := create_runway(icao=icao, 
+                             head1=head1, 
+                             head2=head2, 
+                             runway_length=runway_length, 
+                             runway_width=runway_width, 
+                             pavement_code=pavement_code)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/runway/{runwayHead}/edit")
+async def edit_runway(request: Request, icao: str, runwayHead: str):
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    runway = get_runway(icao=icao, runway_head=runwayHead)
+    return templates.TemplateResponse("admin/runway.html", {
+        "request": request,
+        "icao": icao,
+        "runway": runway,
+        "action": f"/area/restrita/{icao}/runway/{runwayHead}/edit",
+        "pavementCodes": get_pavement_codes(),
+        "canDelete": True
+    })
+
+@admin.post("/area/restrita/{icao}/runway/{runway_head}/edit")
+async def edit_runway_post(request: Request,
+                           icao: str,
+                           runway_head: str,
+                           head1: str = Form(...),
+                           head2: str = Form(...),
+                           runway_length: float = Form(...),
+                           runway_width: str = Form(...),
+                           pavement_code: str = Form(...)):
+    
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := patch_runway(icao=icao, 
+                            head1_old=runway_head, 
+                            head1=head1, 
+                            head2=head2, 
+                            runway_length=runway_length, 
+                            runway_width=runway_width, 
+                            pavement_code=pavement_code)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.post("/area/restrita/{icao}/runway/{runwayHead}/delete")
+async def delete_runway(request: Request, icao: str, runwayHead: str):
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    del_runway(icao, runwayHead)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/communication/add")
+async def add_communication(request: Request, icao: str):
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    empty_comm = {"Frequency": "", "CommType": ""}
+    return templates.TemplateResponse("admin/communication.html", {
+        "request": request,
+        "icao": icao,
+        "communication": empty_comm,
+        "action": f"/area/restrita/{icao}/communication/add",
+        "commTypes": get_comm_types()
+    })
+
+@admin.post("/area/restrita/{icao}/communication/add")
+async def add_communication_post(request: Request,
+                                 icao: str,
+                                 frequency: str = Form(...),
+                                 comm_type: str = Form(...)):
+    
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := create_comm(icao=icao, frequency=frequency, comm_type=comm_type)) is not None:
+        return exc, status.HTTP_400_BAD_REQUEST
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/communication/{frequency}/edit")
+async def edit_communication(request: Request,
+                             icao: str,
+                             frequency: int):
+    
+    get_logged_user(request=request, icao_to_check=icao)
+
+    comm = get_communication(icao=icao, frequency=frequency)
+    return templates.TemplateResponse("admin/communication.html", {
+        "request": request,
+        "icao": icao,
+        "communication": comm,
+        "action": f"/area/restrita/{icao}/communication/{frequency}/edit",
+        "commTypes": get_comm_types(),
+        "canDelete": True
+    })
+
+@admin.post("/area/restrita/{icao}/communication/{frequency_old}/edit")
+async def edit_communication(request: Request,
+                             icao: str,
+                             frequency: str = Form(...),
+                             comm_type: str = Form(...)):
+    
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := patch_comm(icao=icao, 
+                          frequency_old=frequency, 
+                          frequency=frequency, 
+                          comm_type=comm_type)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.post("/area/restrita/{icao}/communication/{frequency}/delete")
+async def delete_communication(request: Request, icao: str, frequency: int):
+    get_logged_user(request=request, icao_to_check=icao)
+    del_comm(icao, frequency)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/ils/add")
+async def add_ils(request: Request, icao: str):
+    get_logged_user(request=request, icao_to_check=icao)
+    if request.method == 'GET':
+        empty_ils = {"Ident": "", "RunwayHead": "", "Frequency": "", "Category": "", "Crs": "", "Minimum": ""}
+        return templates.TemplateResponse("admin/ils.html", {
+            "request": request,
+            "icao": icao,
+            "ils": empty_ils,
+            "action": f"/area/restrita/{icao}/ils/add",
+            "ILS_Categories": get_ils_categories()
+        })
+
+@admin.post("/area/restrita/{icao}/ils/add")
+async def add_ils_post(request: Request,
+                       icao: str,
+                       ident: str = Form(...),
+                       runway_head: str = Form(...),
+                       frequency: float = Form(...),
+                       category: str = Form(...),
+                       crs: str = Form(...),
+                       minimum: str = Form(...)):
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := create_ils(icao=icao, 
+                          ident=ident, 
+                          runway_head=runway_head, 
+                          frequency=frequency, 
+                          category=category, 
+                          crs=crs, 
+                          minimum=minimum)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/ils/{frequency}/edit")
+async def edit_ils(request: Request,
+                   icao: str,
+                   frequency: int):
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    ils = get_ils(icao=icao, frequency=frequency)
+    return templates.TemplateResponse("admin/ils.html", {
+        "request": request,
+        "icao": icao,
+        "ils": ils,
+        "action": f"/area/restrita/{icao}/ils/{frequency}/edit",
+        "ILS_Categories": get_ils_categories(),
+        "canDelete": True
+    })
+
+@admin.post("/area/restrita/{icao}/ils/{frequency_old}/edit")
+async def edit_ils(request: Request,
+                   icao: str,
+                   frequency_old: int,
+                   ident: str = Form(...),
+                   runway_head: str = Form(...),
+                   frequency: float = Form(...),
+                   category: str = Form(...),
+                   crs: str = Form(...),
+                   minimum: str = Form(...)):
+    
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := patch_ils(icao=icao, 
+                         frequency_old=frequency_old, 
+                         ident=ident, 
+                         runway_head=runway_head, 
+                         frequency=frequency, 
+                         category=category, 
+                         crs=crs, 
+                         minimum=minimum)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.post("/area/restrita/{icao}/ils/{frequency}/delete")
+async def delete_ils(request: Request,
+                     icao: str,
+                     frequency: int):
+
+    get_logged_user(request=request, icao_to_check=icao)
+    del_ils(icao, frequency)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/vor/add")
+async def add_vor(request: Request,
+                  icao: str):
+
+    get_logged_user(request=request, icao_to_check=icao)
+    if request.method == 'GET':
+        empty_vor = {"Ident": "", "Frequency": ""}
+        return templates.TemplateResponse("admin/vor.html", {
+            "request": request,
+            "icao": icao,
+            "vor": empty_vor,
+            "action": f"/area/restrita/{icao}/vor/add",
+        })
+    
+@admin.post("/area/restrita/{icao}/vor/add")
+async def add_vor(request: Request,
+                  icao: str,
+                  ident: str = Form(...),
+                  frequency: str = Form(...)): 
+
+    get_logged_user(request=request, icao_to_check=icao)
+
+    if (exc := create_vor(icao=icao, 
+                            ident=ident, 
+                            frequency=frequency)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@admin.get("/area/restrita/{icao}/vor/{frequency}/edit")
+async def edit_vor(request: Request,
+                   icao: str,
+                   frequency: int):
+    get_logged_user(request=request, icao_to_check=icao)
    
-#         return redirect(f"/area/restrita/{icao}")
+    vor = get_vor(icao=icao, frequency=frequency)
+    return templates.TemplateResponse("admin/vor.html", {
+        "request": request,
+        "icao": icao,
+        "vor": vor,
+        "action": f"/area/restrita/{icao}/vor/{frequency}/edit",
+        "canDelete": True
+    })
+
+@admin.post("/area/restrita/{icao}/vor/{frequency_old}/edit")
+async def edit_vor_post(request: Request,
+                        icao: str,
+                        frequency_old: int,
+                        ident: str = Form(...),
+                        frequency: str = Form(...)):
+    get_logged_user(request=request, icao_to_check=icao)
 
 
-# @admin.post("/area/restrita/<string:icao>/runway/<string:runwayHead>/delete")
-# def delete_runway(icao: str, runwayHead: str):
-#     get_logged_user(icao_to_check=icao)
-#     del_runway(icao, runwayHead)
-#     return redirect(f"/area/restrita/{icao}")
+    if (exc := patch_vor(icao=icao, 
+                         frequency_old=frequency_old, 
+                         ident=ident, 
+                         frequency=frequency)) is not None:
+        return exc, status.HTTP_401_UNAUTHORIZED
+
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
-# @admin.route("/area/restrita/<string:icao>/communication/add", methods=['GET', 'POST'])
-# def add_communication(icao: str):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         empty_comm = {"Frequency": "", "CommType": ""}
-#         return render_template("admin/communication.html",
-#                                icao=icao,
-#                                communication=empty_comm,
-#                                action=f"/area/restrita/{icao}/communication/add",
-#                                CommTypes=get_comm_types())
-#     else:
-#         frequency = request.form.get('Frequency')
-#         comm_type = request.form.get('CommType')
-
-#         if (exc := create_comm(icao=icao, frequency=frequency, comm_type=comm_type)) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.route("/area/restrita/<string:icao>/communication/<int:frequency>/edit", methods=['GET', 'POST'])
-# def edit_communication(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         communication = get_communication(icao=icao, frequency=frequency)
-#         return render_template("admin/communication.html",
-#                                icao=icao,
-#                                communication=communication,
-#                                action=f"/area/restrita/{icao}/communication/{frequency}/edit",
-#                                CommTypes=get_comm_types(),
-#                                canDelete=True)
-#     else:
-#         frequency_new = request.form.get('Frequency')
-#         comm_type = request.form.get('CommType')
-
-#         if (exc := patch_comm(icao, frequency, frequency_new, comm_type)) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.post("/area/restrita/<string:icao>/communication/<int:frequency>/delete")
-# def delete_communication(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     del_comm(icao, frequency)
-#     return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.route("/area/restrita/<string:icao>/ils/add", methods=['GET', 'POST'])
-# def add_ils(icao: str):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         ils = {"Ident": "", 
-#                "RunwayHead": "",
-#                "Frequency": "",
-#                "Category": "",
-#                "CRS": "",
-#                "Minimum": ""}
-#         return render_template("admin/ils.html",
-#                                icao=icao,
-#                                ils=ils,
-#                                action=f"/area/restrita/{icao}/ils/add",
-#                                ILSCats=get_ils_categories())
-#     else:
-#         ident = request.form.get('Ident')
-#         runway_head = request.form.get('RunwayHead')
-#         frequency = request.form.get('Frequency')
-#         category = request.form.get('Category')
-#         crs = request.form.get('CRS')
-#         minimum = request.form.get('Minimum')
-
-#         if (exc := create_ils(icao=icao,
-#                               ident=ident, 
-#                               runway_head=runway_head, 
-#                               frequency=frequency, 
-#                               category=category, 
-#                               crs=crs, 
-#                               minimum=minimum)) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.route("/area/restrita/<string:icao>/ils/<int:frequency>/edit", methods=['GET', 'POST'])
-# def edit_ils(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         ils = get_ils(icao=icao, frequency=frequency)
-#         return render_template("admin/ils.html",
-#                                icao=icao,
-#                                ils=ils,
-#                                action=f"/area/restrita/{icao}/ils/{frequency}/edit",
-#                                ILSCats=get_ils_categories(),
-#                                canDelete=True)
-#     else:
-#         ident = request.form.get('Ident')
-#         runway_head = request.form.get('RunwayHead')
-#         frequency_new = request.form.get('Frequency')
-#         category = request.form.get('Category')
-#         crs = request.form.get('CRS')
-#         minimum = request.form.get('Minimum')
-
-#         if (exc := patch_ils(icao=icao,
-#                             frequency_old=frequency,
-#                             ident=ident,
-#                             runway_head=runway_head,
-#                             frequency=frequency_new,
-#                             category=category,
-#                             crs=crs,
-#                             minimum=minimum)) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.post("/area/restrita/<string:icao>/ils/<int:frequency>/delete")
-# def delete_ils(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     del_ils(icao, frequency)
-#     return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.route("/area/restrita/<string:icao>/vor/add", methods=['GET', 'POST'])
-# def add_vor(icao: str):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         vor = {"Ident": "",
-#                "Frequency": "",
-#               }
-#         return render_template("admin/vor.html", icao=icao, vor=vor, action=f"/area/restrita/{icao}/vor/add")
-#     else:
-#         ident = request.form.get('Ident')
-#         frequency = request.form.get('Frequency')
-
-#         if (exc := create_vor(icao=icao,
-#                               ident=ident,
-#                               frequency=frequency,
-#                               )) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.route("/area/restrita/<string:icao>/vor/<int:frequency>/edit", methods=['GET', 'POST'])
-# def edit_vor(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     if request.method == 'GET':
-#         vor = get_vor(icao=icao, frequency=frequency)
-#         return render_template("admin/vor.html",
-#                                icao=icao,
-#                                vor=vor,
-#                                action=f"/area/restrita/{icao}/vor/{frequency}/edit",
-#                                canDelete=True)
-#     else:
-#         ident = request.form.get('Ident')
-#         frequency_new = request.form.get('Frequency')
-
-#         if (exc := patch_vor(icao=icao,
-#                              frequency_old=frequency,
-#                              ident=ident,
-#                              frequency=frequency_new,
-#                              )) is not None:
-#             return exc, 401
-
-#         return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.post("/area/restrita/<string:icao>/vor/<int:frequency>/delete")
-# def delete_vor(icao: str, frequency: int):
-#     get_logged_user(icao_to_check=icao)
-#     del_vor(icao, frequency)
-#     return redirect(f"/area/restrita/{icao}")
-
-
-# @admin.errorhandler(NotLoggedException)
-# def not_logged(e):
-#     return redirect("/area/restrita/login")
-
-
-# @admin.errorhandler(NotAllowedToEditAirport)
-# def airport_not_allowed(e):
-#     return render_template("error.html", "User can't edit this airport")
-
-# @admin.errorhandler(NotSuperUser)
-# def no_create_delete_permision(e):
-#     return render_template("error.html", "User can't create or remove airports")
+@admin.post("/area/restrita/{icao}/vor/{frequency}/delete")
+async def delete_vor(request: Request,
+                     icao: str,
+                     frequency: int):
+    get_logged_user(request=request, icao_to_check=icao)
+    del_vor(icao, frequency)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)

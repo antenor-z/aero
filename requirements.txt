@@ -10,3 +10,4 @@ qrcode
 bcrypt
 Flask-Minify
 matplotlib
+python-multipart

@@ -10,19 +10,19 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="head1">Cabeçeira 1: </label>
-		<input type="text" name="Head1" id="head1" value="{{runway.Head1}}">
+		<input type="text" name="head1" id="head1" value="{{runway.Head1}}">
 
 		<label for="head2">Cabeçeira 2: </label>
-		<input type="text" name="Head2" id="head2" value="{{runway.Head2}}">
+		<input type="text" name="head2" id="head2" value="{{runway.Head2}}">
 
 		<label for="RunwayLength">Comprimento: </label>
-		<input type="text" name="RunwayLength" id="RunwayLength" value="{{runway.RunwayLength}}">
+		<input type="text" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
 
 		<label for="RunwayWidth">Largura: </label>
-		<input type="text" name="RunwayWidth" id="RunwayWidth" value="{{runway.RunwayWidth}}">
+		<input type="text" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
 
 		<label for="PavementCode">Tipo do pavimento: </label>
-		<select name="PavementCode" id="PavementCode">
+		<select name="pavement_code" id="PavementCode">
 			{% for p in pavementCodes %}
 				{% if runway.PavementCode == p.Code %}
 					<option value="{{p.Code}}" selected>{{p.Material}}</option>

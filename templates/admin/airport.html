@@ -8,25 +8,24 @@
 </head>
 <body>
 	<main>
-	<a href="/area/restrita/logout">Logout</a>
 	<form method="post" action="{{ action }}">
 		<label for="ICAO">ICAO: </label>
-		<input type="text" name="ICAO" id="ICAO" value="{{aerodrome.ICAO}}">
+		<input type="text" name="icao" id="ICAO" value="{{aerodrome.ICAO}}">
 
 		<label for="AerodromeName">Nome do aerodromo: </label>
-		<input type="text" name="AerodromeName" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
+		<input type="text" name="aerodrome_name" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
 
 		<label for="Latitude">Latitude: </label>
-		<input type="text" name="Latitude" id="Latitude" value="{{aerodrome.Latitude}}">
+		<input type="text" name="latitude" id="Latitude" value="{{aerodrome.Latitude}}">
 
 		<label for="Longitude">Longitude: </label>
-		<input type="text" name="Longitude" id="Longitude" value="{{aerodrome.Longitude}}">
+		<input type="text" name="longitude" id="Longitude" value="{{aerodrome.Longitude}}">
 
 		<label for="CityName">Cidade: </label>
-		<input type="text" name="CityName" id="CityName" value="{{aerodrome.CityName}}">
+		<input type="text" name="city_name" id="CityName" value="{{aerodrome.CityName}}">
 
 		<label for="StateCode">Estado: </label>
-		<select name="StateCode" id="StateCode">
+		<select name="state_code" id="StateCode">
 			{% for t in States %}
 			{% if aerodrome.StateCode == t.StateCode %}
 				<option value="{{t.StateCode}}" selected>{{t.StateName}} - {{t.StateAbbreviation}}</option>

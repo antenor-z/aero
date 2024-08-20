@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
-from blueprints.admin import admin, get_logged_user
+from blueprints.admin import NotAllowedToEditAirport, NotLoggedException, NotSuperUser, admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
@@ -12,9 +12,12 @@ from tafDecoder import decode_taf
 from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+templates.env.filters['frequency3'] = lambda value: "{:.3f}".format(round(float(value) / 1000, 3))
+templates.env.filters['frequency1'] = lambda value: "{:.1f}".format(round(float(value) / 10, 1))
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(admin)
 
@@ -24,23 +27,10 @@ scheduler.add_job(update_images, CronTrigger(minute='0,8,21,41'))
 scheduler.add_job(update_tafs, CronTrigger(minute='10'), args=[get_all_icao()])
 scheduler.start()
 
-DB_PASSWORD = None
 with open(environ["SESSION_SECRET_KEY"]) as fp:
-    SECRET_KEY = fp.read()
+    SESSION_SECRET_KEY = fp.read()
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 
-
-def frequency3(value):
-    value = float(value) / 1000
-    return "{:.3f}".format(round(value, 3))
-
-
-def frequency1(value):
-    value = float(value) / 10
-    return "{:.1f}".format(round(value, 1))
-
-
-templates.env.filters['frequency3'] = frequency3
-templates.env.filters['frequency1'] = frequency1
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -120,6 +110,20 @@ async def history(request: Request, icao: str):
 @app.exception_handler(404)
 async def not_found(request: Request, exc: HTTPException):
     return templates.TemplateResponse("error.html", {"request": request, "error": "404 | Página não encontrada."}, status_code=404)
+
+@app.exception_handler(NotLoggedException)
+async def not_logged_exception_handler(request: Request, exc: NotLoggedException):
+    return RedirectResponse("/area/restrita/login", status_code=303)
+
+
+@app.exception_handler(NotAllowedToEditAirport)
+async def not_allowed_to_edit_airport_handler(request: Request, exc: NotAllowedToEditAirport):
+    return templates.TemplateResponse("error.html", {"request": request, "error": "User can't edit this airport"})
+
+
+@app.exception_handler(NotSuperUser)
+async def not_super_user_handler(request: Request, exc: NotSuperUser):
+    return templates.TemplateResponse("error.html", {"request": request, "error": "User can't create or remove airports"})
 
 if __name__ == '__main__':
     import uvicorn

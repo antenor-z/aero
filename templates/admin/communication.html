@@ -10,11 +10,11 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Frequency">Frequência: </label>
-		<input type="text" name="Frequency" id="Frequency" value="{{communication.Frequency}}">
+		<input type="text" name="frequency" id="Frequency" value="{{communication.Frequency}}">
 
 		<label for="CommType">Tipo: </label>
-		<select name="CommType" id="CommType">
-		{% for t in CommTypes %}
+		<select name="comm_type" id="CommType">
+		{% for t in commTypes %}
 			{% if communication.CommType == t.CommType %}
 				<option value="{{t.CommType}}" selected>{{t.CommType}}</option>
 			{% else %}
