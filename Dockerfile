@@ -15,4 +15,4 @@ COPY . /app
 EXPOSE 5000
 
 # -u: print Python's print() on docker logs
-CMD exec ${VIRTUAL_ENV}/bin/python3 -u -m uvicorn server:app --host 0.0.0.0 --port 5000
+CMD exec ${VIRTUAL_ENV}/bin/python3 -u -m fastapi run server.py --host 0.0.0.0 --port 5000
