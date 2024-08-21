@@ -15,7 +15,7 @@ def plot_metar_data(icao: str,
                     label_name2: str,
                     label_color2: str):
 
-    timestamps = [(data["timestamp"] - timedelta(hours=3)).strftime("%d/%m %H:%M") for data in metar_data if data]
+    timestamps = [(data["timestamp"] - timedelta(hours=3)).strftime("%H:%M") for data in metar_data if data]
     data1 = [data[data_name1] for data in metar_data if data]
     data2 = [data[data_name2] for data in metar_data if data]
 
@@ -49,9 +49,9 @@ def plot_metar_data(icao: str,
 
 
 def plot(icao, metar_data):
-    plot_metar_data(icao, metar_data, "temperature", "Temperatura", "red", "dew_point", "Ponto de orvalho", "green")
-    plot_metar_data(icao, metar_data, "wind_speed", "Velocidade do vento", "blue", "wind_direction", "Direção do vento", "green")
-    plot_metar_data(icao, metar_data, "qnh", "Ajuste altímetro", "blue", "visibility", "Visibilidade", "green")
+    plot_metar_data(icao, metar_data, "temperature", "Temperatura (°C)", "red", "dew_point", "Ponto de orvalho (°C)", "green")
+    plot_metar_data(icao, metar_data, "wind_speed", "Velocidade do vento (kt)", "blue", "wind_direction", "Direção do vento (graus)", "green")
+    plot_metar_data(icao, metar_data, "qnh", "Ajuste altímetro (hPa)", "blue", "visibility", "Visibilidade (m)", "green")
 
 
 def update_images():
