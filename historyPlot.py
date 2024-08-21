@@ -26,14 +26,24 @@ def plot_metar_data(icao: str,
     ax1.plot(timestamps, data1, 'o-', color=f'tab:{label_color1}', label=label_name1)
     ax1.tick_params(axis='y', labelcolor=f'tab:{label_color1}')
 
+    for i, value in enumerate(data1):
+        ax1.annotate(f'{value}', xy=(timestamps[i], value), xytext=(0, 5), textcoords='offset points',
+                        ha='center', color=f'tab:{label_color1}', fontsize=9)
+
     ax2 = ax1.twinx()
     ax2.set_ylabel(label_name2, color=f'tab:{label_color2}')
     ax2.plot(timestamps, data2, 's-', color=f'tab:{label_color2}', label=label_name2)
     ax2.tick_params(axis='y', labelcolor=f'tab:{label_color2}')
 
+    for i, value in enumerate(data2):
+        ax2.annotate(f'{value}', xy=(timestamps[i], value), xytext=(0, -12), textcoords='offset points',
+                     ha='center', color=f'tab:{label_color2}', fontsize=9)
+
+    # ax1.grid(True)
+
     fig.tight_layout()
     filename = f"static/plots/{icao}-{data_name1}-{data_name2}.png"
-    plt.savefig(filename)
+    plt.savefig(filename, dpi=600)
     plt.close(fig)
     print(f"Plot saved as {filename}")
 

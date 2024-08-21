@@ -2,9 +2,11 @@ from DB.Getter import get_all_icao
 from DB.addUser import add_user
 from DB.PortableDataLoad import insert_initial_data
 from ext import update_metars, update_tafs
+from historyPlot import update_images
 
 def update_all_metars(): update_metars(get_all_icao())
 def update_all_tafs(): update_tafs(get_all_icao())
+def update_all_images(): update_images()
 def exit_now(): exit()
 
 while(True):
@@ -13,7 +15,8 @@ while(True):
         "1": insert_initial_data,
         "2": add_user,
         "3": update_all_metars,
-        "4": update_all_tafs
+        "4": update_all_tafs,
+        "5": update_all_images
     }
     for num, func in options.items():
         print(f"{num}: {func.__name__}")
