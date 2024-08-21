@@ -62,7 +62,7 @@ async def info(request: Request, icao: str):
 
     return templates.TemplateResponse("airport.html", {"request": request, "info": info, "icao": icao, "metar": metar, "decoded": decoded, "history": history})
 
-@app.get("/info/taf/{icao}", response_class=HTMLResponse)
+@app.get("/taf/{icao}", response_class=HTMLResponse)
 async def info_taf(request: Request, icao: str):
     icao_upper = icao.upper()
     if icao != icao_upper:
@@ -102,7 +102,7 @@ async def windcalc(request: Request):
 async def descent(request: Request):
     return templates.TemplateResponse("vertical.html", {"request": request})
 
-@app.get("/info/{icao}/history", response_class=HTMLResponse)
+@app.get("/history/{icao}/", response_class=HTMLResponse)
 async def history(request: Request, icao: str):
     info = get_info(icao)
     return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
