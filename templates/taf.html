@@ -20,8 +20,10 @@
 		<span style="background-color: #eee; color: #565656; padding: 3px;">{{ icao }}</span> {{ info.AerodromeName }}
 	</header>
 	<main>
-	<a class="button-small" href="/info/{{ icao }}">&lt Voltar para o METAR</a>
-	<a class="button-small" href="javascript:void(0);" onclick="copy(`{{taf}}`)">Copiar TAF</a>
+	<subheader>
+		<a class="button-small" href="/info/{{ icao }}">&lt Voltar para o METAR</a>
+		<a class="button-small" href="javascript:void(0);" onclick="copy(`{{taf}}`)">Copiar TAF</a>
+	</subheader>
 	
 	<p>APENAS PARA USO EM SIMULADOR</p>
 

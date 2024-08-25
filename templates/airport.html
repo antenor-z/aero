@@ -16,10 +16,12 @@
 		{% endif %}
 	</header>
 	<main>
-	<a class="button-small" href="/">&lt Voltar</a>
-	<a class="button-small" href="javascript:void(0);" onclick="copy('{{metar}}')">Copiar METAR</a>
-	<a class="button-small" href="/taf/{{icao}}">Previsão TAF</a>
-	<a class="button-small" href="/history/{{icao}}">Histórico</a>
+	<subheader>
+		<a class="button-small" href="/">&lt Voltar</a>
+		<a class="button-small" href="javascript:void(0);" onclick="copy('{{metar}}')">Copiar METAR</a>
+		<a class="button-small" href="/taf/{{icao}}">Previsão TAF</a>
+		<a class="button-small" href="/history/{{icao}}">Histórico</a>
+	</subheader>
 	{% if info is not none %}
 	<div class="line line-margin">
 		{% for runway in info.runways %}
