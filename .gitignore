@@ -6,3 +6,4 @@ __pycache__
 .env
 passwords
 static/plots/*.png
+static/plots/*.svg
