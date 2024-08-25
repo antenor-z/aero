@@ -234,4 +234,4 @@ class DecodeError(Exception):
 
 if __name__ == "__main__":
     metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA -DU BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="
-    print(decode(metar))
+    print(decode_metar(metar))
