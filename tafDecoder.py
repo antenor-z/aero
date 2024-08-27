@@ -174,6 +174,12 @@ def decode_taf(taf: str) -> list:
 
             ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude. {extra}"))
 
+        elif re.match(r"^[A-Z]{3}$", item):
+            if item == "RMK":
+                ret.append((item, "Observação a seguir"))
+            else:
+                ret.append((item, "Trigrama indicando o código do previsor que confeccionou este TAF"))
+
         else:
             ret.append((item, "Item desconhecido"))
 
