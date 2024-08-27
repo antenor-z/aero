@@ -93,9 +93,7 @@ def decode_metar(metar: str) -> dict:
 
     ret = []
 
-    ts_utc = datetime(day=day, month=datetime.utcnow().month, year=datetime.utcnow().year, hour=hour, minute=minute)
-    ts_local = ts_utc - timedelta(hours=3)
-    ret.append((metar[0], f"METAR válido para dia {ts_local.day} as {ts_local.hour}:{ts_local.minute:02d} (hora de Brasília)"))
+    ret.append((metar[0], f"METAR válido para dia {day} as {hour}:{minute} (UTC)"))
 
     metar = metar[1:]
 

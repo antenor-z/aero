@@ -99,13 +99,13 @@ def decode_taf(taf: str) -> list:
         elif re.match(r"^\d{4}/\d{4}$", item):
             from_time, to_time = item.split('/')
             if context == "BECMG":
-                ret.append((f"{context} {item}", f"Condições previstas do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+                ret.append((f"{context} {item}", f"Condições previstas do dia {from_time[:2]} as {from_time[2:4]}:00 (UTC) até dia {to_time[:2]} as {to_time[2:4]}:00 (UTC)"))
                 context = ""
             elif context == "TEMPO":
-                ret.append((f"{context} {item}", f"Condições temporárias previstas do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+                ret.append((f"{context} {item}", f"Condições temporárias previstas do dia {from_time[:2]} as {from_time[2:4]}:00 (UTC) até dia {to_time[:2]} as {to_time[2:4]}:00 (UTC)"))
                 context = ""
             else:
-                ret.append((item, f"Do dia {from_time[:2]} as {from_time[2:4]}:00(UTC) até dia {to_time[:2]} as {to_time[2:4]}:00(UTC)"))
+                ret.append((item, f"Do dia {from_time[:2]} as {from_time[2:4]}:00 (UTC) até dia {to_time[:2]} as {to_time[2:4]}:00 (UTC)"))
 
         elif (wind := re.findall("(\d{3})(\d{2})KT", item)) != []:
             [(direction, speed)] = wind
@@ -131,7 +131,7 @@ def decode_taf(taf: str) -> list:
 
         elif re.match(r"^\d{4}/\d{4}$", item):
             from_time, to_time = item.split('/')
-            ret.append((item, f"Do dia {from_time[0:2]} as {from_time[2:4]}:00(UTC) até dia {from_time[0:2]} as {to_time[2:4]}:00(UTC)"))
+            ret.append((item, f"Do dia {from_time[0:2]} as {from_time[2:4]}:00 (UTC) até dia {from_time[0:2]} as {to_time[2:4]}:00 (UTC)"))
 
         elif re.match(r"^PROB\d{2}$", item):
             probability = item[4:]
@@ -148,13 +148,13 @@ def decode_taf(taf: str) -> list:
             temperature = item[2:4]
             day = item[5:7]
             hour = item[7:9]
-            ret.append((item, f"A temperatura mínima é de {temperature}°C prevista de ocorrer dia {day} as {hour}"))
+            ret.append((item, f"A temperatura mínima é de {temperature}°C prevista de ocorrer dia {day} as {hour}:00 (UTC)"))
 
         elif re.match(r"^TX\d{2}/\d{4}Z$", item):
             temperature = item[2:4]
             day = item[5:7]
             hour = item[7:9]
-            ret.append((item, f"A temperatura máxima é de {temperature}°C prevista de ocorrer dia {day} as {hour}"))
+            ret.append((item, f"A temperatura máxima é de {temperature}°C prevista de ocorrer dia {day} as {hour}:00 (UTC)"))
 
         elif (cloud := re.findall("([A-Z]{3})(\d{3})(CB|TCU)*", item)) != []:
             [(cloud_type, cloud_altitude, formation)] = cloud
