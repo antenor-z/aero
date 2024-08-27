@@ -159,7 +159,7 @@ def decode_metar(metar: str) -> dict:
             [(temperature, dew_point)] = temp
             temperature = temperature.replace("M", "-")
             dew_point = dew_point.replace("M", "-")
-            print((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
+            ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
         
         elif (qnh := re.findall("Q(\d{4})", item)) != []:
             [qnh] = qnh
