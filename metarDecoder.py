@@ -93,7 +93,7 @@ def decode_metar(metar: str) -> dict:
 
     ret = []
 
-    ret.append((metar[0], f"METAR válido para dia {day} as {hour}:{minute} (UTC)"))
+    ret.append((metar[0], f"METAR válido para dia {day} as {hour}:{minute:02d} (UTC)"))
 
     metar = metar[1:]
 
