@@ -157,9 +157,11 @@ def decode_metar(metar: str) -> dict:
 
             ret.append((item, f"{cloud_type} em <b>{cloud_altitude}</b> pés de altitude. {extra}"))
 
-        elif (temp := re.findall("(\d+)/(\d+)", item)) != []:
+        elif (temp := re.findall("(M?\d+)/(M?\d+)", item)) != []:
             [(temperature, dew_point)] = temp
-            ret.append((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
+            temperature = temperature.replace("M", "-")
+            dew_point = dew_point.replace("M", "-")
+            print((item, f"Temperatura <b>{temperature}</b>°C e ponto de orvalho <b>{dew_point}</b>°C."))
         
         elif (qnh := re.findall("Q(\d{4})", item)) != []:
             [qnh] = qnh
