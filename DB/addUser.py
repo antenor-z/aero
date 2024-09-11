@@ -14,6 +14,7 @@ def add_user():
 
     isSuper = input("Can create/delete airports (superuser)? (y/N)") in ["y", "Y"]
 
+    CanEditAirportsList = None
     if not isSuper:
         CanEditAirportsList = input("Comma separated values of ICAOs this user can edit: ")
         for icao in CanEditAirportsList.split(","):
