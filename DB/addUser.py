@@ -12,12 +12,14 @@ def add_user():
 
     passwd = input("Password: ")
 
-    CanEditAirportsList = input("Comma separated values of ICAOs this user can edit: ")
-    for icao in CanEditAirportsList.split(","):
-        if not re.match("^[A-Z]{4}$", icao):
-            exit("Invalid ICAO code:", icao)
-
     isSuper = input("Can create/delete airports (superuser)? (y/N)") in ["y", "Y"]
+
+    if not isSuper:
+        CanEditAirportsList = input("Comma separated values of ICAOs this user can edit: ")
+        for icao in CanEditAirportsList.split(","):
+            if not re.match("^[A-Z]{4}$", icao):
+                exit("Invalid ICAO code:", icao)
+
 
     TwoFactorKey = None
     if input("Generate TOTP? (y/N)") in ["y", "Y"]:

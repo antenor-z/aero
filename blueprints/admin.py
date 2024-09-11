@@ -62,7 +62,7 @@ async def restricted_area(request: Request):
 
     allowed_aerodromes_list = []
     for aerodrome_name, ICAO, _ in get_all_names():
-        if ICAO in user.CanEditAirportsList.split(","):
+        if ICAO in user.CanEditAirportsList.split(",") or user.IsSuper:
             allowed_aerodromes_list.append((ICAO, aerodrome_name))
 
     return templates.TemplateResponse("admin/index.html", {
