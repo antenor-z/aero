@@ -59,18 +59,7 @@ def get_logged_user(request: Request, icao_to_check: Optional[str] = None, super
 @admin.get("/area/restrita", response_class=HTMLResponse)
 async def restricted_area(request: Request):
     user: User = get_logged_user(request)
-
-    allowed_aerodromes_list = []
-
-    for aerodrome_name, ICAO, _ in get_all_names():
-        if user.IsSuper or ICAO in user.CanEditAirportsList.split(","):
-            allowed_aerodromes_list.append((ICAO, aerodrome_name))
-
-    return templates.TemplateResponse("admin/index.html", {
-        "request": request,
-        "allowed_aerodromes_list": allowed_aerodromes_list,
-        "canCreate": user.IsSuper
-    })
+    return RedirectResponse("/")
 
 
 @admin.get("/area/restrita/info/{icao}", response_class=HTMLResponse)
@@ -80,10 +69,7 @@ async def restricted_area_airport(request: Request, icao: str):
     if icao != icao_upper:
         return RedirectResponse(f"/info/{icao_upper}")
 
-    try:
-        info = get_info(icao)
-    except Exception:
-        return templates.TemplateResponse("error.html", {"request": request, "error": "Aeroporto não encontrado"}, status_code=400)
+    info = get_info(icao, only_published=False)
 
     try:
         metar = get_metar(icao)
@@ -97,7 +83,8 @@ async def restricted_area_airport(request: Request, icao: str):
         "icao": icao,
         "metar": metar,
         "decoded": decoded,
-        "isLogged": True
+        "isLogged": True,
+        "IsPublished": info["IsPublished"],
     })
 
 
@@ -539,6 +526,8 @@ async def publish_aerodrome_post(request: Request,
                             ):
     get_logged_user(request=request, icao_to_check=icao)
     publish_aerodrome(icao=icao)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}")
+
 
 @admin.get("/area/restrita/{icao}/unpublish", response_class=HTMLResponse)
 async def publish_aerodrome_post(request: Request,
@@ -546,3 +535,4 @@ async def publish_aerodrome_post(request: Request,
                             ):
     get_logged_user(request=request, icao_to_check=icao)
     unpublish_aerodrome(icao=icao)
+    return RedirectResponse(url=f"/area/restrita/info/{icao}")

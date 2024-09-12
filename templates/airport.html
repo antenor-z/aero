@@ -23,9 +23,9 @@
 		<a class="button-small" href="/history/{{icao}}">Histórico</a>
 		{% if isLogged %}
 		{% if IsPublished %}
-			<a class="button-small" href="/area/restrita/{{icao}}/publish">Publicar</a>
-		{% else %}
 			<a class="button-small" href="/area/restrita/{{icao}}/unpublish">Ocultar</a>
+		{% else %}
+			<a class="button-small" href="/area/restrita/{{icao}}/publish">Publicar</a>
 		{% endif %}
 		{% endif %}
 	</subheader>

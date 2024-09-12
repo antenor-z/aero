@@ -27,10 +27,10 @@ def model_to_dict(instance, include_relationships=True):
     return instance_dict
 
 
-def get_info(icao):
+def get_info(icao, only_published=True):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
-        if aerodrome is not None and aerodrome.IsPublished:
+        if aerodrome is not None and (not only_published or aerodrome.IsPublished):
             aerodrome = model_to_dict(aerodrome)
             city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
             aerodrome.pop("CityCode")
@@ -126,12 +126,17 @@ def set_taf(icao: str, taf: str):
         except:
             pass
         
-def get_all_names():
+def get_all_names(only_published=True):
     aerodromes = []
     with Session(engine) as session:
-        for aerodrome in session.query(Aerodrome).filter(Aerodrome.IsPublished == True).all():
-            city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
-            aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
+        if only_published:
+            for aerodrome in session.query(Aerodrome).filter(Aerodrome.IsPublished == True).all():
+                city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
+                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
+        else:
+            for aerodrome in session.query(Aerodrome).all():
+                city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
+                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
 
     return aerodromes
 

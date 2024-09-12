@@ -10,9 +10,17 @@
 		<span style="background-color: #eee; color: #565656; padding: 3px;">AERO</span> INFO
 	</header>
 	<main>
+	<subheader>
 	{% if isLogged %}
-		<a class="button-small" href="/area/restrita/">Area Restrita</a>
+		<form action="/area/restrita/logout" method="POST">
+			<button type="submit" class="button-small" href="/area/restrita/">Logout</button>
+		</form>
 	{% endif %}
+	
+	{% if isSuper %}
+		<a class="button-small" href="/area/restrita/add">Adicionar aeródromo</a>
+	{% endif %}
+	</subheader>
 	<div class="direct-icao">
 		<button id="searchButton"><img src="static/search.svg"></button>
 		<input type="text" id="searchInput" oninput="searchAirports()" placeholder="Pesquisar...">

@@ -35,13 +35,16 @@ app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 
 @app.get("/", response_class=HTMLResponse)
 async def list_all(request: Request):
-    airports = get_all_names()
     try:
-        get_logged_user(request=request,)
-        is_logged = True
+        user = get_logged_user(request=request,)
+        airports = get_all_names(only_published=False)
+        return templates.TemplateResponse("index.html", {"request": request,
+                                                         "airports": airports,
+                                                         "isLogged": True,
+                                                         "isSuper": user.IsSuper})
     except:
-        is_logged = False
-    return templates.TemplateResponse("index.html", {"request": request, "airports": airports, "isLogged": is_logged})
+        airports = get_all_names()
+        return templates.TemplateResponse("index.html", {"request": request, "airports": airports, "isLogged": False})
 
 @app.get("/info/{icao}", response_class=HTMLResponse)
 async def info(request: Request, icao: str):
@@ -49,9 +52,12 @@ async def info(request: Request, icao: str):
     if icao != icao_upper:
         return RedirectResponse(url=f"/info/{icao_upper}")
     
-    # if get_logged_user() is not None:
-    #     return RedirectResponse(url=f"/area/restrita/{icao}")
-    
+    try:
+        get_logged_user(request=request,)
+        return RedirectResponse(url=f"/area/restrita/info/{icao_upper}")
+    except:
+        pass
+
     try:
         info = get_info(icao)
     except Exception:
@@ -65,7 +71,13 @@ async def info(request: Request, icao: str):
 
     history = latest_n_metars_parsed(icao=icao, n=10)
 
-    return templates.TemplateResponse("airport.html", {"request": request, "info": info, "icao": icao, "metar": metar, "decoded": decoded, "history": history})
+    return templates.TemplateResponse("airport.html", 
+                                      {"request": request, 
+                                       "info": info, 
+                                       "icao": icao, 
+                                       "metar": metar, 
+                                       "decoded": decoded, 
+                                       "history": history})
 
 @app.get("/taf/{icao}", response_class=HTMLResponse)
 async def info_taf(request: Request, icao: str):
