@@ -16,6 +16,7 @@ def get_aerodrome(icao: str):
            "StateCode": city.StateCode, 
            "Latitude": aerodrome.Latitude,
            "Longitude": aerodrome.Longitude,
+           "IsPublished": aerodrome.IsPublished,
         }
     
 def get_cities():

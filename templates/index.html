@@ -10,6 +10,9 @@
 		<span style="background-color: #eee; color: #565656; padding: 3px;">AERO</span> INFO
 	</header>
 	<main>
+	{% if isLogged %}
+		<a class="button-small" href="/area/restrita/">Area Restrita</a>
+	{% endif %}
 	<div class="direct-icao">
 		<button id="searchButton"><img src="static/search.svg"></button>
 		<input type="text" id="searchInput" oninput="searchAirports()" placeholder="Pesquisar...">

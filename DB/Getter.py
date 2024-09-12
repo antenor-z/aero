@@ -30,7 +30,7 @@ def model_to_dict(instance, include_relationships=True):
 def get_info(icao):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
-        if aerodrome is not None:
+        if aerodrome is not None and aerodrome.IsPublished:
             aerodrome = model_to_dict(aerodrome)
             city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
             aerodrome.pop("CityCode")
@@ -129,7 +129,7 @@ def set_taf(icao: str, taf: str):
 def get_all_names():
     aerodromes = []
     with Session(engine) as session:
-        for aerodrome in session.query(Aerodrome).all():
+        for aerodrome in session.query(Aerodrome).filter(Aerodrome.IsPublished == True).all():
             city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
             aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
 

@@ -8,7 +8,7 @@ from DB.AdminGetter import get_aerodrome, get_cities, get_comm_types, get_commun
     get_pavement_codes, get_runway, get_user, get_vor, get_states, get_city
 from DB.AdminSetter import create_city, create_comm, create_ils, create_runway, create_vor, del_aerodrome, \
     del_comm, del_ils, del_runway, del_vor, patch_aerodrome, patch_ils, patch_runway, patch_comm, patch_vor, \
-    create_aerodrome
+    create_aerodrome, publish_aerodrome, unpublish_aerodrome
 from DB.Getter import get_all_names, get_info
 from DB.ORM import User
 from ext import get_metar
@@ -351,13 +351,14 @@ async def edit_communication(request: Request,
 @admin.post("/area/restrita/{icao}/communication/{frequency_old}/edit")
 async def edit_communication(request: Request,
                              icao: str,
+                             frequency_old: str,
                              frequency: str = Form(...),
                              comm_type: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
 
     if (exc := patch_comm(icao=icao, 
-                          frequency_old=frequency, 
+                          frequency_old=frequency_old, 
                           frequency=frequency, 
                           comm_type=comm_type)) is not None:
         return exc, status.HTTP_401_UNAUTHORIZED
@@ -531,3 +532,17 @@ async def delete_vor(request: Request,
     get_logged_user(request=request, icao_to_check=icao)
     del_vor(icao, frequency)
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
+
+@admin.get("/area/restrita/{icao}/publish", response_class=HTMLResponse)
+async def publish_aerodrome_post(request: Request,
+                            icao: str,
+                            ):
+    get_logged_user(request=request, icao_to_check=icao)
+    publish_aerodrome(icao=icao)
+
+@admin.get("/area/restrita/{icao}/unpublish", response_class=HTMLResponse)
+async def publish_aerodrome_post(request: Request,
+                            icao: str,
+                            ):
+    get_logged_user(request=request, icao_to_check=icao)
+    unpublish_aerodrome(icao=icao)

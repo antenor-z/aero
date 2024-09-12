@@ -36,7 +36,12 @@ app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 @app.get("/", response_class=HTMLResponse)
 async def list_all(request: Request):
     airports = get_all_names()
-    return templates.TemplateResponse("index.html", {"request": request, "airports": airports})
+    try:
+        get_logged_user(request=request,)
+        is_logged = True
+    except:
+        is_logged = False
+    return templates.TemplateResponse("index.html", {"request": request, "airports": airports, "isLogged": is_logged})
 
 @app.get("/info/{icao}", response_class=HTMLResponse)
 async def info(request: Request, icao: str):

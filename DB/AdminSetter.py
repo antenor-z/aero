@@ -32,6 +32,27 @@ def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude:
             session.rollback()
             return str(e)
         
+def publish_aerodrome(icao):
+    with Session(engine) as session:
+        try:
+            aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
+            aerodrome.IsPublished = True
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
+        
+def unpublish_aerodrome(icao):
+    with Session(engine) as session:
+        try:
+            aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
+            aerodrome.IsPublished = False
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return str(e)
+
+        
 def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: float, city_code: int):
     with Session(engine) as session:
         try:

@@ -32,6 +32,7 @@ class Aerodrome(Base):
     __table_args__ = (
         UniqueConstraint('AerodromeName'),
     )
+    IsPublished = Column(Boolean, default=True)
 
     runways = relationship("Runway", backref="aerodrome")
     ils = relationship("ILS", backref="aerodrome")
