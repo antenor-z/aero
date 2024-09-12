@@ -105,6 +105,7 @@ async def post_login(request: Request, user: str = Form(...), passwd: str = Form
 
 @admin.post("/area/restrita/logout", response_class=HTMLResponse)
 async def logout(request: Request):
+    get_logged_user(request=request)
     request.session.pop("logged_user")
     return RedirectResponse("/area/restrita", status_code=303)
 
