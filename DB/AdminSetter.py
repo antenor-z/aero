@@ -27,10 +27,6 @@ def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude:
                 CityCode=city_code,
             )
             session.add(aerodrome)
-            user = session.get_one(User, user.Name)
-            can_edit_airport_list = user.CanEditAirportsList.split(",")
-            can_edit_airport_list.append(icao)
-            user.CanEditAirportsList = ",".join(can_edit_airport_list)
             session.commit()
         except Exception as e:
             session.rollback()

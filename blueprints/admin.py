@@ -45,7 +45,7 @@ def get_logged_user(request: Request, icao_to_check: Optional[str] = None, super
     if user is None:
         raise NotLoggedException
 
-    if icao_to_check is not None and not user.IsSuper:
+    if not user.IsSuper and icao_to_check is not None:
         authorized_airports = user.CanEditAirportsList.split(",")
         if icao_to_check not in authorized_airports:
             raise NotAllowedToEditAirport
