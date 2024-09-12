@@ -7,7 +7,7 @@
 </head>
 <body>
 	<header>
-		<span style="background-color: #eee; color: #565656; padding: 3px;">AERO</span> INFO
+		<span style="background-color: #eee; color: #565656; padding: 3px; font-weight: 700; border-radius: 10px;">AERO</span> INFO
 	</header>
 	<main>
 	<subheader>
@@ -31,13 +31,18 @@
 			<div class="box-airport-name">
 				{{ airport[2] }}
 			</div>
-			<div class="box-value center-text">{{ airport[1] }} ● {{ airport[0] }}</div>
+			<div class="box-value center-text">{{ airport[1] }} ● {{ airport[0] }}
+				{% if isLogged and airport[3] == false %}
+					(oculto)
+				{% endif %}
+			</div>
 		</div>
 		{% endfor %}
 	</div>
 	<div id="noResultMessage" style="display: none; text-align:center">Sem resultados.</div>
 	<div id="enterMessage" style="display: none; text-align:center">Pressione <span style="font-family: monospace;">&ltEnter&gt</span> para acessar o aeroporto.</div>
 	</main>
+	<div style="text-align: center; color: #aaa">v. {{ VERSION }}</div>
 	
 	<script>
 		window.onload = function() {

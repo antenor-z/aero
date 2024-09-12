@@ -13,6 +13,7 @@ from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from starlette.middleware.sessions import SessionMiddleware
+from version import VERSION
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -41,10 +42,14 @@ async def list_all(request: Request):
         return templates.TemplateResponse("index.html", {"request": request,
                                                          "airports": airports,
                                                          "isLogged": True,
-                                                         "isSuper": user.IsSuper})
+                                                         "isSuper": user.IsSuper,
+                                                         "VERSION": VERSION})
     except:
         airports = get_all_names()
-        return templates.TemplateResponse("index.html", {"request": request, "airports": airports, "isLogged": False})
+        return templates.TemplateResponse("index.html", {"request": request,
+                                                         "airports": airports,
+                                                         "isLogged": False,
+                                                         "VERSION": VERSION})
 
 @app.get("/info/{icao}", response_class=HTMLResponse)
 async def info(request: Request, icao: str):

@@ -132,11 +132,11 @@ def get_all_names(only_published=True):
         if only_published:
             for aerodrome in session.query(Aerodrome).filter(Aerodrome.IsPublished == True).all():
                 city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
-                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
+                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0], aerodrome.IsPublished))
         else:
             for aerodrome in session.query(Aerodrome).all():
                 city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
-                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0]))
+                aerodromes.append((aerodrome.AerodromeName, aerodrome.ICAO, city[0], aerodrome.IsPublished))
 
     return aerodromes
 
