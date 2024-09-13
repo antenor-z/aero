@@ -144,7 +144,7 @@ async def add_aerodrome_post(request: Request,
 
     city = get_city(state_code=state_code, city_name=city_name.replace("+", " "))
     if not city:
-        res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
+        res = get_city_and_code_from_IGBE(city=city_name, state_code=int(state_code))
         if res is None:
             return HTMLResponse("Cidade inválida", status_code=status.HTTP_400_BAD_REQUEST)
         city_code, city_name = res
