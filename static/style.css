@@ -72,10 +72,10 @@ header {
   padding: 10px;
 }
 .box-outlined {
-  border: white solid 1px;
+  border: gray solid 1px;
 }
 .box-onhover:hover {
-  background-color: #aaa;
+  background-color: #6f6f6f;
   cursor: pointer;
 }
 .box-gray {
