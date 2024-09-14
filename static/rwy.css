@@ -3,6 +3,7 @@
     font-weight: bold;
     padding: 6px;
     white-space: nowrap;
+    border-radius: 3px;
   }
   .rwy-in-use {
     border-top: white solid 3px;

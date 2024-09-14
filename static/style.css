@@ -20,6 +20,7 @@ header {
   padding: 20px 0;
   background-color: rgb(88, 88, 88);
   background-image: url('/static/BG_noise.png');
+  background-attachment: fixed;
 }
 .first-line {
   display: flex;
@@ -72,7 +73,7 @@ header {
   padding: 10px;
 }
 .box-outlined {
-  border: gray solid 1px;
+  border: gray solid 2px;
 }
 .box-onhover:hover {
   background-color: #6f6f6f;
