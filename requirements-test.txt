@@ -1,0 +1,13 @@
+fastapi[standard]
+pymysql
+SQLAlchemy
+requests
+pydantic
+apscheduler
+pyotp
+qrcode
+bcrypt
+Flask-Minify
+matplotlib
+python-multipart
+locust
