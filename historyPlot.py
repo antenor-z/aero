@@ -20,7 +20,7 @@ def plot_metar_data(icao: str,
                     label_color2: str
                     ):
 
-    with plt.rc_context({'axes.edgecolor':'white', 'xtick.color':'white', 'ytick.color':'green', 'figure.facecolor':'#333'}):    
+    with plt.rc_context({'axes.edgecolor':'white', 'xtick.color':'white', 'ytick.color':'green', 'figure.facecolor':'#33333b'}):    
         timestamps = [(data["timestamp"] - timedelta(hours=3)).strftime("%H:%M") for data in metar_data if data]
         data1 = [data[data_name1] or np.nan for data in metar_data if data]
         data2 = [data[data_name2] or np.nan for data in metar_data if data]

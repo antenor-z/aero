@@ -2,7 +2,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #333;
+  background-color: #33333b;
   color: #eee;
   font-family: sans-serif;
 }
@@ -128,19 +128,19 @@ table {
 }
 
 td {
-  border: 10px solid #333;
+  border: 10px solid #33333b;
   padding: 0;
 }
 
 .metarItem {
   font-family: monospace;
-  color: #333;
+  color: #33333b;
   padding: 5px;
   background-color: #bbb;
 }
 
 .metarSubItem {
-  border-left: #333 solid 30px;
+  border-left: #33333b solid 30px;
 }
 
 .tafGroupHeader {
