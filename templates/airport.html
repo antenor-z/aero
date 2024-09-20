@@ -10,7 +10,7 @@
 </head>
 <body>
 	<header>
-		<span style="background-color: #eee; color: #565656; padding: 3px; font-weight: 700; border-radius: 10px;">{{ icao }}</span> {{ info.AerodromeName }}
+		<span style="color: #eee; padding: 3px; font-weight: 700; border-radius: 10px;">{{ icao }}</span> // {{ info.AerodromeName }}
 		{% if isLogged %}
 			<a href="/area/restrita/{{ icao }}/edit" class="button-admin">Editar</a>
 		{% endif %}
@@ -21,6 +21,12 @@
 		<a class="button-small" href="javascript:void(0);" onclick="copy('{{metar}}')">Copiar METAR</a>
 		<a class="button-small" href="/taf/{{icao}}">Previsão TAF</a>
 		<a class="button-small" href="/history/{{icao}}">Histórico</a>
+		<a class="button-small" id="ellipsis-btn" href="javascript:void(0);" onclick="toggleMenu(event)">...</a>
+		<div class="menu-ellipsis" id="menu" style="display: none; position: absolute;">
+			<a class="button-small" href="https://conv.a4barros.com">Conversor de unidades</a>
+			<a class="button-small" href="/descent">Cálculo de descida</a>
+			<a class="button-small" href="/wind/">Cálculo de componentes de vento</a>
+		</div>
 		{% if isLogged %}
 		{% if IsPublished %}
 			<a class="button-small" href="/area/restrita/{{icao}}/unpublish">Ocultar</a>
@@ -135,6 +141,30 @@
 	</table>
 	</main>
 	<script src="/static/copy.js"></script>
+	<script>
+		function toggleMenu(event) {
+    const menu = document.getElementById('menu');
+    
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+        menu.style.left = `${event.pageX}px`;
+        menu.style.top = `${event.pageY}px`;
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+// Hide menu when clicking outside of it
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('menu');
+    const ellipsisBtn = document.getElementById('ellipsis-btn');
+    
+    if (!menu.contains(event.target) && !ellipsisBtn.contains(event.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+	</script>
 </body>
 </html>
 

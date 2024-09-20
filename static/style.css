@@ -73,10 +73,10 @@ header {
   padding: 10px;
 }
 .box-outlined {
-  border: gray solid 2px;
+  border: #ffffff43 solid 2px;
 }
 .box-onhover:hover {
-  background-color: #6f6f6f;
+  background-color: #5f5f6f;
   cursor: pointer;
 }
 .box-gray {
@@ -185,14 +185,15 @@ td {
   width: 40px;
 }
 .button-small {
-  background-color: rgb(0, 82, 136); 
-  border: 1px solid white ;
+  background-color: rgba(0, 82, 136, 0.40);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 3px;
   a, a:visited {color: white; text-decoration: none; }
   font-family: sans-serif;
   margin-right: 5px;
   color: white;
   font-size: 16px;
+  font-stretch: condensed;
 }
 .button-small:hover {
   background-color: rgb(0, 100, 167); 
@@ -201,10 +202,21 @@ subheader {
   display: block;
   margin: 10px 0;
   * {
-    margin: 10px 0;
+    margin: 5px 0;
     display: inline flow-root;
   }
 }
+.menu-ellipsis {
+  background: #003253;
+  display: grid;
+  border-radius: 5px;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  width: 20%;
+  padding: 10px;
+  z-index: 1000;
+}
+
 
 .scroll-container {
   overflow: auto;
