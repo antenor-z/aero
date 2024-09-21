@@ -38,6 +38,9 @@ input:focus {
     margin-bottom: 1px;
 }
 
+.outer-container {
+  display: flex; height: unset; justify-content: center; align-items: center; text-align: center;
+}
 .container {
   display: block;
 }
@@ -45,5 +48,8 @@ input:focus {
 @media screen and (min-width: 1240px) {
     .container {
       display: flex;
+    }
+    .outer-container {
+      height: 100vh;
     }
 }
