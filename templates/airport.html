@@ -62,7 +62,6 @@
 			<a href="/area/restrita/{{icao}}/runway/add" class="button-admin">Adicionar Pista</a>
 		{% endif %}
 	</div>
-	<span>APENAS PARA USO EM SIMULADOR</span>
 	<div class="line">
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
@@ -165,6 +164,7 @@ document.addEventListener('click', function(event) {
 });
 
 	</script>
+	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
 </body>
 </html>
 

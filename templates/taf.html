@@ -25,8 +25,6 @@
 		<a class="button-small" href="javascript:void(0);" onclick="copy(`{{taf}}`)">Copiar TAF</a>
 	</subheader>
 	
-	<p>APENAS PARA USO EM SIMULADOR</p>
-
 	<table class="padded-table">
 		{% for block in decoded %}
 			{% if block[0] is string %}
@@ -72,5 +70,6 @@
 	    }
 	  }
 	</script>
+	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
 </body>
 </html>

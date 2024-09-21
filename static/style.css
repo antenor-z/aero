@@ -229,3 +229,7 @@ subheader {
   min-width: 900px;
   width: 100%;
 }
+
+.sim-only {
+  position: fixed; bottom: 2px; left: 2px; background-color: black;
+}
