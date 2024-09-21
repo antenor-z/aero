@@ -146,8 +146,8 @@
     const menu = document.getElementById('menu');
     
     if (menu.style.display === "none") {
-        menu.style.display = "block";
-        menu.style.left = `${event.pageX}px`;
+        menu.style.display = "grid";
+        menu.style.left = `${event.pageX-200}px`;
         menu.style.top = `${event.pageY}px`;
     } else {
         menu.style.display = "none";

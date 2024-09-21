@@ -212,7 +212,7 @@ subheader {
   border-radius: 5px;
   grid-template-columns: 1fr;
   gap: 5px;
-  width: 20%;
+  width: 200px;
   padding: 10px;
   z-index: 1000;
 }
