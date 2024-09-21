@@ -4,7 +4,12 @@ function calculateWind() {
   const windSpeed = document.getElementById("wind-speed").value
   calculateWindReq(windDir, windSpeed, runwayHead)
   .then(result => {
-    console.log(result)
+    if (result === "erro") {
+      document.getElementById("label-cross").textContent = "Erro"
+      document.getElementById("label-head").textContent = "Erro"
+      document.getElementById("runway-number").textContent = " X"
+      return
+    }
 
     let head = result.head * 10
     let cross = result.cross * 10
@@ -38,7 +43,13 @@ function calculateWind() {
     document.getElementById("vector").setAttribute('transform', 'rotate(' + result.angle + ' 0 0)')
     document.getElementById("vector").setAttribute("height", Math.abs(speed))
 
-    document.getElementById("runway-number").textContent = Math.round(runwayHead / 10)
+    let rwy =  Math.round(runwayHead / 10)
+    if (rwy < 10) {
+      document.getElementById("runway-number").textContent = "0" + rwy;
+    }
+    else {
+      document.getElementById("runway-number").textContent = rwy;
+    }
     
 
   })
@@ -53,6 +64,6 @@ function calculateWindReq(wind_dir, wind_speed, runway_head) {
     })
     .catch(error => {
       console.error('Error fetching data:', error)
-      return null
+      return "erro"
     });
 }

@@ -10,7 +10,7 @@
   <div style="display: flex; height: 100vh; justify-content: center; align-items: center; text-align: center;">
     <div>
         <h1>CALCULAR VENTO</h1>
-        <div style="display: flex;">
+        <div class="container">
           <div style="display: block;">
               <svg id="w" width="350" height="350" xmlns="http://www.w3.org/2000/svg" class="m20">
                   <rect width="200" height="300" x="70" y="0" fill="black" transform="rotate(0 0 0)"/>
@@ -24,26 +24,27 @@
                       <rect width="3" height="0" x="0" y="0" fill="#999" transform="rotate(45 0 0)" id="vector"/>
                       <rect width="3" height="0" x="0" y="0" fill="#b2ff55" transform="rotate(90 0 0)" id="vector-cross"/>
                   </g> 
-                  <text x="300" y="328" font-size="14px" fill="#ff9c55" id="label-head" text-anchor="end">Vento de proa: 0kt</text>
-                  <text x="300" y="345" font-size="14px" fill="#b2ff55" id="label-cross" text-anchor="end">Vento da esquerda: 0kt</text>
+                  <text x="300" y="328" font-size="14px" fill="#ff9c55" id="label-head" text-anchor="end"></text>
+                  <text x="300" y="345" font-size="14px" fill="#b2ff55" id="label-cross" text-anchor="end"></text>
               </svg>
           </div>
 
           <div style="display: grid;">
               <label class="m20 b1" for="runway-head">Direção da Pista (graus): </label>
-              <input id="runway-head" type="text" value="100"/>
+              <input id="runway-head" type="text" value="90"/>
               
               <label class="m20 b1" for="wind-dir">Direção do vento (graus): </label>
-              <input id="wind-dir" type="text" value="100"/>
+              <input id="wind-dir" type="text" value="90"/>
               
               <label class="m20 b1" for="wind-speed">Velocidade do vento (nós): </label>
-              <input id="wind-speed" type="text" value="6"/>
+              <input id="wind-speed" type="text" value="0"/>
               
               <button class="m20" onclick="calculateWind()" type="button">Calcular</button>
           </div>
         </div>
     </div>
-</div>
+  </div>
+  APENAS PARA USO EM SIMULADOR
 
   <script src="/static/wind.js">
   </script>
