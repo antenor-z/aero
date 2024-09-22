@@ -192,8 +192,7 @@ td {
   font-family: sans-serif;
   margin-right: 5px;
   color: white;
-  font-size: 16px;
-  font-stretch: condensed;
+  font-size: 15px;
 }
 .button-small:hover {
   background-color: rgb(0, 100, 167); 
@@ -232,4 +231,8 @@ subheader {
 
 .sim-only {
   position: fixed; bottom: 2px; left: 2px; background-color: black;
+}
+
+* {
+  overflow-x: hidden;
 }
