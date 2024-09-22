@@ -17,8 +17,8 @@ main {
 }
 header {
   font-size: 48px;
-  padding: 20px 0;
-  background-color: rgb(88, 88, 88);
+  padding: 20px 10px;
+  background-color: #545762;
   background-image: url('/static/BG_noise.png');
   background-attachment: fixed;
 }
@@ -233,6 +233,3 @@ subheader {
   position: fixed; bottom: 2px; left: 2px; background-color: black;
 }
 
-* {
-  overflow-x: hidden;
-}

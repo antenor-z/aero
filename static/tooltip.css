@@ -8,7 +8,7 @@
   
 .tooltip .tooltip-text {
   visibility: hidden;
-  width: 200px;
+  width: 180px;
   background-color:rgb(37, 37, 37);
   font-size: 16px;
   font-style: normal;
@@ -22,7 +22,7 @@
   z-index: 1;
   bottom: 125%;
   left: 50%;
-  transform: translateX(-50%), translateY(-10%);
+  transform: translate(-150px, 90px);
   opacity: 0;
   transition: opacity 0.3s, visibility 0.3s;
 }
@@ -33,6 +33,6 @@
 }
 
 .tooltip-left {
-  transform: translateX(-100%) !important;
+  transform: translateX(-90%) !important;
 }
 
