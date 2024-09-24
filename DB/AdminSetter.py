@@ -14,7 +14,7 @@ def create_city(city_code, city_name, state_code):
             return city
         except Exception as e:
             session.rollback()
-            print(str(e))
+            raise ValueError("Erro ao criar a cidade, verifique se o nome correto foi digitado.", e)
 
 def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: float, city_code: int, user: User):
     with Session(engine) as session:
@@ -30,7 +30,7 @@ def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude:
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao criar o aeródromo. Provavelmente existe um aeródromo com mesmo ICAO", e)
         
 def publish_aerodrome(icao):
     with Session(engine) as session:
@@ -40,7 +40,7 @@ def publish_aerodrome(icao):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao publicar o aeródromo", e)
         
 def unpublish_aerodrome(icao):
     with Session(engine) as session:
@@ -50,7 +50,7 @@ def unpublish_aerodrome(icao):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao ocultar o aeróromo", e)
 
         
 def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: float, city_code: int):
@@ -64,7 +64,7 @@ def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: 
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao editar o aeródromo.", e)
   
 def del_aerodrome(icao: str):
     with Session(engine) as session:
@@ -74,7 +74,7 @@ def del_aerodrome(icao: str):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao apagar o aeródromo", e)
 
 def create_runway(icao: str, head1: str, head2: str, runway_length: int, runway_width: int, pavement_code: str):
     with Session(engine) as session:
@@ -84,7 +84,7 @@ def create_runway(icao: str, head1: str, head2: str, runway_length: int, runway_
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao inserir a pista. Provavelmente uma pista com mesma cabeceira já existe.", e)
 
 def patch_runway(icao: str, head1_old: str, head1: str, head2: str, runway_length: int, runway_width: int, pavement_code: str):
     with Session(engine) as session:
@@ -98,7 +98,7 @@ def patch_runway(icao: str, head1_old: str, head1: str, head2: str, runway_lengt
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao editar a pista.", e)
 
 def del_runway(icao: str, runway_head: str):
     with Session(engine) as session:
@@ -108,7 +108,7 @@ def del_runway(icao: str, runway_head: str):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao apagar a pista.", e)
 
 def create_comm(icao: str, frequency: str, comm_type: str):
     with Session(engine) as session:
@@ -118,7 +118,7 @@ def create_comm(icao: str, frequency: str, comm_type: str):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao inserir frequência. Veja se a frequência não está sendo usada no mesmo aeródromo.", e)
 
 def patch_comm(icao: str, frequency_old, frequency, comm_type):
     with Session(engine) as session:
@@ -131,7 +131,7 @@ def patch_comm(icao: str, frequency_old, frequency, comm_type):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao editar frequência. Veja se a frequência não está sendo usada no mesmo aeródromo.", e)
   
 def del_comm(icao: str, frequency):
     with Session(engine) as session:
@@ -141,7 +141,7 @@ def del_comm(icao: str, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao apagar frequência.", e)
 
 def create_ils(icao, ident, runway_head, frequency, category, crs, minimum):
     with Session(engine) as session:
@@ -157,7 +157,7 @@ def create_ils(icao, ident, runway_head, frequency, category, crs, minimum):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao adicionar o ILS. Verifique se já não existe um com mesmo IDENT e frequência", e)
 
 def patch_ils(icao, frequency_old, ident, runway_head, frequency, category, crs, minimum):
     with Session(engine) as session:
@@ -172,7 +172,7 @@ def patch_ils(icao, frequency_old, ident, runway_head, frequency, category, crs,
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao editar o ILS. Verifique se já não existe um com mesmo IDENT e frequência", e)
         
 def del_ils(icao: str, frequency):
     with Session(engine) as session:
@@ -182,7 +182,7 @@ def del_ils(icao: str, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise ValueError("Erro ao apagar o ILS.", e)
         
 def create_vor(icao, ident, frequency):
     with Session(engine) as session:
@@ -194,7 +194,7 @@ def create_vor(icao, ident, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)  
+            raise e  
         
 def patch_vor(icao, frequency_old, ident, frequency):
     with Session(engine) as session:
@@ -205,7 +205,7 @@ def patch_vor(icao, frequency_old, ident, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise e
 
 def del_vor(icao: str, frequency):
     with Session(engine) as session:
@@ -215,4 +215,4 @@ def del_vor(icao: str, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            return str(e)
+            raise e

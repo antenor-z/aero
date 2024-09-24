@@ -10,10 +10,10 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="head1">Cabeçeira 1: </label>
-		<input required pattern="[0-9]{2}[RLC]?" type="text" name="head1" id="head1" value="{{runway.Head1}}">
+		<input required pattern="\b\d{2}[LRC]?\b" type="text" name="head1" id="head1" value="{{runway.Head1}}">
 
 		<label for="head2">Cabeçeira 2: </label>
-		<input required pattern="[0-9]{2}[RLC]?" type="text" name="head2" id="head2" value="{{runway.Head2}}">
+		<input required pattern="\b\d{2}[LRC]?\b" type="text" name="head2" id="head2" value="{{runway.Head2}}">
 
 		<label for="RunwayLength">Comprimento: </label>
 		<input required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">

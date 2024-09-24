@@ -146,6 +146,17 @@ async def bad_request(request: Request, exc: HTTPException):
 async def unauthorized(request: Request, exc: HTTPException):
     return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 401 | {exc.detail}"}, status_code=401)
 
+@app.exception_handler(ValueError)
+async def value_error(request: Request, exc: ValueError):
+    if len(exc.args) == 2:
+        return templates.TemplateResponse("error.html", {"request": request,
+                                                         "error": f"Erro 422 | {exc.args[0]}",
+                                                         "details": [exc.args[1]]}, status_code=422)
+    else:
+        return templates.TemplateResponse("error.html", {"request": request,
+                                                         "error": f"Erro 422 | {exc}"})
+
+
 @app.exception_handler(RequestValidationError)
 async def unprocesable(request: Request, exc: RequestValidationError):
     details = []

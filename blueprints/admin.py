@@ -146,16 +146,16 @@ async def add_aerodrome_post(request: Request,
     if not city:
         res = get_city_and_code_from_IGBE(city=city_name, state_code=int(state_code))
         if res is None:
-            return HTMLResponse("Cidade inválida", status_code=status.HTTP_400_BAD_REQUEST)
+            raise ValueError("Cidade inválida")
         city_code, city_name = res
         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
     create_aerodrome(icao=icao,
-                     aerodrome_name=aerodrome_name,
-                     latitude=latitude,
-                     longitude=longitude,
-                     city_code=city.CityCode,
-                     user=get_logged_user(request))
+                    aerodrome_name=aerodrome_name,
+                    latitude=latitude,
+                    longitude=longitude,
+                    city_code=city.CityCode,
+                    user=get_logged_user(request))
 
     return RedirectResponse(f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -186,7 +186,7 @@ async def edit_aerodrome_post(request: Request,
     if city is None:
         res = get_city_and_code_from_IGBE(city=city_name, state_code=state_code)
         if res is None:
-            return "Cidade inválida"
+            raise ValueError("Cidade inválida")
         city_code, city_name = res
         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
@@ -224,22 +224,22 @@ async def add_runway(request: Request, icao: str):
 @admin.post("/area/restrita/{icao}/runway/add")
 async def add_runway(request: Request,
                      icao: str,
-                     head1: str = Form(pattern="[0-9]{2}[RLC]"),
-                     head2: str = Form(pattern="[0-9]{2}[RLC]"),
+                     head1: str = Form(pattern="\d{2}[LRC]?"),
+                     head2: str = Form(pattern="\d{2}[LRC]?"),
                      runway_length: int = Form(...),
                      runway_width: int = Form(...),
                      pavement_code: str = Form(...)):
 
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := create_runway(icao=icao, 
-                             head1=head1, 
-                             head2=head2, 
-                             runway_length=runway_length, 
-                             runway_width=runway_width, 
-                             pavement_code=pavement_code)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
-
+    create_runway(
+        icao=icao, 
+        head1=head1, 
+        head2=head2, 
+        runway_length=runway_length, 
+        runway_width=runway_width, 
+        pavement_code=pavement_code)
+       
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -262,22 +262,22 @@ async def edit_runway(request: Request, icao: str, runwayHead: str):
 async def edit_runway_post(request: Request,
                            icao: str,
                            runway_head: str,
-                           head1: str = Form(pattern="[0-9]{2}[RLC]*"),
-                           head2: str = Form(pattern="[0-9]{2}[RLC]*"),
+                           head1: str = Form(pattern="\d{2}[LRC]?"),
+                           head2: str = Form(pattern="\d{2}[LRC]?"),
                            runway_length: int = Form(...),
                            runway_width: int = Form(...),
                            pavement_code: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := patch_runway(icao=icao, 
-                            head1_old=runway_head, 
-                            head1=head1, 
-                            head2=head2, 
-                            runway_length=runway_length, 
-                            runway_width=runway_width, 
-                            pavement_code=pavement_code)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    patch_runway(
+        icao=icao, 
+        head1_old=runway_head, 
+        head1=head1, 
+        head2=head2, 
+        runway_length=runway_length, 
+        runway_width=runway_width, 
+        pavement_code=pavement_code)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -313,8 +313,7 @@ async def add_communication_post(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := create_comm(icao=icao, frequency=frequency, comm_type=comm_type)) is not None:
-        return exc, status.HTTP_400_BAD_REQUEST
+    create_comm(icao=icao, frequency=frequency, comm_type=comm_type)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -345,11 +344,10 @@ async def edit_communication(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := patch_comm(icao=icao, 
-                          frequency_old=frequency_old, 
-                          frequency=frequency, 
-                          comm_type=comm_type)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    patch_comm(icao=icao, 
+               frequency_old=frequency_old, 
+               frequency=frequency, 
+               comm_type=comm_type)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -378,21 +376,21 @@ async def add_ils(request: Request, icao: str):
 async def add_ils_post(request: Request,
                        icao: str,
                        ident: str = Form(pattern="[A-Z]{3}"),
-                       runway_head: str = Form(pattern="[0-9]{2}[RLC]"),
+                       runway_head: str = Form(pattern="\d{2}[LRC]?"),
                        frequency: int = Form(...),
                        category: str = Form(...),
                        crs: int = Form(...),
                        minimum: int = Form(...)):
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := create_ils(icao=icao, 
-                          ident=ident, 
-                          runway_head=runway_head, 
-                          frequency=frequency, 
-                          category=category, 
-                          crs=crs, 
-                          minimum=minimum)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    create_ils(
+        icao=icao, 
+        ident=ident, 
+        runway_head=runway_head, 
+        frequency=frequency, 
+        category=category, 
+        crs=crs, 
+        minimum=minimum)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -419,7 +417,7 @@ async def edit_ils(request: Request,
                    icao: str,
                    frequency_old: int,
                    ident: str = Form(pattern="[A-Z]{3}"),
-                   runway_head: str = Form(pattern="[0-9]{2}[RLC]"),
+                   runway_head: str = Form(pattern="\d{2}[LRC]?"),
                    frequency: int = Form(...),
                    category: str = Form(...),
                    crs: int = Form(...),
@@ -427,15 +425,14 @@ async def edit_ils(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := patch_ils(icao=icao, 
-                         frequency_old=frequency_old, 
-                         ident=ident, 
-                         runway_head=runway_head, 
-                         frequency=frequency, 
-                         category=category, 
-                         crs=crs, 
-                         minimum=minimum)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    patch_ils(icao=icao, 
+              frequency_old=frequency_old, 
+              ident=ident, 
+              runway_head=runway_head, 
+              frequency=frequency, 
+              category=category, 
+              crs=crs, 
+              minimum=minimum)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -472,10 +469,10 @@ async def add_vor(request: Request,
 
     get_logged_user(request=request, icao_to_check=icao)
 
-    if (exc := create_vor(icao=icao, 
-                            ident=ident, 
-                            frequency=frequency)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    create_vor(
+        icao=icao, 
+        ident=ident, 
+        frequency=frequency)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -504,11 +501,11 @@ async def edit_vor_post(request: Request,
     get_logged_user(request=request, icao_to_check=icao)
 
 
-    if (exc := patch_vor(icao=icao, 
-                         frequency_old=frequency_old, 
-                         ident=ident, 
-                         frequency=frequency)) is not None:
-        return exc, status.HTTP_401_UNAUTHORIZED
+    patch_vor(
+        icao=icao, 
+        frequency_old=frequency_old, 
+        ident=ident, 
+        frequency=frequency)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
