@@ -224,10 +224,10 @@ async def add_runway(request: Request, icao: str):
 @admin.post("/area/restrita/{icao}/runway/add")
 async def add_runway(request: Request,
                      icao: str,
-                     head1: str = Form(...),
-                     head2: str = Form(...),
-                     runway_length: float = Form(...),
-                     runway_width: str = Form(...),
+                     head1: str = Form(pattern="[0-9]{2}[RLC]"),
+                     head2: str = Form(pattern="[0-9]{2}[RLC]"),
+                     runway_length: int = Form(...),
+                     runway_width: int = Form(...),
                      pavement_code: str = Form(...)):
 
     get_logged_user(request=request, icao_to_check=icao)
@@ -262,10 +262,10 @@ async def edit_runway(request: Request, icao: str, runwayHead: str):
 async def edit_runway_post(request: Request,
                            icao: str,
                            runway_head: str,
-                           head1: str = Form(...),
-                           head2: str = Form(...),
-                           runway_length: float = Form(...),
-                           runway_width: str = Form(...),
+                           head1: str = Form(pattern="[0-9]{2}[RLC]*"),
+                           head2: str = Form(pattern="[0-9]{2}[RLC]*"),
+                           runway_length: int = Form(...),
+                           runway_width: int = Form(...),
                            pavement_code: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
@@ -308,7 +308,7 @@ async def add_communication(request: Request, icao: str):
 @admin.post("/area/restrita/{icao}/communication/add")
 async def add_communication_post(request: Request,
                                  icao: str,
-                                 frequency: str = Form(...),
+                                 frequency: int = Form(...),
                                  comm_type: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
@@ -339,8 +339,8 @@ async def edit_communication(request: Request,
 @admin.post("/area/restrita/{icao}/communication/{frequency_old}/edit")
 async def edit_communication(request: Request,
                              icao: str,
-                             frequency_old: str,
-                             frequency: str = Form(...),
+                             frequency_old: int,
+                             frequency: int = Form(...),
                              comm_type: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
@@ -377,12 +377,12 @@ async def add_ils(request: Request, icao: str):
 @admin.post("/area/restrita/{icao}/ils/add")
 async def add_ils_post(request: Request,
                        icao: str,
-                       ident: str = Form(...),
-                       runway_head: str = Form(...),
-                       frequency: float = Form(...),
+                       ident: str = Form(pattern="[A-Z]{3}"),
+                       runway_head: str = Form(pattern="[0-9]{2}[RLC]"),
+                       frequency: int = Form(...),
                        category: str = Form(...),
-                       crs: str = Form(...),
-                       minimum: str = Form(...)):
+                       crs: int = Form(...),
+                       minimum: int = Form(...)):
     get_logged_user(request=request, icao_to_check=icao)
 
     if (exc := create_ils(icao=icao, 
@@ -418,12 +418,12 @@ async def edit_ils(request: Request,
 async def edit_ils(request: Request,
                    icao: str,
                    frequency_old: int,
-                   ident: str = Form(...),
-                   runway_head: str = Form(...),
-                   frequency: float = Form(...),
+                   ident: str = Form(pattern="[A-Z]{3}"),
+                   runway_head: str = Form(pattern="[0-9]{2}[RLC]"),
+                   frequency: int = Form(...),
                    category: str = Form(...),
-                   crs: str = Form(...),
-                   minimum: str = Form(...)):
+                   crs: int = Form(...),
+                   minimum: int = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
 
@@ -467,8 +467,8 @@ async def add_vor(request: Request,
 @admin.post("/area/restrita/{icao}/vor/add")
 async def add_vor(request: Request,
                   icao: str,
-                  ident: str = Form(...),
-                  frequency: str = Form(...)): 
+                  ident: str = Form(pattern="[A-Z]{3}"),
+                  frequency: int = Form(...)): 
 
     get_logged_user(request=request, icao_to_check=icao)
 
@@ -499,8 +499,8 @@ async def edit_vor(request: Request,
 async def edit_vor_post(request: Request,
                         icao: str,
                         frequency_old: int,
-                        ident: str = Form(...),
-                        frequency: str = Form(...)):
+                        ident: str = Form(pattern="[A-Z]{3}"),
+                        frequency: int = Form(...)):
     get_logged_user(request=request, icao_to_check=icao)
 
 
