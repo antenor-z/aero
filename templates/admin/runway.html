@@ -10,16 +10,16 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="head1">Cabeçeira 1: </label>
-		<input type="text" name="head1" id="head1" value="{{runway.Head1}}">
+		<input required pattern="[0-9]{2}[RLC]?" type="text" name="head1" id="head1" value="{{runway.Head1}}">
 
 		<label for="head2">Cabeçeira 2: </label>
-		<input type="text" name="head2" id="head2" value="{{runway.Head2}}">
+		<input required pattern="[0-9]{2}[RLC]?" type="text" name="head2" id="head2" value="{{runway.Head2}}">
 
 		<label for="RunwayLength">Comprimento: </label>
-		<input type="text" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
+		<input required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
 
 		<label for="RunwayWidth">Largura: </label>
-		<input type="text" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
+		<input required type="number" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
 
 		<label for="PavementCode">Tipo do pavimento: </label>
 		<select name="pavement_code" id="PavementCode">

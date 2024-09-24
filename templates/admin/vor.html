@@ -10,10 +10,10 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident: </label>
-		<input type="text" name="ident" id="Ident" value="{{vor.Ident}}">
+		<input required pattern="[A-Z]{4}" name="ident" id="Ident" value="{{vor.Ident}}">
 
-		<label for="Frequency">Frequência: </label>
-		<input type="text" name="frequency" id="Frequency" value="{{vor.Frequency}}">
+		<label for="Frequency">Frequência (sem vírgula): </label>
+		<input required type="number" name="frequency" id="Frequency" value="{{vor.Frequency}}">
 
 		<button type="submit">OK</button>
 	</form>

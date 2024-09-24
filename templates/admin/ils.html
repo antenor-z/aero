@@ -15,7 +15,7 @@
 		<label for="RunwayHead">Cabeçeira: </label>
 		<input type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
 
-		<label for="Frequency">Frequência: </label>
+		<label for="Frequency">Frequência (sem vírgula): </label>
 		<input type="text" name="frequency" id="Frequency" value="{{ils.Frequency}}">
 
 		<label for="Category">Categoria: </label>
@@ -29,10 +29,10 @@
 		{% endfor %}
 		</select>
 
-		<label for="CRS">Curso final: </label>
+		<label for="CRS">Curso final (graus): </label>
 		<input type="text" name="crs" id="CRS" value="{{ils.CRS}}">
 
-		<label for="Minimum">Minimum: </label>
+		<label for="Minimum">Minimum (metros): </label>
 		<input type="text" name="minimum" id="Minimum" value="{{ils.Minimum}}">
 
 		<button type="submit">OK</button>
