@@ -15,6 +15,7 @@ from ext import get_metar
 from metarDecoder import decode_metar
 from security import password
 from util import get_city_and_code_from_IGBE
+from validation import validate_runway
 
 admin = APIRouter()
 
@@ -231,6 +232,7 @@ async def add_runway(request: Request,
                      pavement_code: str = Form(...)):
 
     get_logged_user(request=request, icao_to_check=icao)
+    validate_runway(head1, head2, runway_length, runway_width)
 
     create_runway(
         icao=icao, 
@@ -269,6 +271,7 @@ async def edit_runway_post(request: Request,
                            pavement_code: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
+    validate_runway(head1, head2, runway_length, runway_width)
 
     patch_runway(
         icao=icao, 
