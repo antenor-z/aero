@@ -69,6 +69,30 @@ def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: 
 def del_aerodrome(icao: str):
     with Session(engine) as session:
         try:
+            runways = session.query(Runway).filter(Runway.ICAO == icao).all()
+            for runway in runways:
+                session.delete(runway)
+
+            communications = session.query(Communication).filter(Communication.ICAO == icao).all()
+            for communication in communications:
+                session.delete(communication)
+
+            ils_systems = session.query(ILS).filter(ILS.ICAO == icao).all()
+            for ils in ils_systems:
+                session.delete(ils)
+
+            vors = session.query(VOR).filter(VOR.ICAO == icao).all()
+            for vor in vors:
+                session.delete(vor)
+
+            metars = session.query(METAR).filter(METAR.ICAO == icao).all()
+            for metar in metars:
+                metar.delete(vor)
+
+            tafs = session.query(TAF).filter(TAF.ICAO == icao).all()
+            for taf in tafs:
+                taf.delete(vor)
+
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
             session.delete(aerodrome)
             session.commit()
