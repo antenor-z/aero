@@ -311,7 +311,7 @@ async def add_communication(request: Request, icao: str):
 @admin.post("/area/restrita/{icao}/communication/add")
 async def add_communication_post(request: Request,
                                  icao: str,
-                                 frequency: int = Form(...),
+                                 frequency: int = Form(ge=108000, le=137000),
                                  comm_type: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
@@ -342,7 +342,7 @@ async def edit_communication(request: Request,
 async def edit_communication(request: Request,
                              icao: str,
                              frequency_old: int,
-                             frequency: int = Form(...),
+                             frequency: int = Form(ge=108000, le=137000),
                              comm_type: str = Form(...)):
     
     get_logged_user(request=request, icao_to_check=icao)
@@ -380,7 +380,7 @@ async def add_ils_post(request: Request,
                        icao: str,
                        ident: str = Form(pattern="[A-Z]{3}"),
                        runway_head: str = Form(pattern="\d{2}[LRC]?"),
-                       frequency: int = Form(...),
+                       frequency: int = Form(ge=1080, le=1180),
                        category: str = Form(...),
                        crs: int = Form(...),
                        minimum: int = Form(...)):
@@ -421,7 +421,7 @@ async def edit_ils(request: Request,
                    frequency_old: int,
                    ident: str = Form(pattern="[A-Z]{3}"),
                    runway_head: str = Form(pattern="\d{2}[LRC]?"),
-                   frequency: int = Form(...),
+                   frequency: int = Form(ge=1080, le=1180),
                    category: str = Form(...),
                    crs: int = Form(...),
                    minimum: int = Form(...)):
@@ -468,7 +468,7 @@ async def add_vor(request: Request,
 async def add_vor(request: Request,
                   icao: str,
                   ident: str = Form(pattern="[A-Z]{3}"),
-                  frequency: int = Form(...)): 
+                  frequency: int = Form(ge=1080, le=1180)): 
 
     get_logged_user(request=request, icao_to_check=icao)
 
@@ -500,7 +500,7 @@ async def edit_vor_post(request: Request,
                         icao: str,
                         frequency_old: int,
                         ident: str = Form(pattern="[A-Z]{3}"),
-                        frequency: int = Form(...)):
+                        frequency: int = Form(ge=1080, le=1180)):
     get_logged_user(request=request, icao_to_check=icao)
 
 
