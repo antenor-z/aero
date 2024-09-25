@@ -1,6 +1,6 @@
 from os import environ
 from fastapi import FastAPI, HTTPException, Request, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -133,6 +133,10 @@ async def history(request: Request, icao: str):
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
     return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
+
+@app.get("/favicon.ico", response_class=FileResponse)
+async def favicon():
+    return FileResponse("static/favicon.ico")
 
 @app.exception_handler(404)
 async def not_found(request: Request, exc: HTTPException):
