@@ -87,11 +87,11 @@ def del_aerodrome(icao: str):
 
             metars = session.query(METAR).filter(METAR.ICAO == icao).all()
             for metar in metars:
-                metar.delete(vor)
+                session.delete(metar)
 
             tafs = session.query(TAF).filter(TAF.ICAO == icao).all()
             for taf in tafs:
-                taf.delete(vor)
+                session.delete(taf)
 
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
             session.delete(aerodrome)
