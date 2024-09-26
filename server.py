@@ -14,6 +14,7 @@ from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from starlette.middleware.sessions import SessionMiddleware
+from translation import custom_errors
 from version import VERSION
 
 app = FastAPI()
@@ -162,15 +163,26 @@ async def value_error(request: Request, exc: ValueError):
 
 
 @app.exception_handler(RequestValidationError)
-async def unprocesable(request: Request, exc: RequestValidationError):
+async def unprocessable(request: Request, exc: RequestValidationError):
     details = []
     for error in exc.errors():
-        details.append(f"Variável '{error["loc"][1]}' com valor '{error["input"]}' está com o erro '{error["msg"]}'")
-    return templates.TemplateResponse("error.html", {"request": request, 
-                                                     "error": f"Erro 422 | Erro no formulário", 
-                                                     "details": details},
-                                                     status_code=401)
+        error_type = error['type']
+        loc = error['loc'][1]
+        input_value = error['input']
 
+        # print("!!!!", error_type)
+        msg = custom_errors.get(error_type, error['msg'])
+
+        if 'ctx' in error:
+            msg = msg.format(**error['ctx'])
+
+        details.append(f"Variável '{loc}' com valor '{input_value}' está com o erro '{msg}'")
+
+    return templates.TemplateResponse("error.html", {
+        "request": request, 
+        "error": "Erro 422 | Erro no formulário", 
+        "details": details
+    }, status_code=422)
 
 @app.exception_handler(NotLoggedException)
 async def not_logged_exception_handler(request: Request, exc: NotLoggedException):
