@@ -230,6 +230,6 @@ subheader {
 }
 
 .sim-only {
-  position: fixed; bottom: 2px; left: 2px; background-color: black;
+  position: fixed; bottom: 0px; left: 2px; background-color: black;
 }
 
