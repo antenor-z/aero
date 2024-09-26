@@ -1,12 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OpenStreetMap</title>
+    <title>Mapa | AERO A4</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <style>
+        .leaflet-layer,
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out,
+        .leaflet-control-attribution {
+        filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+    </style>
 </head>
 <body>
-    
+    <div id="map" style="width: 600px; height: 400px;"></div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        const locations = [
+          { name: "aaa", latitude: 1.12345, longitude: 1.12345, url: "https://example.com/abc" },
+        ];
+      
+        const map = L.map('map').setView([-17, -52], 3.5);
+      
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+      
+        locations.forEach(location => {
+          const marker = L.marker([location.latitude, location.longitude]).addTo(map);
+            
+          var icon = marker.options.icon;
+          icon.options.iconSize = [20, 30];
+          icon.options.shadowSize = [0, 0];
+          marker.setIcon(icon);
+          marker.on('mouseover', function () {
+            this.openPopup();
+          });
+
+          marker.on('mouseout', function () {
+            this.closePopup();
+          });
+
+          marker.bindPopup(`<b>${location.name}</b>`).on('click', () => {
+            window.location.href = location.url;
+          });
+        });
+      </script>      
 </body>
 </html>
