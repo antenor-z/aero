@@ -218,7 +218,7 @@ def create_vor(icao, ident, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            raise e  
+            raise ValueError("Erro ao criar o VOR", e)
         
 def patch_vor(icao, frequency_old, ident, frequency):
     with Session(engine) as session:
@@ -229,7 +229,7 @@ def patch_vor(icao, frequency_old, ident, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            raise e
+            raise ValueError("Erro ao editar o VOR", e)
 
 def del_vor(icao: str, frequency):
     with Session(engine) as session:
@@ -239,4 +239,4 @@ def del_vor(icao: str, frequency):
             session.commit()
         except Exception as e:
             session.rollback()
-            raise e
+            raise ValueError("Erro ao apagar o VOR", e)

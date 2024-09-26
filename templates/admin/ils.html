@@ -13,10 +13,10 @@
 		<input type="text" name="ident" id="Ident" value="{{ils.Ident}}">
 
 		<label for="RunwayHead">Cabeçeira: </label>
-		<input type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
+		<input required pattern="^\d{2}[LRC]?$" type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
 
 		<label for="Frequency">Frequência (de 108,0MHz a 118,0MHz sem vírgula): </label>
-		<input type="text" name="frequency" id="Frequency" value="{{ils.Frequency}}">
+		<input reqired type="number" name="frequency" id="Frequency" value="{{ils.Frequency}}">
 
 		<label for="Category">Categoria: </label>
 		<select name="category" id="Category">

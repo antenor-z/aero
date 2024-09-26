@@ -10,7 +10,7 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident: </label>
-		<input required pattern="[A-Z]{4}" name="ident" id="Ident" value="{{vor.Ident}}">
+		<input required pattern="^[A-Z]{3}$" name="ident" id="Ident" value="{{vor.Ident}}">
 
 		<label for="Frequency">Frequência (4 digitos, sem vírgula): </label>
 		<input required type="number" name="frequency" id="Frequency" value="{{vor.Frequency}}">
