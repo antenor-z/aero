@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mapa | AERO A4</title>
+  <title>Mapa | AERO A4</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/wind.css">
+    <link rel="stylesheet" href="/static/3p/leaflet.css" />
     <style>
         .leaflet-layer,
         .leaflet-control-zoom-in,
@@ -14,41 +17,23 @@
     </style>
 </head>
 <body>
-    <div id="map" style="width: 600px; height: 400px;"></div>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
+  <header>
+		MAPA
+	</header>
+  <main>
+    <subheader>
+      <a class="button-small" href="/">&lt Voltar</a>
+      Clique no ícone laranja para abrir o aeroporto.
+    </subheader>
+    <div id="map" style="width: 100%; height: 80vh;"></div>
+    <script src="/static/3p/leaflet.js"></script>
     <script>
-        const locations = [
-          { name: "aaa", latitude: 1.12345, longitude: 1.12345, url: "https://example.com/abc" },
-        ];
-      
-        const map = L.map('map').setView([-17, -52], 3.5);
-      
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-      
-        locations.forEach(location => {
-          const marker = L.marker([location.latitude, location.longitude]).addTo(map);
-            
-          var icon = marker.options.icon;
-          icon.options.iconSize = [20, 30];
-          icon.options.shadowSize = [0, 0];
-          marker.setIcon(icon);
-          marker.on('mouseover', function () {
-            this.openPopup();
-          });
-
-          marker.on('mouseout', function () {
-            this.closePopup();
-          });
-
-          marker.bindPopup(`<b>${location.name}</b>`).on('click', () => {
-            window.location.href = location.url;
-          });
-        });
-      </script>      
+       const locations = {{ locations | safe }}
+    </script>
+    <script src="/static/map.js"></script>      
+    <div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
+    <script src="/static/vertical.js">
+    </script>
+  </main>
 </body>
 </html>

@@ -140,6 +140,32 @@ def get_all_names(only_published=True):
 
     return aerodromes
 
+def get_all_locations(only_published=True):
+    aerodromes = []
+    with Session(engine) as session:
+        if only_published:
+            for aerodrome in session.query(Aerodrome).filter(Aerodrome.IsPublished == True).all():
+                city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
+                aerodromes.append({
+                    "name": aerodrome.AerodromeName,
+                    "city": city[0],
+                    "latitude": float(aerodrome.Latitude),
+                    "longitude": float(aerodrome.Longitude),
+                    "url": f"/info/{aerodrome.ICAO}"
+                })
+        else:
+            for aerodrome in session.query(Aerodrome).all():
+                city = session.query(City.CityName).filter(City.CityCode == aerodrome.CityCode).first()
+                aerodromes.append({
+                    "name": aerodrome.AerodromeName,
+                    "city": city[0],
+                    "latitude": float(aerodrome.Latitude),
+                    "longitude": float(aerodrome.Longitude),
+                    "url": f"/info/{aerodrome.ICAO}"
+                })
+
+    return aerodromes
+
 def get_all_icao():
     icao = []
     with Session(engine) as session:

@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from DB.Getter import get_all_icao, get_all_names, get_info, latest_n_metars_parsed
+from DB.Getter import get_all_icao, get_all_locations, get_all_names, get_info, latest_n_metars_parsed
 from blueprints.admin import NotAllowedToEditAirport, NotLoggedException, NotSuperUser, admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
@@ -76,11 +76,13 @@ async def info(request: Request, icao: str):
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]
 
+    go_back = "/mapa" if request.query_params.get("mapa") == "1" else "/"
     return templates.TemplateResponse("airport.html", 
                                       {"request": request, 
                                        "info": info, 
                                        "icao": icao, 
-                                       "metar": metar, 
+                                       "metar": metar,
+                                       "go_back": go_back,
                                        "decoded": decoded})
 
 @app.get("/taf/{icao}", response_class=HTMLResponse)
@@ -134,6 +136,18 @@ async def history(request: Request, icao: str):
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
     return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
+
+@app.get("/mapa", response_class=HTMLResponse)
+async def descent(request: Request):
+    try:
+        get_logged_user(request=request,)
+        locations = get_all_locations(only_published=False)
+        return templates.TemplateResponse("map.html", {"request": request, 
+                                                       "locations": locations})
+    except:
+        locations = get_all_locations()
+        return templates.TemplateResponse("map.html", {"request": request, 
+                                                       "locations": locations})
 
 @app.get("/favicon.ico", response_class=FileResponse)
 async def favicon():
