@@ -86,6 +86,7 @@ async def restricted_area_airport(request: Request, icao: str):
         "decoded": decoded,
         "isLogged": True,
         "IsPublished": info["IsPublished"],
+        "go_back": "/",
     })
 
 
