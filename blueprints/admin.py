@@ -100,7 +100,7 @@ async def post_login(request: Request, user: str = Form(...), passwd: str = Form
     try:
         user: User = password.authenticate(user_name=user, passwd=passwd, totp_token=totp)
         request.session["logged_user"] = user.Name
-        return RedirectResponse("/area/restrita", status_code=303)
+        return RedirectResponse("/", status_code=303)
     except Exception:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
