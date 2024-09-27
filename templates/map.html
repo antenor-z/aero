@@ -8,11 +8,8 @@
     <link rel="stylesheet" href="/static/wind.css">
     <link rel="stylesheet" href="/static/3p/leaflet.css" />
     <style>
-        .leaflet-layer,
-        .leaflet-control-zoom-in,
-        .leaflet-control-zoom-out,
-        .leaflet-control-attribution {
-        filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        .map {
+        filter: invert(100%) hue-rotate(200deg) brightness(105%) contrast(90%);
         }
     </style>
 </head>
@@ -25,7 +22,7 @@
       <a class="button-small" href="/">&lt Voltar</a>
       Clique no ícone laranja para abrir o aeroporto.
     </subheader>
-    <div id="map" style="width: 100%; height: calc(100vh - 200px);"></div>
+    <div id="map" class="map" style="width: 100%; height: calc(100vh - 200px);"></div>
     <script src="/static/3p/leaflet.js"></script>
     <script>
        const locations = {{ locations | safe }}
