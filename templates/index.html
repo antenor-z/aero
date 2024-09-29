@@ -30,7 +30,7 @@
 		{% for airport in airports %}
 		<div class="airport box-rounded box-outlined box-onhover" onclick="location.href='/info/{{airport[1]}}';">
 			<div class="box-airport-name">
-				{{ airport[2] }}
+				{{ airport[2] }} ({{ airport[4] }})
 			</div>
 			<div class="box-value center-text">{{ airport[1] }} ● {{ airport[0] }}
 				{% if isLogged and airport[3] == false %}
