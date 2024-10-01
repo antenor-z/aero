@@ -62,6 +62,10 @@ def edit_user():
                 while not TOTP.check2fa(user.TwoFactorKey, token):
                     token = input("Type TOTP token again: ")
 
+        else:
+            print("Unknown option.")
+            return
+
         session.commit()
         print(f"User '{user.Name}' updated successfully!")
 
