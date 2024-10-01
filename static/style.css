@@ -245,3 +245,8 @@ subheader {
   position: fixed; bottom: 0px; left: 2px; background-color: black;
 }
 
+small {
+  font-size: 0.8rem;
+  margin-left: 3px;
+  opacity: 0.4;
+}

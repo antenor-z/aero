@@ -66,7 +66,7 @@
 		{% for comm in info.communication %}
 		<div class="box-rounded box-outlined">
 			<div class="box-name">{{comm.CommType}}</div>
-			<div class="box-value"><b>{{comm.Frequency | frequency3 }}</b>
+			<div class="box-value"><b>{{comm.Frequency | frequency3 }}</b><small>MHz</small>
 				{% if isLogged %}
 				<a href="/area/restrita/{{icao}}/communication/{{ comm.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
@@ -86,12 +86,14 @@
 			<div class="box-name">ILS pista {{ ils.RunwayHead }}</div>
 			<div class="box-value" style="justify-content: space-between; display: flex;">
 				<span>
-				<b>{{ ils.Frequency | frequency1 }}</b> {{ ils.Ident }}
+				{{ ils.Ident }} <b>{{ ils.Frequency | frequency1 }}</b><small>MHz</small>
 				</span>
 
 				<span class="tooltip">ⓘ
 					<span class="tooltip tooltip-text tooltip-left" style="text-align: right;">
 						<div style="font-size: 1.1em;">ILS CAT {{ils.Category}}</div>
+						Frequência: {{ ils.Frequency | frequency1 }}<br />
+						Ident: {{ ils.Ident }} <br />
 						Altitude de decisão: {{ ils.Minimum }}<br />
 						Curso final: {{ils.CRS}}° 
 					</span>
@@ -115,7 +117,7 @@
 		<div class="box-rounded box-orange">
 			<div class="box-name">VOR</div>
 			<div class="box-value">
-				<b>{{ vor.Frequency | frequency1 }}</b> {{ vor.Ident }}
+				{{ vor.Ident }} <b>{{ vor.Frequency | frequency1 }}</b><small>MHz</small>
 				{% if isLogged %}
 					<a href="/area/restrita/{{icao}}/vor/{{ vor.Frequency }}/edit" class="button-admin">Editar</a>
 				{% endif %}
