@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vento e pista | AERO A4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/wind.css">
+</head>
+<body>
+  <div class="outer-container">
+    <div style="text-align: left;">
+        <h1>INFORMAÇÕES DE VENTO E PISTA</h1>
+        <ul>
+          {% for (heading, info) in wind_runway.items() %}
+          <h2>Cabeceira: {{heading}}</h2>
+          <ul>
+            <li>
+              {% if info["head"] | float > 0.0 %}
+                Vento paralelo: {{ info["head"] }} kt (vindo de frente)
+              {% elif info["head"] | float < 0.0 %}
+                Vento paralelo: {{ info["head"] | abs }} kt (vindo de trás)
+              {% else %}
+                Vento paralelo: zero
+              {% endif %}
+            </li>
+            <li>
+              {% if info["cross"] | float > 0.0 %}
+                Vento perpendicular: {{ info["cross"] }} kt (vindo da esquerda)
+              {% elif info["cross"] | float < 0.0 %}
+                Vento perpendicular: {{ info["cross"] | abs }} kt (vindo da direita)
+              {% else %}
+                Vento perpendicular: zero
+              {% endif %}
+            </li>
+          </ul>
+          {% endfor %}
+        </ul>
+    </div>
+        
+	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
+
+  <script src="/static/wind.js">
+  </script>
+</body>
+</html>

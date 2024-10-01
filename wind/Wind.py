@@ -26,7 +26,6 @@ def get_wind(metar):
     return ret
 
 def get_components(icao: str, metar: str):
-    metar = "171800Z 28010KT 9999 SCT035 FEW040TCU 33/19 Q1012"
     wind_dir, wind_speed, gust_speed, wind_dir_min, wind_dir_max = get_wind(metar)
     r = {}
     for (rwy_name, rwy_direction) in get_runways(icao):

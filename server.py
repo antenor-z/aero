@@ -148,6 +148,22 @@ async def descent(request: Request):
         locations = get_all_locations()
         return templates.TemplateResponse("map.html", {"request": request, 
                                                        "locations": locations})
+    
+@app.get("/wind/{icao}/")
+async def rwy_info(request: Request, icao: str):
+    try:
+        info = get_info(icao)
+        metar = get_metar(icao)
+        wind_runway = get_components(icao=icao, metar="302300Z 10080G90KT 080V120 CAVOK 25/14 Q1020")
+        from pprint import pp
+        pp(wind_runway)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
+    
+    return templates.TemplateResponse("wind-runway.html", {"request": request, 
+                                                           "wind_runway": wind_runway})
+
+
 
 @app.get("/favicon.ico", response_class=FileResponse)
 async def favicon():
