@@ -2,6 +2,7 @@ from DB.ORM import *
 import re
 from security import TOTP, password
 from sqlalchemy.exc import NoResultFound
+from getpass import getpass
 
 def add_user():
     Session = sessionmaker(bind=engine)
@@ -11,7 +12,12 @@ def add_user():
     if not re.match("^[a-zA-Z0-9_]{3,30}$", name):
         exit("Invalid username format")
 
-    passwd = input("Password: ")
+    while True:
+        passwd = getpass("Password: ")
+        confirmation = getpass("Retype password:")
+        if passwd == confirmation:
+            break
+        print("The passwords are not the same")
 
     isSuper = input("Can create/delete airports (superuser)? (y/N)") in ["y", "Y"]
 
@@ -52,7 +58,12 @@ def edit_user():
         choice = input("Do you want to change the password or TOTP? (password/TOTP): ").strip().lower()
 
         if choice == "password":
-            passwd = input("Enter new password: ")
+            while True:
+                passwd = getpass("New password: ")
+                confirmation = getpass("Retype new password:")
+                if passwd == confirmation:
+                    break
+                print("The passwords are not the same")
             user.PasswordHash = password.hash_password(passwd)
 
         elif choice == "totp":
