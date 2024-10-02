@@ -11,7 +11,7 @@
 <body>
 	<div class="iframe-container" id="iframe-container">
 		<button class="button-small" onclick="document.getElementById('iframe-container').style.display = 'none'">Fechar</button>
-		<iframe src="http://localhost:5000/wind/{{icao}}/"></iframe>
+		<iframe src="/wind/{{icao}}/"></iframe>
 	</div>
 	<header>
 		<span style="color: #eee; padding: 3px; font-weight: 700; border-radius: 10px;">{{ icao }}</span> // {{ info.AerodromeName }}
@@ -25,12 +25,12 @@
 		<a class="button-small" href="javascript:void(0);" onclick="copy('{{metar}}')">Copiar METAR</a>
 		<a class="button-small" href="/taf/{{icao}}">TAF</a>
 		<a class="button-small" href="/history/{{icao}}">Histórico</a>
-		<a class="button-small" href="javascript:void(0);" onclick="document.getElementById('iframe-container').style.display='block'">Vento e pistas</a>
 		<a class="button-small" id="ellipsis-btn" href="javascript:void(0);" onclick="toggleMenu(event)">...</a>
 		<div class="menu-ellipsis" id="menu" style="display: none; position: absolute;">
 			<a class="button-small" href="https://conv.a4barros.com">Conversor de unidades</a>
-			<a class="button-small" href="/descent">Cálculo de descida</a>
-			<a class="button-small" href="/wind/">Cálculo de componentes de vento</a>
+			<a class="button-small" href="javascript:void(0)" onclick="toggleMenu(event); showMiniApp('/descent')">Cálculo de descida</a>
+			<a class="button-small" href="javascript:void(0);" onclick="toggleMenu(event); showMiniApp('/wind/{{icao}}', false)">Vento e pistas</a>
+			<a class="button-small" href="javascript:void(0)" onclick="toggleMenu(event); showMiniApp('/wind')">Cálculo de componentes de vento</a>
 		</div>
 		{% if isLogged %}
 		{% if IsPublished %}
@@ -160,16 +160,28 @@
     }
 }
 
-// Hide menu when clicking outside of it
-document.addEventListener('click', function(event) {
+document.addEventListener('click', closeMenu)
+document.addEventListener('scroll', closeMenu)
+
+
+function closeMenu (event) {
     const menu = document.getElementById('menu');
     const ellipsisBtn = document.getElementById('ellipsis-btn');
     
-    if (!menu.contains(event.target) && !ellipsisBtn.contains(event.target)) {
+    if (!ellipsisBtn.contains(event.target)) {
         menu.style.display = 'none';
     }
-});
+}
 
+	</script>
+	<script>
+		function showMiniApp(location, isWide=true) {
+			document.getElementsByTagName('iframe')[0].src = location
+			document.getElementById('iframe-container').style.display='block'
+			if (isWide) {
+				document.getElementById('iframe-container').style.maxWidth = 0.8
+			}
+		}
 	</script>
 	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
 </body>

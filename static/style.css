@@ -256,17 +256,23 @@ small {
 
 .iframe-container {
   display: none;
-  width: 60%;
-  height: 95%;
+  width: 70%;
+  height: 60%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  max-width: 500px;
-  max-height: 400px;
+  max-width: 1200px;
+  max-height: 800px;
   border: 2px solid #cccccc89;
   background-color: #33333b;
+}
+@media screen and (max-width: 900px) {
+.iframe-container {
+  width: 90%;
+  height: 90%;
+}
 }
 
 .iframe-container iframe {
