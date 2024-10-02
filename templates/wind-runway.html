@@ -14,7 +14,7 @@
       <h1>INFORMAÇÕES DE VENTO E PISTA</h1>
       <ul>
         {% for (heading, info) in wind_runway.items() %}
-        <h2>Cabeceira: {{heading}} ({{ info["length"] }}m)</h2>
+        <h2>Cabeceira: {{heading}}</h2>
         <ul>
           <li>{{ info["head"] | windhead }}</li>
           <li>{{ info["cross"] | windcross }}</li>
