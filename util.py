@@ -41,3 +41,20 @@ def get_city_and_code_from_IGBE(city, state_code):
             return city_data["id"], city_data["nome"]
 
     return None
+
+
+def windhead_filter(speed):
+    if speed > 0:
+        return f"{speed} kt (vindo de frente)"
+    elif speed < 0:
+        return f"{-speed} kt (vindo de trás)"
+    else:
+        return "zero"
+    
+def windcross_filter(speed):
+    if speed > 0:
+        return f"{speed} kt (vindo da direita)"
+    elif speed < 0:
+        return f"{-speed} kt (vindo da esquerda)"
+    else:
+        return "zero"

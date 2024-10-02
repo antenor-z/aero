@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Vento e pista | AERO A4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/wind.css">
 </head>
+
 <body>
   <div class="outer-container">
     <div style="text-align: left;">
-        <h1>INFORMAÇÕES DE VENTO E PISTA</h1>
+      <h1>INFORMAÇÕES DE VENTO E PISTA</h1>
+      <ul>
+        {% for (heading, info) in wind_runway.items() %}
+        <h2>Cabeceira: {{heading}} ({{ info["length"] }}m)</h2>
         <ul>
-          {% for (heading, info) in wind_runway.items() %}
-          <h2>Cabeceira: {{heading}}</h2>
+          <li>{{ info["head"] | windhead }}</li>
+          <li>{{ info["cross"] | windcross }}</li>
+
+          {% if info["gust"] %}
+          <li>Atenção: Rajadas</li>
           <ul>
-            <li>
-              {% if info["head"] | float > 0.0 %}
-                Vento paralelo: {{ info["head"] }} kt (vindo de frente)
-              {% elif info["head"] | float < 0.0 %}
-                Vento paralelo: {{ info["head"] | abs }} kt (vindo de trás)
-              {% else %}
-                Vento paralelo: zero
-              {% endif %}
-            </li>
-            <li>
-              {% if info["cross"] | float > 0.0 %}
-                Vento perpendicular: {{ info["cross"] }} kt (vindo da esquerda)
-              {% elif info["cross"] | float < 0.0 %}
-                Vento perpendicular: {{ info["cross"] | abs }} kt (vindo da direita)
-              {% else %}
-                Vento perpendicular: zero
-              {% endif %}
-            </li>
+            <li>de até {{ info["gust"]["head"] | windhead }}</li>
+            <li>de até {{ info["gust"]["cross"] | windcross }}</li>
+          </ul>
+
+
+          {% endif %}
+
+          {% if info["wind_var_min"] %}
+          <li>Atenção: Vento variável</li>
+          <ul>
+            <li>{{ info["wind_var_min"]["head"] | windhead }} ~ {{ info["wind_var_max"]["head"] | windhead }}</li>
+            <li>{{ info["wind_var_min"]["cross"] | windcross }} ~ {{ info["wind_var_max"]["head"] | windcross }}</li>
+
+            {% if info["gust"] %}
+            <li>Atenção: Rajadas</li>
+            <ul>
+              <li>{{ info["wind_var_min"]["gust"]["head"] | windhead }} ~ {{ info["wind_var_max"]["gust"]["head"] |
+                windhead }}</li>
+              <li>{{ info["wind_var_min"]["gust"]["cross"] | windcross }} ~ {{ info["wind_var_max"]["gust"]["head"] |
+                windhead }}</li>
+            </ul>
+          </ul>
+
+          {% endif %}
+          {% endif %}
+
           </ul>
           {% endfor %}
-        </ul>
+      </ul>
     </div>
-        
-	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 
 
-  <script src="/static/wind.js">
-  </script>
+    <div class="sim-only">APENAS PARA USO EM SIMULADOR</div>
+
+    <script src="/static/wind.js">
+    </script>
 </body>
+
 </html>

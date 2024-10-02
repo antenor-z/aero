@@ -10,6 +10,7 @@ from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
 from historyPlot import update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
 from tafDecoder import decode_taf
+from util import windcross_filter, windhead_filter
 from wind.Wind import get_components, get_components_one_runway, get_wind
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -21,6 +22,9 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 templates.env.filters['frequency3'] = lambda value: "{:.3f}".format(round(float(value) / 1000, 3))
 templates.env.filters['frequency1'] = lambda value: "{:.1f}".format(round(float(value) / 10, 1))
+templates.env.filters['windhead'] = windhead_filter
+templates.env.filters['windcross'] = windcross_filter
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(admin)
 
@@ -154,9 +158,7 @@ async def rwy_info(request: Request, icao: str):
     try:
         info = get_info(icao)
         metar = get_metar(icao)
-        wind_runway = get_components(icao=icao, metar="302300Z 10080G90KT 080V120 CAVOK 25/14 Q1020")
-        from pprint import pp
-        pp(wind_runway)
+        wind_runway = get_components(icao=icao, metar=metar)
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
     

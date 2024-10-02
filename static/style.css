@@ -253,3 +253,28 @@ small {
   margin-left: 3px;
   opacity: 0.4;
 }
+
+.iframe-container {
+  display: none;
+  width: 60%;
+  height: 95%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  max-width: 500px;
+  max-height: 400px;
+  border: 2px solid #cccccc89;
+  background-color: #33333b;
+}
+
+.iframe-container iframe {
+  border-width: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.iframe-container button {
+  position: fixed;
+}
