@@ -75,7 +75,7 @@ def latest_n_metars_parsed(icao: str, n=10) -> list[dict]:
 
     return result
 
-
+@cache_it
 def get_taf(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         latest_metar = session.query(TAF).filter(TAF.ICAO == icao).order_by(desc(TAF.ValidOn)).first()

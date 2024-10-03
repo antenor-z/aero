@@ -26,13 +26,8 @@ def cache_it(func):
         print(key, end=" :: ")
         cached = json.loads(client.get(key) or "null", object_hook=datetime_parser)
         if not cached:
-            print("Vou tentar chamar a funcao")
             cached = func(*args, **kargs)
-            print("saí da função")
-            print(cached)
-            print(json.dumps(cached))
-            print(json.loads(cached, default=datetime_serializer))
-            client.set(key, json.dumps(cached, default=datetime_serializer))
+            client.set(key, json.dumps(cached, default=datetime_serializer), ex=3600)
             print("miss", cached)
         else:
             print("hit", cached)
