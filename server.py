@@ -71,7 +71,7 @@ async def info(request: Request, icao: str):
 
     try:
         info = get_info(icao)
-    except Exception:
+    except ValueError:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
 
     try:

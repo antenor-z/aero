@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import re
 
 from metarDecoder import parse_metar
+from red import cache_it
 
 engine = create_engine(db_url, pool_pre_ping=True)
 
@@ -27,6 +28,7 @@ def model_to_dict(instance, include_relationships=True):
     return instance_dict
 
 
+@cache_it
 def get_info(icao, only_published=True):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
@@ -34,11 +36,12 @@ def get_info(icao, only_published=True):
             aerodrome = model_to_dict(aerodrome)
             city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
             aerodrome.pop("CityCode")
-            aerodrome["City"] = city
+            #aerodrome["City"] = city
             return aerodrome
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
 
+@cache_it
 def get_metar(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         latest_metar = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).first()
@@ -125,7 +128,8 @@ def set_taf(icao: str, taf: str):
             session.commit()
         except:
             pass
-        
+
+@cache_it
 def get_all_names(only_published=True):
     aerodromes = []
     with Session(engine) as session:
