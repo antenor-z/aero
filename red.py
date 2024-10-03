@@ -37,3 +37,5 @@ def cache_it(func):
 def trash_it(icao):
     for k in client.scan_iter(f"{icao}:*"):
         client.delete(k)
+    for k in client.scan_iter(f"default:*"):
+        client.delete(k)

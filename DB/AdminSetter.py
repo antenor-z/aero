@@ -2,6 +2,8 @@ from DB.ORM import *
 from sqlalchemy import types, desc
 from datetime import datetime, timezone
 
+from red import trash_it
+
 engine = create_engine(db_url, pool_pre_ping=True)
 
 def create_city(city_code, city_name, state_code):
@@ -28,6 +30,7 @@ def create_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude:
             )
             session.add(aerodrome)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao criar o aeródromo. Provavelmente existe um aeródromo com mesmo ICAO", e)
@@ -38,6 +41,7 @@ def publish_aerodrome(icao):
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
             aerodrome.IsPublished = True
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao publicar o aeródromo", e)
@@ -48,6 +52,7 @@ def unpublish_aerodrome(icao):
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
             aerodrome.IsPublished = False
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao ocultar o aeróromo", e)
@@ -62,6 +67,7 @@ def patch_aerodrome(icao: str, aerodrome_name: str, latitude: float, longitude: 
             aerodrome.Longitude = longitude
             aerodrome.CityCode = city_code
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao editar o aeródromo.", e)
@@ -96,6 +102,7 @@ def del_aerodrome(icao: str):
             aerodrome: Aerodrome = session.get_one(Aerodrome, icao)
             session.delete(aerodrome)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao apagar o aeródromo", e)
@@ -106,6 +113,7 @@ def create_runway(icao: str, head1: str, head2: str, runway_length: int, runway_
             runway: Runway = Runway(ICAO=icao, Head1=head1, Head2=head2, RunwayLength=runway_length, RunwayWidth=runway_width, PavementCode=pavement_code)
             session.add(runway)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao inserir a pista. Provavelmente uma pista com mesma cabeceira já existe.", e)
@@ -120,6 +128,7 @@ def patch_runway(icao: str, head1_old: str, head1: str, head2: str, runway_lengt
             runway.RunwayWidth = runway_width
             runway.PavementCode = pavement_code
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao editar a pista.", e)
@@ -130,6 +139,7 @@ def del_runway(icao: str, runway_head: str):
             runway: Runway = session.get_one(Runway, (icao, runway_head))
             session.delete(runway)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao apagar a pista.", e)
@@ -140,6 +150,7 @@ def create_comm(icao: str, frequency: str, comm_type: str):
             communication: Communication = Communication(ICAO=icao, Frequency=float(frequency), CommType=comm_type)
             session.add(communication)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao inserir frequência. Veja se a frequência não está sendo usada no mesmo aeródromo.", e)
@@ -153,6 +164,7 @@ def patch_comm(icao: str, frequency_old, frequency, comm_type):
             if comm_type is not None:
                 communication.CommType = comm_type
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao editar frequência. Veja se a frequência não está sendo usada no mesmo aeródromo.", e)
@@ -163,6 +175,7 @@ def del_comm(icao: str, frequency):
             communication: Communication = session.get_one(Communication, (icao, frequency))
             session.delete(communication)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao apagar frequência.", e)
@@ -179,6 +192,7 @@ def create_ils(icao, ident, runway_head, frequency, category, crs, minimum):
         try:
             session.add(ils)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao adicionar o ILS. Verifique se já não existe um com mesmo IDENT e frequência", e)
@@ -194,6 +208,7 @@ def patch_ils(icao, frequency_old, ident, runway_head, frequency, category, crs,
             ils.CRS = crs
             ils.Minimum = minimum
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao editar o ILS. Verifique se já não existe um com mesmo IDENT e frequência", e)
@@ -204,6 +219,7 @@ def del_ils(icao: str, frequency):
             ils: ILS = session.get_one(ILS, (icao, frequency))
             session.delete(ils)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao apagar o ILS.", e)
@@ -216,6 +232,7 @@ def create_vor(icao, ident, frequency):
         try:
             session.add(vor)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao criar o VOR", e)
@@ -227,6 +244,7 @@ def patch_vor(icao, frequency_old, ident, frequency):
             vor.Ident = ident
             vor.Frequency = frequency
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao editar o VOR", e)
@@ -237,6 +255,7 @@ def del_vor(icao: str, frequency):
             vor: VOR = session.get_one(VOR, (icao, frequency))
             session.delete(vor)
             session.commit()
+            trash_it(icao)
         except Exception as e:
             session.rollback()
             raise ValueError("Erro ao apagar o VOR", e)

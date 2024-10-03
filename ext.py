@@ -5,6 +5,8 @@ from DB.Getter import get_metar as db_get_metar, \
                       set_taf as db_set_taf
 import requests
 
+from red import trash_it
+
 
 def update_metars(icao_list):
     print("METAR update started at", datetime.now())
@@ -16,6 +18,7 @@ def update_metars(icao_list):
         icao = metar[0:4]
         metar = metar[5:]
         db_set_metar(icao=icao, metar=metar)
+        trash_it(icao)
         print(f"{icao}: {metar}")
     print("METAR update ended at", datetime.now())
 
@@ -31,6 +34,7 @@ def update_tafs(icao_list):
         if taf[-1] == "\n": taf = taf[:-1]
         db_set_taf(icao=icao, taf=taf)
         print(f"{icao}: {taf}")
+        trash_it(icao)
     print("TAF update ended at", datetime.now())
 
 
