@@ -43,13 +43,12 @@
               <li>{{ info["wind_var_min"]["gust"]["cross"] | windcross }} ~ {{ info["wind_var_max"]["gust"]["head"] |
                 windhead }}</li>
             </ul>
+            {% endif %}
           </ul>
-
-          {% endif %}
           {% endif %}
 
-          </ul>
-          {% endfor %}
+        </ul>
+        {% endfor %}
       </ul>
     </div>
     <script src="/static/wind.js">
