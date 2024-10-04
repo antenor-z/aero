@@ -29,9 +29,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(admin)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_metars, CronTrigger(minute='0,15,30,45'), args=[get_all_icao()])
-scheduler.add_job(update_images, CronTrigger(minute='0,15,30,45'))
-scheduler.add_job(update_tafs, CronTrigger(hour='10'), args=[get_all_icao()])
+scheduler.add_job(update_metars, CronTrigger(minute='0,20,40'), args=[get_all_icao()])
+scheduler.add_job(update_images, CronTrigger(minute='0,20,40'))
+scheduler.add_job(update_tafs, CronTrigger(hour='0,3,6,9,12,15,18,21'), args=[get_all_icao()])
 scheduler.start()
 
 with open(environ["SESSION_SECRET_KEY"]) as fp:
