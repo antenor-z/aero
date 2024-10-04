@@ -35,8 +35,8 @@ def cache_it(func):
         return cached            
     return wrapper
 
-def trash_it(icao):
-    for k in client.scan_iter(f"{icao}:*"):
-        client.delete(k)
-    for k in client.scan_iter(f"default:*"):
-        client.delete(k)
+async def trash_it(icao):
+    async for k in client.scan_iter(f"{icao}:*"):
+        await client.delete(k)
+    async for k in client.scan_iter(f"default:*"):
+        await client.delete(k)

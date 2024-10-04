@@ -8,7 +8,7 @@ import requests
 from red import trash_it
 
 
-def update_metars(icao_list):
+async def update_metars(icao_list):
     print("METAR update started at", datetime.now())
     icao_list_str = ",".join(icao_list)
     metars = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao_list_str}").text.split("\n")
@@ -18,11 +18,11 @@ def update_metars(icao_list):
         icao = metar[0:4]
         metar = metar[5:]
         db_set_metar(icao=icao, metar=metar)
-        trash_it(icao)
+        await trash_it(icao)
         print(f"{icao}: {metar}")
     print("METAR update ended at", datetime.now())
 
-def update_tafs(icao_list):
+async def update_tafs(icao_list):
     print("TAF update started at", datetime.now())
     icao_list_str = ",".join(icao_list)
     tafs = requests.get(f"https://aviationweather.gov/api/data/taf?ids={icao_list_str}").text.split("TAF ")
@@ -34,7 +34,7 @@ def update_tafs(icao_list):
         if taf[-1] == "\n": taf = taf[:-1]
         db_set_taf(icao=icao, taf=taf)
         print(f"{icao}: {taf}")
-        trash_it(icao)
+        await trash_it(icao)
     print("TAF update ended at", datetime.now())
 
 

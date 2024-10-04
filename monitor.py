@@ -3,10 +3,11 @@ from DB.UserCtl import add_user, edit_user, remove_user
 from DB.PortableDataLoad import insert_initial_data
 from ext import update_metars, update_tafs
 from historyPlot import update_images
+from asyncio import run
 
-def update_all_metars(): update_metars(get_all_icao())
-def update_all_tafs(): update_tafs(get_all_icao())
-def update_all_images(): update_images()
+def update_all_metars(): run(update_metars(get_all_icao()))
+def update_all_tafs(): run(update_tafs(get_all_icao()))
+def update_all_images(): run(update_images())
 def exit_now(): exit()
 
 while(True):

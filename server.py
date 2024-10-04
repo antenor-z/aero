@@ -12,13 +12,21 @@ from metarDecoder import DecodeError, decode_metar, get_wind_info
 from tafDecoder import decode_taf
 from util import windcross_filter, windhead_filter
 from wind.Wind import get_components, get_components_one_runway, get_wind
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from starlette.middleware.sessions import SessionMiddleware
 from translation import custom_errors
 from version import VERSION
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+scheduler = AsyncIOScheduler()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler.start()
+    yield
+    scheduler.shutdown()
+
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="templates")
 templates.env.filters['frequency3'] = lambda value: "{:.3f}".format(round(float(value) / 1000, 3))
 templates.env.filters['frequency1'] = lambda value: "{:.1f}".format(round(float(value) / 10, 1))
@@ -28,11 +36,9 @@ templates.env.filters['windcross'] = windcross_filter
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(admin)
 
-scheduler = BackgroundScheduler()
 scheduler.add_job(update_metars, CronTrigger(minute='0,20,40'), args=[get_all_icao()])
 scheduler.add_job(update_images, CronTrigger(minute='0,20,40'))
 scheduler.add_job(update_tafs, CronTrigger(hour='0,3,6,9,12,15,18,21'), args=[get_all_icao()])
-scheduler.start()
 
 with open(environ["SESSION_SECRET_KEY"]) as fp:
     SESSION_SECRET_KEY = fp.read()
