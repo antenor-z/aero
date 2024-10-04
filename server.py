@@ -70,12 +70,12 @@ async def info(request: Request, icao: str):
         pass
 
     try:
-        info = get_info(icao)
+        info = await get_info(icao)
     except ValueError:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
 
     try:
-        metar = get_metar(icao)
+        metar = await get_metar(icao)
         decoded = decode_metar(metar)
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]
@@ -96,12 +96,12 @@ async def info_taf(request: Request, icao: str):
         return RedirectResponse(url=f"/info/taf/{icao_upper}")
 
     try:
-        taf = get_taf(icao)
+        taf = await get_taf(icao)
     except Exception:
         raise HTTPException(status_code=400, detail="Aeroporto não encontrado")
 
     try:
-        info = get_info(icao)
+        info = await get_info(icao)
         decoded = decode_taf(taf)
     except Exception:
         raise HTTPException(status_code=400, detail="Erro ao obter o TAF")
@@ -136,7 +136,7 @@ async def descent(request: Request):
 @app.get("/history/{icao}/", response_class=HTMLResponse)
 async def history(request: Request, icao: str):
     try:
-        info = get_info(icao)
+        info = await get_info(icao)
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
     return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
@@ -156,9 +156,8 @@ async def descent(request: Request):
 @app.get("/wind/{icao}/")
 async def rwy_info(request: Request, icao: str):
     try:
-        info = get_info(icao)
-        metar = get_metar(icao)
-        wind_runway = get_components(icao=icao, metar=metar)
+        metar = await get_metar(icao)
+        wind_runway = await get_components(icao=icao, metar=metar)
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
     
@@ -171,9 +170,9 @@ async def rwy_info(request: Request, icao: str):
 async def favicon():
     return FileResponse("static/favicon.ico")
 
-@app.exception_handler(404)
-async def not_found(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 404 | {exc.detail}"}, status_code=404)
+# @app.exception_handler(404)
+# async def not_found(request: Request, exc: HTTPException):
+#     return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 404 | {exc.detail}"}, status_code=404)
 
 @app.exception_handler(400)
 async def bad_request(request: Request, exc: HTTPException):

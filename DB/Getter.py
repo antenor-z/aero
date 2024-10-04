@@ -29,7 +29,7 @@ def model_to_dict(instance, include_relationships=True):
 
 
 @cache_it
-def get_info(icao, only_published=True):
+async def get_info(icao, only_published=True):
     with Session(engine) as session:
         aerodrome = session.get(Aerodrome, icao)
         if aerodrome is not None and (not only_published or aerodrome.IsPublished):
@@ -42,7 +42,7 @@ def get_info(icao, only_published=True):
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
 
 @cache_it
-def get_metar(icao: str) -> tuple[str, str]:
+async def get_metar(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         latest_metar = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).first()
         if latest_metar:
@@ -76,7 +76,7 @@ def latest_n_metars_parsed(icao: str, n=10) -> list[dict]:
     return result
 
 @cache_it
-def get_taf(icao: str) -> tuple[str, str]:
+async def get_taf(icao: str) -> tuple[str, str]:
     with Session(engine) as session:
         latest_metar = session.query(TAF).filter(TAF.ICAO == icao).order_by(desc(TAF.ValidOn)).first()
         if latest_metar:
@@ -129,7 +129,6 @@ def set_taf(icao: str, taf: str):
         except:
             pass
 
-@cache_it
 def get_all_names(only_published=True):
     aerodromes = []
     with Session(engine) as session:

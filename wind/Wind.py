@@ -25,10 +25,10 @@ def get_wind(metar):
 
     return ret
 
-def get_components(icao: str, metar: str):
+async def get_components(icao: str, metar: str):
     wind_dir, wind_speed, gust_speed, wind_dir_min, wind_dir_max = get_wind(metar)
     r = {}
-    for (rwy_name, rwy_direction) in get_runways(icao):
+    for (rwy_name, rwy_direction) in await get_runways(icao):
         r[rwy_name] = get_components_one_runway(rwy_direction, int(wind_dir), int(wind_speed))
         
         if gust_speed is not None:
@@ -82,7 +82,7 @@ def get_components_one_runway(runway_head: int, wind_dir:int, wind_speed: int):
         "angle": round(angle_deg, 2),
     }
 
-def get_runways(icao: str):
+async def get_runways(icao: str):
     """
     Returns the runway 'name' (including R, L or C) and the runway heading in degrees.
     For example if the airport has runways 17L, 17R, 35L and 35R, the following will
@@ -90,7 +90,8 @@ def get_runways(icao: str):
     [('17R', 170), ('35L', 350), ('17L', 170), ('35R', 350)]
     """
     r = []
-    for runway in get_info(icao)["runways"]:
+    info = await get_info(icao)
+    for runway in info["runways"]:
         rwy_without_letter = runway["Head1"].replace("L", "").replace("C", "").replace("R", "")
         r.append((runway["Head1"], int(rwy_without_letter) * 10))
         rwy_without_letter = runway["Head2"].replace("L", "").replace("C", "").replace("R", "")

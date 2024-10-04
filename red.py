@@ -1,5 +1,6 @@
 from datetime import datetime
-import redis, json
+import json
+import redis.asyncio as redis
 
 client = redis.Redis(host='redis', port=6379, decode_responses=True)
 
@@ -17,17 +18,17 @@ def datetime_parser(dct):
     return dct
 
 def cache_it(func):
-    def wrapper(*args, **kargs):
+    async def wrapper(*args, **kargs):
         try:
             icao = kargs.get("icao") or args[0]
         except IndexError:
             icao = "default"
         key = f'{icao}:{func.__name__}'
         print(key, end=" :: ")
-        cached = json.loads(client.get(key) or "null", object_hook=datetime_parser)
+        cached = json.loads(await client.get(key) or "null", object_hook=datetime_parser)
         if not cached:
-            cached = func(*args, **kargs)
-            client.set(key, json.dumps(cached, default=datetime_serializer), ex=3600)
+            cached = await func(*args, **kargs)
+            await client.set(key, json.dumps(cached, default=datetime_serializer), ex=3600)
             print("miss")
         else:
             print("hit")

@@ -70,10 +70,10 @@ async def restricted_area_airport(request: Request, icao: str):
     if icao != icao_upper:
         return RedirectResponse(f"/info/{icao_upper}")
 
-    info = get_info(icao, only_published=False)
+    info = await get_info(icao, only_published=False)
 
     try:
-        metar = get_metar(icao)
+        metar = await get_metar(icao)
         decoded = decode_metar(metar)
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]

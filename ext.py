@@ -38,12 +38,12 @@ def update_tafs(icao_list):
     print("TAF update ended at", datetime.now())
 
 
-def get_metar(icao: str) -> str | None:
-    metar, _ = db_get_metar(icao=icao)
+async def get_metar(icao: str) -> str | None:
+    metar, _ = await db_get_metar(icao=icao)
     return metar
 
-def get_taf(icao: str) -> str | None:
-    metar, _ = db_get_taf(icao=icao)
+async def get_taf(icao: str) -> str | None:
+    metar, _ = await db_get_taf(icao=icao)
     return metar
 
 
