@@ -28,9 +28,9 @@ def cache_it(func):
         if not cached:
             cached = func(*args, **kargs)
             client.set(key, json.dumps(cached, default=datetime_serializer), ex=3600)
-            print("miss", cached)
+            print("miss")
         else:
-            print("hit", cached)
+            print("hit")
         return cached            
     return wrapper
 
