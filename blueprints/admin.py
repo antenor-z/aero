@@ -152,7 +152,7 @@ async def add_aerodrome_post(request: Request,
         city_code, city_name = res
         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
-    create_aerodrome(icao=icao,
+    await create_aerodrome(icao=icao,
                     aerodrome_name=aerodrome_name,
                     latitude=latitude,
                     longitude=longitude,
@@ -192,7 +192,7 @@ async def edit_aerodrome_post(request: Request,
         city_code, city_name = res
         city = create_city(city_code=city_code, city_name=city_name, state_code=state_code)
 
-    patch_aerodrome(icao=icao,
+    await patch_aerodrome(icao=icao,
                     aerodrome_name=aerodrome_name,
                     latitude=float(latitude),
                     longitude=float(longitude),
@@ -205,7 +205,7 @@ async def delete_aerodrome(request: Request, icao: str):
 
     get_logged_user(request=request, icao_to_check=icao, super_only=True)
 
-    del_aerodrome(icao)
+    await del_aerodrome(icao)
     return RedirectResponse(url="/area/restrita", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -235,7 +235,7 @@ async def add_runway(request: Request,
     get_logged_user(request=request, icao_to_check=icao)
     validate_runway(head1, head2, runway_length, runway_width)
 
-    create_runway(
+    await create_runway(
         icao=icao, 
         head1=head1, 
         head2=head2, 
@@ -274,7 +274,7 @@ async def edit_runway_post(request: Request,
     get_logged_user(request=request, icao_to_check=icao)
     validate_runway(head1, head2, runway_length, runway_width)
 
-    patch_runway(
+    await patch_runway(
         icao=icao, 
         head1_old=runway_head, 
         head1=head1, 
@@ -291,7 +291,7 @@ async def delete_runway(request: Request, icao: str, runwayHead: str):
 
     get_logged_user(request=request, icao_to_check=icao)
 
-    del_runway(icao, runwayHead)
+    await del_runway(icao, runwayHead)
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -317,7 +317,7 @@ async def add_communication_post(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    create_comm(icao=icao, frequency=frequency, comm_type=comm_type)
+    await create_comm(icao=icao, frequency=frequency, comm_type=comm_type)
 
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -348,7 +348,7 @@ async def edit_communication(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    patch_comm(icao=icao, 
+    await patch_comm(icao=icao, 
                frequency_old=frequency_old, 
                frequency=frequency, 
                comm_type=comm_type)
@@ -359,7 +359,7 @@ async def edit_communication(request: Request,
 @admin.post("/area/restrita/{icao}/communication/{frequency}/delete")
 async def delete_communication(request: Request, icao: str, frequency: int):
     get_logged_user(request=request, icao_to_check=icao)
-    del_comm(icao, frequency)
+    await del_comm(icao, frequency)
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -387,7 +387,7 @@ async def add_ils_post(request: Request,
                        minimum: int = Form(...)):
     get_logged_user(request=request, icao_to_check=icao)
 
-    create_ils(
+    await create_ils(
         icao=icao, 
         ident=ident, 
         runway_head=runway_head, 
@@ -417,7 +417,7 @@ async def edit_ils(request: Request,
     })
 
 @admin.post("/area/restrita/{icao}/ils/{frequency_old}/edit")
-async def edit_ils(request: Request,
+async def edit_ils_post(request: Request,
                    icao: str,
                    frequency_old: int,
                    ident: str = Form(pattern="^[A-Z]{3}$"),
@@ -429,7 +429,7 @@ async def edit_ils(request: Request,
     
     get_logged_user(request=request, icao_to_check=icao)
 
-    patch_ils(icao=icao, 
+    await patch_ils(icao=icao, 
               frequency_old=frequency_old, 
               ident=ident, 
               runway_head=runway_head, 
@@ -447,7 +447,7 @@ async def delete_ils(request: Request,
                      frequency: int):
 
     get_logged_user(request=request, icao_to_check=icao)
-    del_ils(icao, frequency)
+    await del_ils(icao, frequency)
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -473,7 +473,7 @@ async def add_vor(request: Request,
 
     get_logged_user(request=request, icao_to_check=icao)
 
-    create_vor(
+    await create_vor(
         icao=icao, 
         ident=ident, 
         frequency=frequency)
@@ -505,7 +505,7 @@ async def edit_vor_post(request: Request,
     get_logged_user(request=request, icao_to_check=icao)
 
 
-    patch_vor(
+    await patch_vor(
         icao=icao, 
         frequency_old=frequency_old, 
         ident=ident, 
@@ -519,7 +519,7 @@ async def delete_vor(request: Request,
                      icao: str,
                      frequency: int):
     get_logged_user(request=request, icao_to_check=icao)
-    del_vor(icao, frequency)
+    await del_vor(icao, frequency)
     return RedirectResponse(url=f"/area/restrita/info/{icao}", status_code=status.HTTP_303_SEE_OTHER)
 
 @admin.get("/area/restrita/{icao}/publish", response_class=HTMLResponse)
@@ -527,7 +527,7 @@ async def publish_aerodrome_post(request: Request,
                             icao: str,
                             ):
     get_logged_user(request=request, icao_to_check=icao)
-    publish_aerodrome(icao=icao)
+    await publish_aerodrome(icao=icao)
     return RedirectResponse(url=f"/area/restrita/info/{icao}")
 
 
@@ -536,5 +536,5 @@ async def publish_aerodrome_post(request: Request,
                             icao: str,
                             ):
     get_logged_user(request=request, icao_to_check=icao)
-    unpublish_aerodrome(icao=icao)
+    await unpublish_aerodrome(icao=icao)
     return RedirectResponse(url=f"/area/restrita/info/{icao}")
