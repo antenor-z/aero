@@ -74,7 +74,7 @@ async def restricted_area_airport(request: Request, icao: str):
 
     try:
         metar = await get_metar(icao)
-        decoded = decode_metar(metar)
+        decoded = await decode_metar(metar)
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]
 
