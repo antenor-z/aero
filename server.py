@@ -82,7 +82,7 @@ async def info(request: Request, icao: str):
 
     try:
         metar = await get_metar(icao)
-        decoded = decode_metar(metar)
+        decoded = await decode_metar(metar)
     except Exception:
         decoded = [("", "Não foi possível obter o METAR")]
 
@@ -108,7 +108,7 @@ async def info_taf(request: Request, icao: str):
 
     try:
         info = await get_info(icao)
-        decoded = decode_taf(taf)
+        decoded = await decode_taf(taf)
     except Exception:
         raise HTTPException(status_code=400, detail="Erro ao obter o TAF")
 

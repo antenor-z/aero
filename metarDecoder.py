@@ -1,6 +1,8 @@
 import re
 from datetime import datetime, timedelta
 
+from red import cache_it
+
 # Fonte: https://ajuda.decea.mil.br/base-de-conhecimento/como-decodificar-o-metar-e-o-speci/
 
 other_items = {
@@ -78,7 +80,8 @@ other_items = {
     "VCTS": "Trovoada na vizinhança"
 }
 
-def decode_metar(metar: str) -> dict:
+@cache_it
+async def decode_metar(metar: str) -> dict:
     #metar = "METAR SBSP 290400Z AUTO 19008KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
     #metar = "METAR SBSP 290400Z AUTO VRB08KT 160V220 9999 FEW006 SCT008 BKN010 16/14 Q1025="
     #metar = "METAR SBMN 061300Z 31015G27KT 280V350 5000 1500W -RA BKN010 SCT020 FEW025TCU 25/24 Q1014 RERA WS RWY17 W12/H75="

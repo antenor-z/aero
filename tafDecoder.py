@@ -1,5 +1,7 @@
 import re
 
+from red import cache_it
+
 taf_items = {
     "SH": "Pancada(s) moderada.",
     "+SH": "Pancada(s) forte.",
@@ -75,7 +77,8 @@ taf_items = {
     "VCTS": "Trovoada na vizinhança"
 }
 
-def decode_taf(taf: str) -> list:
+@cache_it
+async def decode_taf(taf: str) -> list:
     taf_lines = taf.split()
     ret = []
 
