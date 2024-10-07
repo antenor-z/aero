@@ -135,7 +135,7 @@ async def add_aerodrome(request: Request):
 
 @admin.post("/area/restrita/add")
 async def add_aerodrome_post(request: Request,
-                             icao: str = Form(...),
+                             icao: str = Form(pattern="^[A-Z]{4}$"),
                              aerodrome_name: str = Form(...),
                              latitude: float = Form(...),
                              longitude: float = Form(...),

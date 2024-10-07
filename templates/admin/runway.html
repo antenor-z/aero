@@ -16,10 +16,10 @@
 		<input required pattern="^\d{2}[LRC]?$" type="text" name="head2" id="head2" value="{{runway.Head2}}">
 
 		<label for="RunwayLength">Comprimento: </label>
-		<input required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
+		<input min="100" max="5000" required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
 
 		<label for="RunwayWidth">Largura: </label>
-		<input required type="number" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
+		<input min="20" max="80" required type="number" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
 
 		<label for="PavementCode">Tipo do pavimento: </label>
 		<select name="pavement_code" id="PavementCode">
