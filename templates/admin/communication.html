@@ -10,7 +10,7 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Frequency">Frequência (de 108,000MHz a 137,000MHz sem vírgula): </label>
-		<input required type="number" name="frequency" id="Frequency" value="{{communication.Frequency}}">
+		<input required type="number" min="108000" max="137000" name="frequency" id="Frequency" value="{{communication.Frequency}}">
 
 		<label for="CommType">Tipo: </label>
 		<select name="comm_type" id="CommType">

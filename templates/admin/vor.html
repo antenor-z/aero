@@ -13,7 +13,7 @@
 		<input required pattern="^[A-Z]{3}$" name="ident" id="Ident" value="{{vor.Ident}}">
 
 		<label for="Frequency">Frequência (4 digitos, sem vírgula): </label>
-		<input required type="number" name="frequency" id="Frequency" value="{{vor.Frequency}}">
+		<input required type="number"  min="1080" max="1180" name="frequency" id="Frequency" value="{{vor.Frequency}}">
 
 		<button type="submit">OK</button>
 	</form>

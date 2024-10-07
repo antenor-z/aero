@@ -16,7 +16,7 @@
 		<input required pattern="^\d{2}[LRC]?$" type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
 
 		<label for="Frequency">Frequência (de 108,0MHz a 118,0MHz sem vírgula): </label>
-		<input reqired type="number" name="frequency" id="Frequency" value="{{ils.Frequency}}">
+		<input reqired type="number" min="1080" max="1180" name="frequency" id="Frequency" value="{{ils.Frequency}}">
 
 		<label for="Category">Categoria: </label>
 		<select name="category" id="Category">
