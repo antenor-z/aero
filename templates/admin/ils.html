@@ -10,7 +10,7 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident (ex.: ABC): </label>
-		<input type="text" name="ident" id="Ident" value="{{ils.Ident}}">
+		<input required pattern="^[A-Z]{3}$" type="text" name="ident" id="Ident" value="{{ils.Ident}}">
 
 		<label for="RunwayHead">Cabeçeira: </label>
 		<input required pattern="^\d{2}[LRC]?$" type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
@@ -30,10 +30,10 @@
 		</select>
 
 		<label for="CRS">Curso final (graus): </label>
-		<input type="text" name="crs" id="CRS" value="{{ils.CRS}}">
+		<input type="number" name="crs" id="CRS" value="{{ils.CRS}}">
 
 		<label for="Minimum">Minimum (metros): </label>
-		<input type="text" name="minimum" id="Minimum" value="{{ils.Minimum}}">
+		<input type="number" name="minimum" id="Minimum" value="{{ils.Minimum}}">
 
 		<button type="submit">OK</button>
 	</form>
