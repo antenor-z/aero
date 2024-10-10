@@ -1,5 +1,5 @@
 from datetime import datetime
-from DB.Getter import get_metar as db_get_metar, \
+from DB.Getter import get_all_icao, get_metar as db_get_metar, \
                       get_taf as db_get_taf, \
                       set_metar as db_set_metar, \
                       set_taf as db_set_taf
@@ -8,8 +8,9 @@ import requests
 from red import trash_it
 
 
-async def update_metars(icao_list):
+async def update_metars():
     print("METAR update started at", datetime.now())
+    icao_list = get_all_icao()
     icao_list_str = ",".join(icao_list)
     metars = requests.get(f"https://aviationweather.gov/api/data/metar?ids={icao_list_str}").text.split("\n")
     for metar in metars:
@@ -22,8 +23,9 @@ async def update_metars(icao_list):
         print(f"{icao}: {metar}")
     print("METAR update ended at", datetime.now())
 
-async def update_tafs(icao_list):
+async def update_tafs():
     print("TAF update started at", datetime.now())
+    icao_list = get_all_icao()
     icao_list_str = ",".join(icao_list)
     tafs = requests.get(f"https://aviationweather.gov/api/data/taf?ids={icao_list_str}").text.split("TAF ")
     for taf in tafs:
