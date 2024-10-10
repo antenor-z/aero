@@ -10,13 +10,19 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Ident">Ident (ex.: ABC): </label>
-		<input required pattern="^[A-Z]{3}$" type="text" name="ident" id="Ident" value="{{ils.Ident}}">
+		<input required pattern="^[A-Z]{3}$" type="text" name="ident" id="Ident" value="{{ils.Ident}}"
+		oninvalid="setCustomValidity('A identificação deve ter três letra maiúsculas')"
+		oninput="setCustomValidity('')">
 
 		<label for="RunwayHead">Cabeçeira: </label>
-		<input required pattern="^\d{2}[LRC]?$" type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}">
+		<input required pattern="^\d{2}[LRC]?$" type="text" name="runway_head" id="RunwayHead" value="{{ils.RunwayHead}}"
+		oninvalid="setCustomValidity('Escreva uma cabeçeira válida')"
+		oninput="setCustomValidity('')">
 
 		<label for="Frequency">Frequência (de 108,0MHz a 118,0MHz sem vírgula): </label>
-		<input reqired type="number" min="1080" max="1180" name="frequency" id="Frequency" value="{{ils.Frequency}}">
+		<input reqired type="number" min="1080" max="1180" name="frequency" id="Frequency" value="{{ils.Frequency}}"
+		oninvalid="setCustomValidity('A frequência deve ser um número de 1080 até 1180 (não use vírgula)')"
+		oninput="setCustomValidity('')">
 
 		<label for="Category">Categoria: </label>
 		<select name="category" id="Category">

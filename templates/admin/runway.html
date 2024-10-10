@@ -10,16 +10,24 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="head1">Cabeçeira 1: </label>
-		<input required pattern="^\d{2}[LRC]?$" type="text" name="head1" id="head1" value="{{runway.Head1}}">
+		<input required pattern="^\d{2}[LRC]?$" type="text" name="head1" id="head1" value="{{runway.Head1}}"
+		oninvalid="setCustomValidity('Escreve uma cabeçeira válida')"
+		oninput="setCustomValidity('')">
 
 		<label for="head2">Cabeçeira 2: </label>
-		<input required pattern="^\d{2}[LRC]?$" type="text" name="head2" id="head2" value="{{runway.Head2}}">
+		<input required pattern="^\d{2}[LRC]?$" type="text" name="head2" id="head2" value="{{runway.Head2}}"
+		oninvalid="setCustomValidity('Escreva uma cabeçeira válida')"
+		oninput="setCustomValidity('')">
 
 		<label for="RunwayLength">Comprimento: </label>
-		<input min="100" max="5000" required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}">
+		<input min="100" max="5000" required type="number" name="runway_length" id="RunwayLength" value="{{runway.RunwayLength}}"
+		oninvalid="setCustomValidity('O comprimento deve ser de 100 a 5000')"
+		oninput="setCustomValidity('')">
 
 		<label for="RunwayWidth">Largura: </label>
-		<input min="20" max="80" required type="number" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}">
+		<input min="20" max="80" required type="number" name="runway_width" id="RunwayWidth" value="{{runway.RunwayWidth}}"
+		oninvalid="setCustomValidity('A largura deve ser de 20 a 80')"
+		oninput="setCustomValidity('')">
 
 		<label for="PavementCode">Tipo do pavimento: </label>
 		<select name="pavement_code" id="PavementCode">

@@ -10,16 +10,22 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="ICAO">ICAO: </label>
-		<input required pattern="[A-Z]{4}" type="text" name="icao" id="ICAO" value="{{aerodrome.ICAO}}">
+		<input required pattern="[A-Z]{4}" type="text" name="icao" id="ICAO" value="{{aerodrome.ICAO}}" 
+		oninvalid="setCustomValidity('O ICAO deve ter quatro letras maíusculas')"
+		oninput="setCustomValidity('')">
 
 		<label for="AerodromeName">Nome do aerodromo: </label>
-		<input type="text" name="aerodrome_name" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
+		<input required type="text" name="aerodrome_name" id="AerodromeName" value="{{aerodrome.AerodromeName}}">
 
 		<label for="Latitude">Latitude (ex.: -22.776400): </label>
-		<input required pattern="-?[0-9]*\.[0-9]{6}" type="text" name="latitude" id="Latitude" value="{{aerodrome.Latitude}}">
+		<input required pattern="-?[0-9]*\.[0-9]{6}" type="text" name="latitude" id="Latitude" value="{{aerodrome.Latitude}}"
+		oninvalid="setCustomValidity('A latitude deve ter precisão de seis digitos')"
+		oninput="setCustomValidity('')">
 
 		<label for="Longitude">Longitude (ex.: -38.532041): </label>
-		<input required pattern="-?[0-9]*\.[0-9]{6}" type="text" name="longitude" id="Longitude" value="{{aerodrome.Longitude}}">
+		<input required pattern="-?[0-9]*\.[0-9]{6}" type="text" name="longitude" id="Longitude" value="{{aerodrome.Longitude}}"
+		oninvalid="setCustomValidity('A longitude deve ter precisão de seis digitos')"
+		oninput="setCustomValidity('')">
 
 		<label for="CityName">Cidade: </label>
 		<input type="text" name="city_name" id="CityName" value="{{aerodrome.CityName}}">

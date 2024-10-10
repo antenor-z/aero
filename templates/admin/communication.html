@@ -10,7 +10,9 @@
 	<main>
 	<form method="post" action="{{ action }}">
 		<label for="Frequency">Frequência (de 108,000MHz a 137,000MHz sem vírgula): </label>
-		<input required type="number" min="108000" max="137000" name="frequency" id="Frequency" value="{{communication.Frequency}}">
+		<input required type="number" min="108000" max="137000" name="frequency" id="Frequency" value="{{communication.Frequency}}"
+		oninvalid="setCustomValidity('A frequência deve ser um número de 108000 até 137000 (não use vírgula)')"
+		oninput="setCustomValidity('')">
 
 		<label for="CommType">Tipo: </label>
 		<select name="comm_type" id="CommType">
