@@ -34,9 +34,6 @@ async def get_info(icao, only_published=True):
         aerodrome = session.get(Aerodrome, icao)
         if aerodrome is not None and (not only_published or aerodrome.IsPublished):
             aerodrome = model_to_dict(aerodrome)
-            city = session.query(City.CityName).filter(City.CityCode == aerodrome["CityCode"]).first()
-            aerodrome.pop("CityCode")
-            #aerodrome["City"] = city
             return aerodrome
         else:
             raise ValueError(f"Informações do ICAO '{icao}' não encontradas.")
