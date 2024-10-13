@@ -11,6 +11,10 @@ def update_all_tafs(): loop.run_until_complete(update_tafs())
 def update_all_images(): loop.run_until_complete(update_images())
 def exit_now(): exit()
 
+print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+print("ADMIN")
+print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+
 while(True):
     options = {
         "0": exit_now,

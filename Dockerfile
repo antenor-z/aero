@@ -11,6 +11,8 @@ COPY requirements.txt .
 RUN ${VIRTUAL_ENV}/bin/pip install -r requirements.txt
 
 COPY . /app
+RUN chmod u+x ./monitor
+ENV PATH="$PATH:/app"
 
 EXPOSE 5000
 
