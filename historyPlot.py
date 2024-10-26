@@ -73,7 +73,7 @@ def update_images():
 
 def update_df():
     for icao in get_all_icao():
-        df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=12))
+        df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=50))
    
         # Bellow is to fix: ValueError: Excel does not support datetimes with timezones.
         print(df)
