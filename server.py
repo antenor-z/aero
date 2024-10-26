@@ -1,5 +1,5 @@
 from os import environ
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, HTTPException, Request, Depends, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from DB.Getter import get_all_icao, get_all_locations, get_all_names, get_info, latest_n_metars_parsed
 from blueprints.admin import NotAllowedToEditAirport, NotLoggedException, NotSuperUser, admin, get_logged_user
 from ext import IcaoError, get_metar, update_metars, update_tafs, get_taf
-from historyPlot import update_images
+from historyPlot import update_df, update_images
 from metarDecoder import DecodeError, decode_metar, get_wind_info
 from tafDecoder import decode_taf
 from util import windcross_filter, windhead_filter
@@ -38,6 +38,7 @@ app.include_router(admin)
 
 scheduler.add_job(update_metars, CronTrigger(minute='0,20,40', jitter=30))
 scheduler.add_job(update_images, CronTrigger(minute='0,20,40'))
+scheduler.add_job(update_df, CronTrigger(minute='0,20,40'))
 scheduler.add_job(update_tafs, CronTrigger(hour='0,3,6,9,12,15,18,21', jitter=30))
 
 with open(environ["SESSION_SECRET_KEY"]) as fp:
@@ -220,6 +221,12 @@ async def unprocessable(request: Request, exc: RequestValidationError):
         "error": "Erro 422 | Erro no formulário", 
         "details": details
     }, status_code=422)
+
+@app.get("/download/excel/{icao}")
+async def dump_metar_dataset(request: Request, icao: str):
+    return FileResponse(
+        f"static/datasets/dataset_{icao}.xlsx",
+    )
 
 @app.exception_handler(NotLoggedException)
 async def not_logged_exception_handler(request: Request, exc: NotLoggedException):

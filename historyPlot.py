@@ -4,6 +4,7 @@ from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 from datetime import timedelta
 import numpy as np
+import pandas as pd
 
 from DB.Getter import get_all_icao, latest_n_metars_parsed
 
@@ -68,3 +69,15 @@ def update_images():
         latest = latest_n_metars_parsed(icao=icao, n=12)
         plot(icao=icao, metar_data=latest)
         print(icao, latest)
+
+
+def update_df():
+    for icao in get_all_icao():
+        df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=12))
+   
+        # Bellow is to fix: ValueError: Excel does not support datetimes with timezones.
+        print(df)
+        df['timestamp'] = df['timestamp'].dt.tz_localize(None)
+
+        FILENAME = f"static/datasets/dataset_{icao}.xlsx"
+        df.to_excel(FILENAME, index=False, sheet_name=icao)
