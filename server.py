@@ -226,6 +226,8 @@ async def unprocessable(request: Request, exc: RequestValidationError):
 async def dump_metar_dataset(request: Request, icao: str):
     return FileResponse(
         f"static/datasets/dataset_{icao}.xlsx",
+        media_type='application/octet-stream', 
+        filename=f"dataset_{icao}.xlsx"
     )
 
 @app.exception_handler(NotLoggedException)
