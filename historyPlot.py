@@ -75,9 +75,10 @@ def update_df():
     for icao in get_all_icao():
         df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=50))
    
-        # Bellow is to fix: ValueError: Excel does not support datetimes with timezones.
-        print(df)
-        df['timestamp'] = df['timestamp'].dt.tz_localize(None)
+        try:
+            df['timestamp'] = df['timestamp'].dt.tz_localize(None)
+        except ValueError:
+            continue
 
         FILENAME = f"static/datasets/dataset_{icao}.xlsx"
         df.to_excel(FILENAME, index=False, sheet_name=icao)
