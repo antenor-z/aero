@@ -7,3 +7,5 @@ __pycache__
 passwords
 static/plots/*.png
 static/plots/*.svg
+static/datasets/*.xlsx
+
