@@ -219,6 +219,7 @@ def parse_metar(metar_str: str) -> dict:
         dew_point = -int(dew_str[1:]) if dew_str.startswith('M') else int(dew_str)
     else:
         temperature = None
+        dew_point = None
 
     qnh = int(qnh_match.group(1)) if qnh_match else None
 
