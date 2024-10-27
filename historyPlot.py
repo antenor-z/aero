@@ -73,7 +73,7 @@ def update_images():
 
 def update_df():
     for icao in get_all_icao():
-        df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=300))
+        df = pd.DataFrame(latest_n_metars_parsed(icao=icao, n=500))
    
         try:
             df['timestamp'] = df['timestamp'].dt.tz_localize(None)
