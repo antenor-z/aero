@@ -77,7 +77,7 @@ def update_df():
    
         try:
             df['timestamp'] = df['timestamp'].dt.tz_localize(None)
-        except ValueError:
+        except KeyError:
             continue
 
         FILENAME = f"static/datasets/dataset_{icao}.xlsx"
