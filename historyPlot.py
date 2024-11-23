@@ -71,8 +71,8 @@ def plot(icao, metar_data, page=1):
     plot_metar_data(page, icao, metar_data, "qnh", "Ajuste altímetro (hectopascal)", "hPa", BLUE, "visibility", "Visibilidade (metros)", "m", YELLOW)
 
 
-def update_images(n_pages=4):
-    for page in range(n_pages + 1):
+def update_images(n_pages=5):
+    for page in range(n_pages):
         for icao in get_all_icao():
             latest = latest_n_metars_parsed(icao=icao, n=12, offset=12*page)
             plot(icao=icao, metar_data=latest, page=page)

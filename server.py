@@ -143,7 +143,7 @@ async def descent(request: Request):
 @app.get("/history/{icao}/", response_class=HTMLResponse)
 @app.get("/history/{icao}/{page}", response_class=HTMLResponse)
 async def history(request: Request, icao: str, page: int=1):
-    if not 1 <= page <= 3:
+    if not 1 <= page <= 5:
         raise HTTPException(status_code=400, detail="Página não encontrada")
     try:
         info = await get_info(icao)
