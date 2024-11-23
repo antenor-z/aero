@@ -16,16 +16,22 @@
 	<subheader>
 		<a class="button-small" href="/info/{{icao}}">&lt Voltar</a>
 		<a class="button-small" href="/download/excel/{{icao}}">Baixar como planilha</a>
+		{% if page <= 4 %}
+		<a class="button-small" href="/history/{{icao}}/{{page + 1}}">&nbsp;&lt;&nbsp;</a>
+		{% endif %}
+		{% if page > 1 %}
+		<a class="button-small" href="/history/{{icao}}/{{page - 1}}">&nbsp;&gt;&nbsp;</a>
+		{% endif %}
 	</subheader>
 	
 	<div class="scroll-container">
-		<img src="/static/plots/{{icao}}-temperature-dew_point.svg">
+		<img src="/static/plots/{{icao}}-temperature-dew_point-{{page}}.svg">
 	</div>
 	<div class="scroll-container">
-		<img src="/static/plots/{{icao}}-wind_speed-wind_direction.svg">
+		<img src="/static/plots/{{icao}}-wind_speed-wind_direction-{{page}}.svg">
 	</div>
 	<div class="scroll-container">
-		<img src="/static/plots/{{icao}}-qnh-visibility.svg">
+		<img src="/static/plots/{{icao}}-qnh-visibility-{{page}}.svg">
 	</div>
 	</main>
 	<div class="sim-only">APENAS PARA USO EM SIMULADOR</div> 

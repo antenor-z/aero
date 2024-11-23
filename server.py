@@ -141,12 +141,15 @@ async def descent(request: Request):
     return templates.TemplateResponse("vertical.html", {"request": request})
 
 @app.get("/history/{icao}/", response_class=HTMLResponse)
-async def history(request: Request, icao: str):
+@app.get("/history/{icao}/{page}", response_class=HTMLResponse)
+async def history(request: Request, icao: str, page: int=1):
+    if not 1 <= page <= 3:
+        raise HTTPException(status_code=400, detail="Página não encontrada")
     try:
         info = await get_info(icao)
     except Exception:
         raise HTTPException(status_code=404, detail="Aeroporto não encontrado")
-    return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info})
+    return templates.TemplateResponse("history.html", {"request": request, "icao": icao, "info": info, "page": page})
 
 @app.get("/mapa", response_class=HTMLResponse)
 async def descent(request: Request):

@@ -46,9 +46,9 @@ async def get_metar(icao: str) -> tuple[str, str]:
             return latest_metar.METAR, latest_metar.ValidOn.replace(tzinfo=timezone.utc)
         return None, None
 
-def latest_n_metars(icao: str, n=10) -> list[tuple[str, str]]:
+def latest_n_metars(icao: str, n=10, offset=0) -> list[tuple[str, str]]:
     with Session(engine) as session:
-        metars = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).limit(n).all()
+        metars = session.query(METAR).filter(METAR.ICAO == icao).order_by(desc(METAR.ValidOn)).offset(offset).limit(n).all()
         results = [('', '')] * n
 
         for i, metar in enumerate(metars):
@@ -58,8 +58,8 @@ def latest_n_metars(icao: str, n=10) -> list[tuple[str, str]]:
 
         return results
 
-def latest_n_metars_parsed(icao: str, n=10) -> list[dict]:
-    metars = latest_n_metars(icao, n)
+def latest_n_metars_parsed(icao: str, n=10, offset=0) -> list[dict]:
+    metars = latest_n_metars(icao, n, offset)
     result = []
 
     for metar_str, valid_on in metars:

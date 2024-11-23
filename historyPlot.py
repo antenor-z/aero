@@ -9,7 +9,9 @@ import pandas as pd
 from DB.Getter import get_all_icao, latest_n_metars_parsed
 
 
-def plot_metar_data(icao: str,
+def plot_metar_data(
+                    page: int,
+                    icao: str,
                     metar_data: list[dict],
                     data_name1: str,
                     label_name1: str,
@@ -22,9 +24,14 @@ def plot_metar_data(icao: str,
                     ):
 
     with plt.rc_context({'axes.edgecolor':'white', 'xtick.color':'white', 'ytick.color':'green', 'figure.facecolor':'#33333b'}):    
-        timestamps = [(data["timestamp"] - timedelta(hours=3)).strftime("%H:%M") for data in metar_data if data]
+        timestamps = [(data["timestamp"] - timedelta(hours=3)).strftime("%H:%M (%d/%m)") for data in metar_data if data]
         data1 = [data[data_name1] or np.nan for data in metar_data if data]
         data2 = [data[data_name2] or np.nan for data in metar_data if data]
+
+        for i in range(len(timestamps)):
+            if i == 0 or i == len(timestamps) - 1:
+                continue
+            timestamps[i] = timestamps[i].split(" ")[0]
 
         fig, ax1 = plt.subplots()
         fig.set_size_inches(12, 4)
@@ -50,25 +57,26 @@ def plot_metar_data(icao: str,
         # ax1.grid(True)
 
         fig.tight_layout()
-        filename = f"static/plots/{icao}-{data_name1}-{data_name2}.svg"
+        filename = f"static/plots/{icao}-{data_name1}-{data_name2}-{page+1}.svg"
         plt.savefig(filename, dpi=600)
         plt.close(fig)
         print(f"Plot saved as {filename}")
 
 
-def plot(icao, metar_data):
+def plot(icao, metar_data, page=1):
     BLUE = "#008ae6"
     YELLOW = "#d5a810"
-    plot_metar_data(icao, metar_data, "temperature", "Temperatura (°C)", "°C", BLUE, "dew_point", "Ponto de orvalho (°C)", "°C", YELLOW)
-    plot_metar_data(icao, metar_data, "wind_speed", "Velocidade do vento (kt)", "kt", BLUE, "wind_direction", "Direção do vento (graus)", "°", YELLOW)
-    plot_metar_data(icao, metar_data, "qnh", "Ajuste altímetro (hectopascal)", "hPa", BLUE, "visibility", "Visibilidade (metros)", "m", YELLOW)
+    plot_metar_data(page, icao, metar_data, "temperature", "Temperatura (°C)", "°C", BLUE, "dew_point", "Ponto de orvalho (°C)", "°C", YELLOW)
+    plot_metar_data(page, icao, metar_data, "wind_speed", "Velocidade do vento (kt)", "kt", BLUE, "wind_direction", "Direção do vento (graus)", "°", YELLOW)
+    plot_metar_data(page, icao, metar_data, "qnh", "Ajuste altímetro (hectopascal)", "hPa", BLUE, "visibility", "Visibilidade (metros)", "m", YELLOW)
 
 
-def update_images():
-    for icao in get_all_icao():
-        latest = latest_n_metars_parsed(icao=icao, n=12)
-        plot(icao=icao, metar_data=latest)
-        print(icao, latest)
+def update_images(n_pages=4):
+    for page in range(n_pages + 1):
+        for icao in get_all_icao():
+            latest = latest_n_metars_parsed(icao=icao, n=12, offset=12*page)
+            plot(icao=icao, metar_data=latest, page=page)
+            print(icao, latest, "page", page)
 
 
 def update_df():
