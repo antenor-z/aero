@@ -2,7 +2,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
-RUN apk add python3 py3-virtualenv
+RUN apk add python3 python3-dev py3-virtualenv py3-virtualenv alpine-sdk
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
