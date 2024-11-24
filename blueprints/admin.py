@@ -102,7 +102,7 @@ async def post_login(request: Request, user: str = Form(...), passwd: str = Form
         request.session["logged_user"] = user.Name
         return RedirectResponse("/", status_code=303)
     except Exception:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Login inválido")
 
 
 @admin.post("/area/restrita/logout", response_class=HTMLResponse)

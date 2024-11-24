@@ -4,7 +4,7 @@ import io
 
 def gen2fa(user_name):
     key = pyotp.random_base32()
-    otp_string=f"otpauth://totp/{user_name}?secret={key}&issuer=AeroInfo"
+    otp_string=f"otpauth://totp/{user_name}?secret={key}&issuer=AeroA4"
 
     qr = qrcode.QRCode()
     qr.add_data(otp_string)

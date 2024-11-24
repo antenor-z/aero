@@ -180,17 +180,17 @@ async def rwy_info(request: Request, icao: str):
 async def favicon():
     return FileResponse("static/favicon.ico")
 
-# @app.exception_handler(404)
-# async def not_found(request: Request, exc: HTTPException):
-#     return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 404 | {exc.detail}"}, status_code=404)
+@app.exception_handler(404)
+async def not_found(request: Request, exc: HTTPException):
+    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 404 | Página não encontrada"}, status_code=404)
 
 @app.exception_handler(400)
 async def bad_request(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 400 | {exc.detail}"}, status_code=400)
+    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 400 | Requisição inválida"}, status_code=400)
 
 @app.exception_handler(401)
 async def unauthorized(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 401 | {exc.detail}"}, status_code=401)
+    return templates.TemplateResponse("error.html", {"request": request, "error": f"Erro 401 | Não autorizado"}, status_code=401)
 
 @app.exception_handler(ValueError)
 async def value_error(request: Request, exc: ValueError):
