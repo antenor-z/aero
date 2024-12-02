@@ -76,7 +76,7 @@ def update_images(n_pages=5):
         for icao in get_all_icao():
             latest = latest_n_metars_parsed(icao=icao, n=12, offset=12*page)
             plot(icao=icao, metar_data=latest, page=page)
-            print(icao, latest, "page", page)
+            #print(icao, latest, "page", page)
 
 
 def update_df():
