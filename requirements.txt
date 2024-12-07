@@ -7,7 +7,6 @@ apscheduler
 pyotp
 qrcode
 bcrypt
-Flask-Minify
 matplotlib
 python-multipart
 redis
