@@ -1,0 +1,53 @@
+services:
+  aero:
+    build: ../aero
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "aero"
+      MYSQL_USER: "aero-user"
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      SESSION_SECRET_KEY: /run/secrets/session_secret_key
+    ports:
+      - "5000:5000"
+    depends_on:
+      - aero-db
+    networks:
+      - aeronet
+      - net
+    secrets:
+      - db_password
+      - session_secret_key
+
+
+  aero-db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: "/run/secrets/db_root_password"
+      MYSQL_DATABASE: "aero"
+      MYSQL_USER: "aero-user"
+      MYSQL_PASSWORD_FILE: "/run/secrets/db_password"
+    ports:
+      - "3306:3306"
+    volumes:
+      - .db-data:/var/lib/mysql
+    networks:
+      - aeronet
+    secrets:
+      - db_root_password
+      - db_password
+      - session_secret_key
+
+secrets:
+  db_password:
+    file: ./passwords/db_password.txt
+  db_root_password:
+    file: ./passwords/db_root_password.txt
+  session_secret_key:
+    file: ./passwords/session_secret_key.txt
+
+networks:
+  aeronet:
+    external: true
+  net:
+    external: true
