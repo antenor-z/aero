@@ -1,6 +1,6 @@
 services:
   aero:
-    build: ../aero
+    build: .
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: "aero"
